@@ -1,27 +1,29 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Appointment {
     private int appointmentID;
-    private String patientName;
+    //private String patientName;
+    //private int patientID;
     private String status;
     private String outcome;
-    private int patientID;
+    private Patient patient;
+    private Doctor doctor;
+    private String date;
+    private String time;
 
-    public Appointment(int appointmentID, String patientName, int patientID) {
+    public Appointment(int appointmentID, String date, String time) {
         this.appointmentID = appointmentID;
-        this.patientName = patientName;
         this.status = "Pending";
-        this.patientID = patientID;
+        this.date = date;
+        this.time = time;
+        this.patient = null;
+        this.doctor = null;
+        //appts.add(this);
     }
 
     public int getAppointmentID() {
         return appointmentID;
-    }
-
-    public String getPatientName() {
-        return patientName;
-    }
-
-    public int getPatientID() {
-        return patientID;
     }
 
     public String getStatus() {
@@ -40,8 +42,24 @@ public class Appointment {
         this.outcome = outcome;
     }
 
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public Doctor getDoctor() {
+        return doctor;
+    }
+
+    public void schedule(Patient patient, Doctor doctor) {
+        this.patient = patient;
+        this.doctor = doctor;
+        System.out.println("Appointment scheduled successfully.");
+    }
+
     @Override
     public String toString() {
-        return "Appointment ID: " + appointmentID + ", Patient: " + patientName + ", ID: " + patientID + ", Status: " + status;
+        return "Appointment ID: " + appointmentID + ", Patient: " + (patient != null ? (patient.getName()+", Patient ID: "+patient.getPatientID()) : "No patient assigned") 
+        + ", Doctor: " + (doctor != null ? (doctor.getName()+", Doctor ID: "+doctor.getDoctorID()) : "No doctor assigned") + ", Status: " + status + ", Date: " + date 
+        + ", Time: " + time;
     }
 }

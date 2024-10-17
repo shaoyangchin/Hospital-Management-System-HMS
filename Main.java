@@ -16,6 +16,21 @@ public class Main {
     //private ArrayList<Pharmacist> pharmacists;
     //private ArrayList<Administrator> administrators;
 
+    public void displayDoctorList() {
+        for (Doctor doc : doctors) {
+            System.out.println("Doctor ID: "+doc.getDoctorID()+", Name: "+doc.getName());
+        }
+    }
+
+    public Doctor findDoctor(int doctorID) {
+        for (Doctor doc : doctors) {
+            if (doc.getDoctorID() == doctorID) {
+                return doc;
+            }
+        }
+        return null;
+    }
+
     public void initData() {
         users = new ArrayList<>();
         patients = new ArrayList<>();
@@ -151,6 +166,8 @@ public class Main {
         return null;
     }
 
+    
+
     public static void main(String[] args) {
 
         Main main = new Main();
@@ -164,15 +181,23 @@ public class Main {
             user = main.login(main.users);
         }
 
+        // create sample appointments 
+        ApptManager apptManager = new ApptManager();
+        Appointment appt1 = new Appointment(1003, "17/10/2024", "1100");
+        Appointment appt2 = new Appointment(1004, "17/10/2024", "1200");
+        apptManager.addAppointment(appt1);
+        apptManager.addAppointment(appt2);
+
+
         if (user instanceof Doctor) {
             Scanner scanner = new Scanner(System.in);
             Doctor doctor = (Doctor) user;
             // Sample appointments
-            Appointment appointment1 = new Appointment(1001, "John Doe", 2);
-            Appointment appointment2 = new Appointment(1002, "Jane Doe", 2);
-            doctor.getAppointments().add(appointment1);
-            doctor.getAppointments().add(appointment2);
-
+            // Appointment appointment1 = new Appointment(1001, "John Doe", 2);
+            // Appointment appointment2 = new Appointment(1002, "Jane Doe", 2);
+            // doctor.getAppointments().add(appointment1);
+            // doctor.getAppointments().add(appointment2);
+            
             while (true) {
                 System.out.println("\n--- Doctor Menu ---");
                 System.out.println("1. View Patient Medical Records");
@@ -236,7 +261,13 @@ public class Main {
                 System.out.println("\n--- Patient Menu ---");
                 System.out.println("1. View Medical Record");
                 System.out.println("2. Update Personal Information");
-                System.out.println("3. Exit");
+                System.out.println("3. View Available Appointment Slots");
+                System.out.println("4. Schedule an Appointment");
+                //System.out.println("5. Reschedule an Appointment");
+                //System.out.println("6. Cancel an Appointment");
+                //System.out.println("7. View scheduled Appointments");
+                //System.out.println("8. View Past Appointment Outcome Records");
+                System.out.println("9. Exit");
                 System.out.print("Choose an option: ");
 
                 int choice = scanner.nextInt();
@@ -254,6 +285,22 @@ public class Main {
                         patient.updateRecord(patient, email, phoneNum);
                         break;
                     case 3:
+                        //patient.viewAvailAppts();
+                        apptManager.displayAvail();
+                        break;
+                    case 4:
+                        System.out.println("Enter an available appointment ID: ");
+                        int apptId = scanner.nextInt();
+                        main.displayDoctorList();
+                        System.out.println("Enter Doctor ID: ");
+                        int doctorId = scanner.nextInt();
+
+                        Doctor doc1 = main.findDoctor(doctorId);
+                        apptManager.schedulePatient(patient, apptId, doc1);
+                        break;
+                    case 5:
+                        patient.rescheduleAppt();
+                    case 9:
                         System.out.println("Exiting...");
                         return;
 
