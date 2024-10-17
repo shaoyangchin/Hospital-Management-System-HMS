@@ -2,17 +2,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Doctor {
+public class Doctor extends User{
     private int doctorID;
     private String name;
     private String specialization;
     private List<Appointment> appointments;
+    private String gender;
+    private int age;
 
-    public Doctor(int doctorID, String name, String specialization) {
+    public Doctor(int doctorID, String name, String specialization, String gender, int age, String userId, String password) {
+        super(userId, password);
         this.doctorID = doctorID;
         this.name = name;
         this.specialization = specialization;
         this.appointments = new ArrayList<>();
+        this.gender = gender;
+        this.age = age;
     }
 
     public int getDoctorID() {
@@ -30,6 +35,20 @@ public class Doctor {
     public List<Appointment> getAppointments() {
         return appointments;
     }
+
+
+    public static Patient selectPatient(ArrayList<Patient> patients) {
+        int num = 0;
+        for (Patient patient : patients) {
+            num++;
+            System.out.printf("%d. %s\n",num , patient.getName());
+        }
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Select Option:");
+        int choice = scanner.nextInt();
+        return patients.get(choice-1);
+    }
+
 
     public void viewPatientRecords(Patient patient) {
         System.out.println("Viewing medical records for patient ID: " + patient.getPatientID());

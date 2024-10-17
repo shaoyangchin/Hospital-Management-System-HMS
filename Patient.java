@@ -1,11 +1,20 @@
-public class Patient {
+public class Patient extends User{
     private int patientID;
     private String name;
     private MedicalRecord medicalRecord;
+    private String dateOfBirth;
+    private String gender;
+    private String bloodType;
+    private String contactInformation;
 
-    public Patient(int patientID, String name, MedicalRecord medicalRecord) {
+    public Patient(int patientID, String name, String userId, String password, String dateOfBirth, String gender, String bloodType, String contactInformation,MedicalRecord medicalRecord) {
+        super(userId, password);
         this.patientID = patientID;
         this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        this.gender = gender;
+        this.bloodType = bloodType;
+        this.contactInformation = contactInformation;
         this.medicalRecord = medicalRecord;
     }
 
