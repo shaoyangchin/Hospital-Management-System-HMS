@@ -3,11 +3,13 @@ public class Appointment {
     private String patientName;
     private String status;
     private String outcome;
+    private int patientID;
 
-    public Appointment(int appointmentID, String patientName) {
+    public Appointment(int appointmentID, String patientName, int patientID) {
         this.appointmentID = appointmentID;
         this.patientName = patientName;
         this.status = "Pending";
+        this.patientID = patientID;
     }
 
     public int getAppointmentID() {
@@ -16,6 +18,10 @@ public class Appointment {
 
     public String getPatientName() {
         return patientName;
+    }
+
+    public int getPatientID() {
+        return patientID;
     }
 
     public String getStatus() {
@@ -36,6 +42,6 @@ public class Appointment {
 
     @Override
     public String toString() {
-        return "Appointment ID: " + appointmentID + ", Patient: " + patientName + ", Status: " + status;
+        return "Appointment ID: " + appointmentID + ", Patient: " + patientName + ", ID: " + patientID + ", Status: " + status;
     }
 }
