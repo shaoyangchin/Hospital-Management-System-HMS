@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +17,7 @@ public class Main {
     private ArrayList<Doctor> doctors;
     //private ArrayList<Pharmacist> pharmacists;
     //private ArrayList<Administrator> administrators;
+    private Map<String, Medicine> medicineInventory;
 
     public void displayDoctorList() {
         for (Doctor doc : doctors) {
@@ -110,27 +113,34 @@ public class Main {
 
 
         //medicine file
+        medicineInventory = new HashMap<>();
 
-        File medicineFile = new File("Medicine_List.xlsx");   //creating a new file instance
+        // Load the medicine data from the Excel file
+        File medicineFile = new File("Medicine_List.xlsx");   // Creating a new file instance
         XSSFSheet medicineSheet = null;
         try {
             FileInputStream fis = new FileInputStream(medicineFile);
             XSSFWorkbook medicineWorkbook = new XSSFWorkbook(fis);
             medicineSheet = medicineWorkbook.getSheetAt(0);
-            medicineSheet.iterator();
-            /// testing parameters
+
+            for (Row row : medicineSheet) {
+                if (row.getRowNum() == 0) continue; // Skip header row
+
+                // Reading values from each row
+                String medicineName = row.getCell(0).getStringCellValue();
+                int stockLevel = (int) row.getCell(1).getNumericCellValue();
+                int lowStockAlert = (int) row.getCell(2).getNumericCellValue();
+
+                // Create a new Medicine object
+                Medicine medicine = new Medicine(medicineName, stockLevel, lowStockAlert);
+
+                // Add it to the inventory map
+                medicineInventory.put(medicineName, medicine);
+            }
+
+            fis.close();  // Close the file input stream
         } catch (Exception e) {
-        }
-
-
-        for (Row row : medicineSheet) {
-            if (row.getRowNum() == 0) continue; // Skip header row
-            String medicineName = row.getCell(0).getStringCellValue();
-            int stockLevel = (int) row.getCell(1).getNumericCellValue();
-            int lowStockAlert = (int) row.getCell(2).getNumericCellValue();
-            //Medicine medicine = new Medicine(medicineName, stockLevel, lowStockAlert);
-
-            //medicineInventory.add(medicine);
+            e.printStackTrace();
         }
 
 
@@ -311,10 +321,50 @@ public class Main {
             }
         }
 
-        /* else if ( user instanceof Pharmacist) {
-
+        else if (user instanceof Pharmacist) {
+            Pharmacist pharmacist = (Pharmacist) user;
+            Scanner scanner = new Scanner(System.in);
+        
+            while (true) {
+                System.out.println("\n--- Pharmacist Menu ---");
+                System.out.println("1. View Appointment Outcome Records");
+                System.out.println("2. Update Prescription Status");
+                System.out.println("3. View Medication Inventory");
+                System.out.println("4. Submit Replenishment Request");
+                System.out.println("5. Exit");
+                System.out.print("Choose an option: ");
+                int choice = scanner.nextInt();
+                scanner.nextLine();  // Consume newline
+        
+                switch (choice) {
+                    case 1:
+                        pharmacist.viewAppointmentOutcomeRecords();
+                        break;
+                    case 2:
+                        System.out.print("Enter appointment ID to update prescription status: ");
+                        int appointmentID = scanner.nextInt();
+                        scanner.nextLine();  // Consume newline
+                        System.out.print("Enter new prescription status: ");
+                        String newStatus = scanner.nextLine();
+                        pharmacist.updatePrescriptionStatus(appointmentID, newStatus);
+                        break;
+                    case 3:
+                        pharmacist.viewMedicationInventory();
+                        break;
+                    case 4:
+                        System.out.print("Enter medicine name to submit replenishment request: ");
+                        String medicineName = scanner.nextLine();
+                        pharmacist.submitReplenishmentRequest(medicineName);
+                        break;
+                    case 5:
+                        System.out.println("Exiting Pharmacist Menu...");
+                        return;
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+                }
+            }
         }
-        else if ( user instanceof Administrator) {
+        /*else if ( user instanceof Administrator) {
 
         } */
 
