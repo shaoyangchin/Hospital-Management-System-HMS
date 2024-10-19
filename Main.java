@@ -42,7 +42,7 @@ public class Main {
 
         //staff file
 
-        File staffFile = new File("Staff_List.xlsx");   //creating a new file instance
+        File staffFile = new File("./data/Staff_List.xlsx");   //creating a new file instance
         XSSFSheet staffSheet = null;
         try {
             FileInputStream fis = new FileInputStream(staffFile);
@@ -85,7 +85,7 @@ public class Main {
         ///temporary var for testing
         MedicalRecord mr1 = new MedicalRecord("cancer", "chemotherapy", "john56@gmail.com", "80913772");
 
-        File patientFile = new File("Patient_List.xlsx");   //creating a new file instance
+        File patientFile = new File("./data/Patient_List.xlsx");   //creating a new file instance
         XSSFSheet patientSheet = null;
         try {
             FileInputStream fis = new FileInputStream(patientFile);
@@ -116,7 +116,7 @@ public class Main {
         medicineInventory = new HashMap<>();
 
         // Load the medicine data from the Excel file
-        File medicineFile = new File("Medicine_List.xlsx");   // Creating a new file instance
+        File medicineFile = new File("./data/Medicine_List.xlsx");   // Creating a new file instance
         XSSFSheet medicineSheet = null;
         try {
             FileInputStream fis = new FileInputStream(medicineFile);
