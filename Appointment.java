@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class Appointment {
     private int appointmentID;
@@ -53,6 +52,7 @@ public class Appointment {
     public void schedule(Patient patient, Doctor doctor) {
         this.patient = patient;
         this.doctor = doctor;
+        //this.status = "Confirmed"; 
         System.out.println("Appointment scheduled successfully.");
     }
 

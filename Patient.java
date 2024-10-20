@@ -64,9 +64,9 @@ public class Patient extends User{
 
     // public void viewAvailAppts() {
     // }
-    public void rescheduleAppt() {
+    public void rescheduleAppt(int apptId, Patient patient) {
         ApptManager manager = new ApptManager();
-        manager.reschedulePatient();
+        manager.reschedulePatient(apptId, patient);
     }
     
 }

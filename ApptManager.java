@@ -35,11 +35,59 @@ public class ApptManager {
         }
     }
 
-    public void reschedulePatient() {
-        for (Appointment appointment : appts) {
-            if (appointment.getStatus() == "Confirmed") {
+    public void reschedulePatient(int apptId, Patient patient) {
+        for (Appointment appt : appts) {
+            if (appt.getAppointmentID() == apptId && 
+            appt.getStatus() == "Confirmed" && 
+            patient.getUserId() == appt.getPatient().getUserId()) {
+
+            }
+            else {
+                System.out.println("Error");
             }
         }
     }
+
+    public void cancelPatient(int apptId, Patient patient) {
+        for (Appointment appt : appts) {
+            if (appt.getAppointmentID() == apptId && 
+            patient.getUserId() == appt.getPatient().getUserId() &&
+            appt.getStatus() == "Confirmed") {
+                
+            }
+        }
+    }
+
+    public void viewScheduled(Patient patient) {
+        int haveAppt = 0;
+        for (Appointment appt : appts) {
+            if (appt.getPatient() != null &&
+            patient.getUserId() == appt.getPatient().getUserId() &&
+            appt.getStatus() == "Pending") {
+                System.out.println(appt);
+                haveAppt++;
+            }
+        }
+        if (haveAppt == 0) {
+            System.out.println("No scheduled appointments.");
+        }
+        
+    }
+
+    public void viewPastOutcomes(Patient patient) {
+        int haveAppt = 0;
+        for (Appointment appt : appts) {
+            if (appt.getPatient() != null &&
+            patient.getUserId() == appt.getPatient().getUserId() &&
+            appt.getStatus() == "Completed") {
+                System.out.println(appt);
+                haveAppt++;
+            }
+        }
+        if (haveAppt == 0) {
+            System.out.println("No scheduled appointments.");
+        }
+    }
+
 }
 
