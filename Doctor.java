@@ -3,27 +3,21 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Doctor extends User{
-    private int doctorID;
     private String name;
     private String specialization;
     private List<Appointment> appointments;
     private String gender;
     private int age;
 
-    public Doctor(int doctorID, String name, String specialization, String gender, int age, String userId, String password) {
+    public Doctor(String name, String specialization, String gender, int age, String userId, String password) {
         super(userId, password);
-        this.doctorID = doctorID;
         this.name = name;
         this.specialization = specialization;
         this.appointments = new ArrayList<>();
         this.gender = gender;
         this.age = age;
     }
-
-    public int getDoctorID() {
-        return doctorID;
-    }
-
+    
     public String getName() {
         return name;
     }

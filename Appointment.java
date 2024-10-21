@@ -59,7 +59,7 @@ public class Appointment {
     @Override
     public String toString() {
         return "Appointment ID: " + appointmentID + ", Patient: " + (patient != null ? (patient.getName()+", Patient ID: "+patient.getPatientID()) : "No patient assigned") 
-        + ", Doctor: " + (doctor != null ? (doctor.getName()+", Doctor ID: "+doctor.getDoctorID()) : "No doctor assigned") + ", Status: " + status + ", Date: " + date 
+        + ", Doctor: " + (doctor != null ? (doctor.getName()) : "No doctor assigned") + ", Status: " + status + ", Date: " + date 
         + ", Time: " + time;
     }
 }
