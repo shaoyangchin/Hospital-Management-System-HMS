@@ -4,7 +4,7 @@ public class Appointment {
     private int appointmentID;
     //private String patientName;
     //private int patientID;
-    private String status;
+    private Status status;
     private String outcome;
     private Patient patient;
     private Doctor doctor;
@@ -13,7 +13,7 @@ public class Appointment {
 
     public Appointment(int appointmentID, String date, String time) {
         this.appointmentID = appointmentID;
-        this.status = "Pending";
+        this.status = Status.PENDING;
         this.date = date;
         this.time = time;
         this.patient = null;
@@ -25,11 +25,11 @@ public class Appointment {
         return appointmentID;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

@@ -21,7 +21,7 @@ public class ApptManager {
 
     public void displayAvail() {
         for (Appointment appointment : appts) {
-            if (appointment.getStatus() == "Pending") {
+            if (appointment.getStatus() == Status.PENDING) {
                 System.out.println(appointment);
             }
         }
@@ -38,7 +38,7 @@ public class ApptManager {
     public void reschedulePatient(int apptId, Patient patient) {
         for (Appointment appt : appts) {
             if (appt.getAppointmentID() == apptId && 
-            appt.getStatus() == "Confirmed" && 
+            appt.getStatus() == Status.CONFIRMED &&
             patient.getUserId() == appt.getPatient().getUserId()) {
 
             }
@@ -52,7 +52,7 @@ public class ApptManager {
         for (Appointment appt : appts) {
             if (appt.getAppointmentID() == apptId && 
             patient.getUserId() == appt.getPatient().getUserId() &&
-            appt.getStatus() == "Confirmed") {
+            appt.getStatus() == Status.CONFIRMED) {
                 
             }
         }
@@ -63,7 +63,7 @@ public class ApptManager {
         for (Appointment appt : appts) {
             if (appt.getPatient() != null &&
             patient.getUserId() == appt.getPatient().getUserId() &&
-            appt.getStatus() == "Pending") {
+            appt.getStatus() == Status.PENDING) {
                 System.out.println(appt);
                 haveAppt++;
             }
@@ -79,7 +79,7 @@ public class ApptManager {
         for (Appointment appt : appts) {
             if (appt.getPatient() != null &&
             patient.getUserId() == appt.getPatient().getUserId() &&
-            appt.getStatus() == "Completed") {
+            appt.getStatus() == Status.COMPLETED) {
                 System.out.println(appt);
                 haveAppt++;
             }

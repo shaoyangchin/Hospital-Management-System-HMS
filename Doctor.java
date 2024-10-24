@@ -69,7 +69,7 @@ public class Doctor extends User{
     public void acceptAppointment(int appointmentID) {
         for (Appointment appointment : appointments) {
             if (appointment.getAppointmentID() == appointmentID) {
-                appointment.setStatus("Confirmed");
+                appointment.setStatus(Status.CONFIRMED);
                 System.out.println("Appointment confirmed.");
                 return;
             }
