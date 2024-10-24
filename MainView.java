@@ -1,3 +1,4 @@
+import javax.print.Doc;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -33,12 +34,18 @@ public class MainView {
         switch (user.getUserType()){
             case DOCTOR:
                 //run DoctorView
+                Doctor doctor = (Doctor) user;
+                DoctorView.doctorView(doctor, db);
                 break;
             case PATIENT:
                 //run PatientView
+                Patient patient = (Patient) user;
+                PatientView.patientView(patient, db);
                 break;
             case PHARMACIST:
                 //run PharmacistView
+                Pharmacist pharmacist = (Pharmacist) user;
+                PharmacistView.pharmacistView(pharmacist, db);
                 break;
 
             case ADMINISTRATOR:

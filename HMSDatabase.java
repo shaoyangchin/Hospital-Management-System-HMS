@@ -23,6 +23,13 @@ public class HMSDatabase {
         medicineInventory = new HashMap<>();         // Initialize an empty medicine inventory
     }
 
+    //Method to get Appt manager
+
+
+    public ApptManager getApptManager() {
+        return apptManager;
+    }
+
     //Method to get all users
     public ArrayList<User> getUsers() {return users;}
 
@@ -105,6 +112,8 @@ public class HMSDatabase {
     public ArrayList<Pharmacist> getAllPharmacists() {
         return pharmacists;
     }
+
+
 
     // Method to get all administrators
     //public ArrayList<Administrator> getAllAdministrators() {
