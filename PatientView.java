@@ -35,7 +35,7 @@ public class PatientView {
                     patient.updateRecord(patient, email, phoneNum);
                     break;
                 case 3:
-                    apptManager.displayAvail();
+                    patient.viewAvailAppts();
                     break;
                 case 4:
                     System.out.println("Enter an available appointment ID: ");
@@ -74,10 +74,10 @@ public class PatientView {
                     patient.rescheduleAppt(apptId, patient);
                     break;
                 case 7:
-                    apptManager.viewScheduled(patient);
+                    patient.viewScheduledAppts(patient);
                     break;
                 case 8:
-                    apptManager.viewPastOutcomes(patient);
+                    patient.viewPastApptOutcomes(patient);
                     break;
                 case 9:
                     System.out.println("Exiting...");

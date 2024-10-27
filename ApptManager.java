@@ -13,13 +13,13 @@ public class ApptManager {
         appts.add(appointment);
     }
 
-    public void displayAppointments() {
+    public void displayAllAppointments() {
         for (Appointment appointment : appts) {
             System.out.println(appointment);
         }
     }
 
-    public void displayAvail() {
+    public void displayAvailAppointments() {
         for (Appointment appointment : appts) {
             if (appointment.getStatus() == Status.PENDING) {
                 System.out.println(appointment);

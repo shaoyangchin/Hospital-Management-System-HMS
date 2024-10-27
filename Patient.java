@@ -8,6 +8,7 @@ public class Patient extends User{
     private String contactInformation;
     private Appointment appt;
     
+    
 
     public Patient(int patientID, String name, String userId, String password, String dateOfBirth, String gender, String bloodType, String contactInformation, MedicalRecord medicalRecord) {
         super(userId, password);
@@ -62,11 +63,29 @@ public class Patient extends User{
         System.out.println("Updated medical record for patient ID: " + patient.getPatientID());
     }
 
-    // public void viewAvailAppts() {
-    // }
+    ApptManager manager = new ApptManager();
+    public void viewAvailAppts() {
+        manager.displayAvailAppointments();
+    }
+
+    public void scheduleAppt(Patient patient, int apptId, Doctor doc1) {
+        manager.schedulePatient(patient, apptId, doc1);
+    }
+
     public void rescheduleAppt(int apptId, Patient patient) {
-        ApptManager manager = new ApptManager();
         manager.reschedulePatient(apptId, patient);
+    }
+
+    public void cancelAppt(int apptId, Patient patient) {
+        manager.cancelPatient(apptId, patient);
+    }
+
+    public void viewScheduledAppts(Patient patient) {
+        manager.viewScheduled(patient);
+    }
+
+    public void viewPastApptOutcomes(Patient patient) {
+        manager.viewPastOutcomes(patient);
     }
     
 }
