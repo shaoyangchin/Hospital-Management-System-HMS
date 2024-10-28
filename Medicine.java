@@ -1,36 +1,91 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
 public class Medicine {
-    private String medicineName;
-    private int stock;
-    private int lowStockAlertLevel;
+    private static final int LOW_STOCK_THRESHOLD = 50;
+    private String name;
+    private String dosage;
+    private int quantity;
+    private String expirationDate;
 
-    public Medicine(String medicineName, int stock, int lowStockAlertLevel) {
-        this.medicineName = medicineName;
-        this.stock = stock;
-        this.lowStockAlertLevel = lowStockAlertLevel;
+    // Standard constructor
+    public Medicine(String name, String dosage, int quantity, String expirationDate) {
+        this.name = name;
+        this.dosage = dosage;
+        this.quantity = quantity;
+        this.expirationDate = expirationDate;
     }
 
-    public String getMedicineName() {
-        return medicineName;
+    // Default constructor for flexibility if needed in database operations
+    public Medicine() {
     }
 
-    public int getStock() {
-        return stock;
+    // Getters
+    public String getName() {
+        return name;
     }
 
-    public void setStock(int stock) {
-        this.stock = stock;
+    public String getDosage() {
+        return dosage;
     }
 
-    public int getLowStockAlertLevel() {
-        return lowStockAlertLevel;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public void setLowStockAlertLevel(int lowStockAlertLevel) {
-        this.lowStockAlertLevel = lowStockAlertLevel;
+    public String getExpirationDate() {
+        return expirationDate;
     }
 
+    // Setters for updates from HMSDatabase
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDosage(String dosage) {
+        this.dosage = dosage;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setExpirationDate(String expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    // Check if stock is low
+    public boolean isLowStock() {
+        return quantity < LOW_STOCK_THRESHOLD;
+    }
+
+    // Check if medicine is expired based on the current date
+    public boolean isExpired(String currentDate) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            LocalDate expiration = LocalDate.parse(expirationDate, formatter);
+            LocalDate current = LocalDate.parse(currentDate, formatter);
+            return current.isAfter(expiration);
+        } catch (DateTimeParseException e) {
+            System.out.println("Invalid date format: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Convert Medicine data to array for easier data handling in Excel operations
+    public String[] toRowData() {
+        return new String[]{name, dosage, String.valueOf(quantity), expirationDate};
+    }
+
+    // Display Medicine Details
     @Override
     public String toString() {
-        return "Medicine Name: " + medicineName + ", Stock: " + stock + ", Low Stock Alert Level: " + lowStockAlertLevel;
+        return "Medicine{" +
+                "name='" + name + '\'' +
+                ", dosage='" + dosage + '\'' +
+                ", quantity=" + quantity +
+                ", expirationDate='" + expirationDate + '\'' +
+                '}';
     }
 }
