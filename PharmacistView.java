@@ -17,7 +17,7 @@ public class PharmacistView {
 
             switch (choice) {
                 case 1:
-                    pharmacist.viewAppointmentOutcomeRecords();
+                    pharmacist.viewAllAppointments();
                     break;
                 case 2:
                     System.out.print("Enter appointment ID to update prescription status: ");
@@ -33,7 +33,9 @@ public class PharmacistView {
                 case 4:
                     System.out.print("Enter medicine name to submit replenishment request: ");
                     String medicineName = scanner.nextLine();
-                    pharmacist.submitReplenishmentRequest(medicineName);
+                    System.out.print("Enter quantity: ");
+                    int requestedQuantity = scanner.nextInt();
+                    pharmacist.submitReplenishmentRequest(medicineName, requestedQuantity);
                     break;
                 case 5:
                     System.out.println("Exiting Pharmacist Menu...");
