@@ -1,19 +1,20 @@
-import java.util.List;       
-import java.util.Map;        
-
+import java.util.ArrayList;
+import java.util.Map;
 
 public class Pharmacist extends User {
     private int pharmacistID;
     private String name;
-    private Map<String, Medicine> inventory;  // Pharmacist manages medicine inventory
-    private List<Appointment> appointments;   // List of appointments associated with prescriptions
+    private Map<String, Medicine> inventory;   // Pharmacist's direct access to medicine inventory
+    private ApptManager appointmentManager;    // Reference to ApptManager for managing appointments
+    private ArrayList<ReplenishmentRequest> requests;  // Track submitted replenishment requests
 
-    public Pharmacist(int pharmacistID, String name, String userId, String password, Map<String, Medicine> inventory, List<Appointment> appointments) {
+    public Pharmacist(int pharmacistID, String name, String userId, String password, Map<String, Medicine> inventory, ApptManager appointmentManager) {
         super(userId, password);
         this.pharmacistID = pharmacistID;
         this.name = name;
         this.inventory = inventory;
-        this.appointments = appointments;
+        this.appointmentManager = appointmentManager;
+        this.requests = new ArrayList<>();
     }
 
     // Getters
@@ -29,31 +30,21 @@ public class Pharmacist extends User {
         return inventory;
     }
 
-    public List<Appointment> getAppointments() {
-        return appointments;
+    // View completed appointments (for outcomes) using ApptManager
+    public void viewAppointmentOutcomes(Patient patient) {
+        System.out.println("Viewing past outcomes for patient: " + patient.getUserId());
+        appointmentManager.viewPastOutcomes(patient);
     }
 
-    // View appointment outcomes
-    public void viewAppointmentOutcomeRecords() {
-        System.out.println("Viewing Appointment Outcome Records for pharmacist: " + this.getName());
-        for (Appointment appointment : appointments) {
-            if ("Completed".equals(appointment.getStatus())) {
-                System.out.println("Appointment ID: " + appointment.getAppointmentID());
-                System.out.println("Prescriptions: " + appointment.getOutcome());
-            }
-        }
+    // View all appointments (could be useful for inventory planning)
+    public void viewAllAppointments() {
+        System.out.println("Viewing all appointments for pharmacist: " + this.getName());
+        appointmentManager.displayAllAppointments();
     }
 
-    // Update prescription status
-    public void updatePrescriptionStatus(int appointmentID, String newStatus) {
-        for (Appointment appointment : appointments) {
-            if (appointment.getAppointmentID() == appointmentID) {
-                appointment.setStatus(newStatus);
-                System.out.println("Updated prescription status for appointment ID: " + appointmentID + " to " + newStatus);
-                return;
-            }
-        }
-        System.out.println("Appointment ID " + appointmentID + " not found.");
+    // Update prescription status of an appointment via AppointmentManager (if needed)
+    public void updatePrescriptionStatus(int apptId, String newStatus) {
+        System.out.println("This feature requires ApptManager support.");
     }
 
     // View medication inventory
@@ -64,18 +55,25 @@ public class Pharmacist extends User {
         }
     }
 
-    // Submit replenishment request for low-stock medicines
-    public void submitReplenishmentRequest(String medicineName) {
-        Medicine medicine = inventory.get(medicineName);
-        if (medicine != null) {
-            if (medicine.getStock() < medicine.getLowStockAlertLevel()) {
-                System.out.println("Submitting replenishment request for " + medicineName);
-                // Simulate sending the request to the administrator
-            } else {
-                System.out.println("Stock level is sufficient for " + medicineName);
-            }
+    // Submit replenishment request based on direct inventory check
+    public ReplenishmentRequest submitReplenishmentRequest(String medicineName, int requestedQuantity) {
+        Medicine medicine = inventory.get(medicineName);  // Access medicine directly from inventory
+        if (medicine != null && medicine.isLowStock()) {
+            ReplenishmentRequest request = new ReplenishmentRequest(medicineName, requestedQuantity, this.name);
+            requests.add(request);  // Track locally
+            System.out.println("Replenishment request submitted for " + medicineName);
+            return request;  // To be processed by Administrator
         } else {
-            System.out.println("Medicine " + medicineName + " not found in inventory.");
+            System.out.println("Replenishment not required or medicine not found.");
+            return null;
+        }
+    }
+
+    // View all requests submitted by this pharmacist
+    public void viewRequests() {
+        System.out.println("Viewing all submitted replenishment requests:");
+        for (ReplenishmentRequest request : requests) {
+            System.out.println(request);
         }
     }
 }
