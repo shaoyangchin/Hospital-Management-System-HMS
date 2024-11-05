@@ -80,7 +80,7 @@ public class Doctor extends User{
     public void declineAppointment(int appointmentID) {
         for (Appointment appointment : appointments) {
             if (appointment.getAppointmentID() == appointmentID) {
-                appointment.setStatus("Declined");
+                appointment.setStatus(Status.DECLINED);
                 System.out.println("Appointment declined.");
                 return;
             }

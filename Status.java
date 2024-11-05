@@ -1,6 +1,7 @@
 public enum Status {
     CANCELLED,
     PENDING,
+    DECLINED,
     CONFIRMED,
     PENDING_PHARMACIST,
     COMPLETED

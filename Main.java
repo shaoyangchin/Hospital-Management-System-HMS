@@ -25,15 +25,15 @@ public class Main {
 
     public void displayDoctorList() {
         for (Doctor doc : doctors) {
-            System.out.println("Doctor ID: "+doc.getDoctorID()+", Name: "+doc.getName());
+            //System.out.println("Doctor ID: "+doc.getDoctorID()+", Name: "+doc.getName());
         }
     }
 
     public Doctor findDoctor(int doctorID) {
         for (Doctor doc : doctors) {
-            if (doc.getDoctorID() == doctorID) {
+            //if (doc.getDoctorID() == doctorID) {
                 return doc;
-            }
+            //}
         }
         return null;
     }
@@ -67,7 +67,7 @@ public class Main {
             User user = null;
             switch (role) {
                 case "Doctor":
-                    user = new Doctor(1, name, "Cardiologist", gender, age, userId, "password");
+                    //user = new Doctor(1, name, "Cardiologist", gender, age, userId, "password");
                     doctors.add((Doctor) user);
                     users.add(user);
                     break;
@@ -136,10 +136,10 @@ public class Main {
                 int lowStockAlert = (int) row.getCell(2).getNumericCellValue();
 
                 // Create a new Medicine object
-                Medicine medicine = new Medicine(medicineName, stockLevel, lowStockAlert);
+                //Medicine medicine = new Medicine(medicineName, stockLevel, lowStockAlert);
 
                 // Add it to the inventory map
-                medicineInventory.put(medicineName, medicine);
+                //medicineInventory.put(medicineName, medicine);
             }
 
             fis.close();  // Close the file input stream
@@ -299,7 +299,7 @@ public class Main {
                         patient.updateRecord(patient, email, phoneNum);
                         break;
                     case 3:
-                        apptManager.displayAvail();
+                        //apptManager.displayAvail();
                         break;
                     case 4:
                         System.out.println("Enter an available appointment ID: ");
@@ -355,7 +355,7 @@ public class Main {
         
                 switch (choice) {
                     case 1:
-                        pharmacist.viewAppointmentOutcomeRecords();
+                        //pharmacist.viewAppointmentOutcomeRecords();
                         break;
                     case 2:
                         System.out.print("Enter appointment ID to update prescription status: ");
@@ -371,7 +371,7 @@ public class Main {
                     case 4:
                         System.out.print("Enter medicine name to submit replenishment request: ");
                         String medicineName = scanner.nextLine();
-                        pharmacist.submitReplenishmentRequest(medicineName);
+                        //pharmacist.submitReplenishmentRequest(medicineName);
                         break;
                     case 5:
                         System.out.println("Exiting Pharmacist Menu...");

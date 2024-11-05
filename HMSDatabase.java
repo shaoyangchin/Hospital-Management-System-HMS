@@ -20,7 +20,7 @@ public class HMSDatabase {
         doctors = DatabaseHelper.initDoctors();      // Initialize doctors
         pharmacists = DatabaseHelper.initPharmacists(); // Initialize pharmacists
         //administrators = DatabaseHelper.initAdministrators(); // Initialize administrators
-        medicineInventory = new HashMap<>();         // Initialize an empty medicine inventory
+        medicineInventory = DatabaseHelper.initMedicines();         // Initialize an empty medicine inventory
     }
 
     //Method to get Appt manager

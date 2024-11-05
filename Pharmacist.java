@@ -5,7 +5,7 @@ public class Pharmacist extends User {
     private int pharmacistID;
     private String name;
     private Map<String, Medicine> inventory;   // Pharmacist's direct access to medicine inventory
-    private ApptManager appointmentManager;    // Reference to ApptManager for managing appointments
+    private ApptManager appointmentManager;    // Reference to ApptManager for managing appointments ****SHOULD BE STATIC
     private ArrayList<ReplenishmentRequest> requests;  // Track submitted replenishment requests
 
     public Pharmacist(int pharmacistID, String name, String userId, String password, Map<String, Medicine> inventory, ApptManager appointmentManager) {
