@@ -148,6 +148,15 @@ public class DatabaseHelper {
 
     }
 
+    public static ArrayList<ReplenishmentRequest> initReplenishmentRequests() {
+        ArrayList<ReplenishmentRequest> replenishmentRequests = new ArrayList<>();
+        List<List<String>> records = readFile("data/ReplenishmentRequest_List.csv");
+        for (List<String> record : records) {
+            replenishmentRequests.add(new ReplenishmentRequest(record.get(0),Integer.parseInt(record.get(1)),record.get(2)));
+        }
+        return replenishmentRequests;
+    }
+
     public static List<List<String>> readFile(String fileName) {
         List<List<String>> records = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {

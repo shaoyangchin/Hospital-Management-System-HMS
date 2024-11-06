@@ -11,6 +11,7 @@ public class HMSDatabase {
     private Map<String, Medicine> medicineInventory;
     private ArrayList<Appointment> appointments;
     private ApptManager apptManager;
+    private ArrayList<ReplenishmentRequest> replenishmentRequests;
 
 
     // Constructor to initialize the database
@@ -22,6 +23,7 @@ public class HMSDatabase {
         //administrators = DatabaseHelper.initAdministrators(); // Initialize administrators
         medicineInventory = DatabaseHelper.initMedicines();         // Initialize an empty medicine inventory
         appointments = DatabaseHelper.initAppointments(patients, doctors);
+        replenishmentRequests = DatabaseHelper.initReplenishmentRequests();
     }
 
     //Method to get Appt manager

@@ -1,13 +1,13 @@
 public class ReplenishmentRequest {
     private String medicineName;
     private int requestedQuantity;
-    private String pharmacistName;
+    private String pharmacistId;
     private boolean isApproved;
 
-    public ReplenishmentRequest(String medicineName, int requestedQuantity, String pharmacistName) {
+    public ReplenishmentRequest(String medicineName, int requestedQuantity, String pharmacistId) {
         this.medicineName = medicineName;
         this.requestedQuantity = requestedQuantity;
-        this.pharmacistName = pharmacistName;
+        this.pharmacistId = pharmacistId;
         this.isApproved = false;
     }
 
@@ -20,8 +20,8 @@ public class ReplenishmentRequest {
         return requestedQuantity;
     }
 
-    public String getPharmacistName() {
-        return pharmacistName;
+    public String getPharmacistId() {
+        return pharmacistId;
     }
 
     public boolean isApproved() {
@@ -38,7 +38,7 @@ public class ReplenishmentRequest {
         return "ReplenishmentRequest{" +
                 "medicineName='" + medicineName + '\'' +
                 ", requestedQuantity=" + requestedQuantity +
-                ", pharmacistName='" + pharmacistName + '\'' +
+                ", pharmacistName='" + pharmacistId + '\'' +
                 ", isApproved=" + isApproved +
                 '}';
     }
