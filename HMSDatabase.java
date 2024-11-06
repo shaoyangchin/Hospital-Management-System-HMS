@@ -9,7 +9,7 @@ public class HMSDatabase {
     private ArrayList<Pharmacist> pharmacists;
     //private ArrayList<Administrator> administrators;
     private Map<String, Medicine> medicineInventory;
-
+    private ArrayList<Appointment> appointments;
     private ApptManager apptManager;
 
 
@@ -21,6 +21,7 @@ public class HMSDatabase {
         pharmacists = DatabaseHelper.initPharmacists(); // Initialize pharmacists
         //administrators = DatabaseHelper.initAdministrators(); // Initialize administrators
         medicineInventory = DatabaseHelper.initMedicines();         // Initialize an empty medicine inventory
+        appointments = DatabaseHelper.initAppointments(patients, doctors);
     }
 
     //Method to get Appt manager

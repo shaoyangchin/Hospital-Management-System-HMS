@@ -23,10 +23,22 @@ public class DatabaseHelper {
             }
         }
 
+        List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
+        ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
+        for (List<String> medrecord : medRecords) {
+            medicalRecords.add(new MedicalRecord(medrecord.get(0),medrecord.get(1),null,null,medrecord.get(2)));
+        }
+
+
 
         records = readFile("data/Patient_List.csv");
         for (List<String> record : records) {
-            MedicalRecord temp = null;
+            ArrayList<MedicalRecord> temp = null;
+            for (MedicalRecord mr : medicalRecords) {
+                if (Objects.equals(mr.getPatientId(), record.get(0))) {
+                    temp.add(mr);
+                }
+            }
             users.add(new Patient(1, record.get(1),record.get(0), "password",record.get(2),record.get(3),record.get(4),record.get(5),temp ));
         }
 
@@ -38,9 +50,21 @@ public class DatabaseHelper {
     public static ArrayList<Patient> initPatients() {
 
         ArrayList<Patient> patients = new ArrayList<>();
+
+        List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
+        ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
+        for (List<String> medrecord : medRecords) {
+            medicalRecords.add(new MedicalRecord(medrecord.get(0),medrecord.get(1),null,null,medrecord.get(2)));
+        }
+
         List<List<String>> records = readFile("data/Patient_List.csv");
         for (List<String> record : records) {
-            MedicalRecord temp = null;
+            ArrayList<MedicalRecord> temp = null;
+            for (MedicalRecord mr : medicalRecords) {
+                if (Objects.equals(mr.getPatientId(), record.get(0))) {
+                    temp.add(mr);
+                }
+            }
             patients.add(new Patient(1, record.get(1),record.get(0), "password",record.get(2),record.get(3),record.get(4),record.get(5),temp ));
         }
 
@@ -92,6 +116,38 @@ public class DatabaseHelper {
         }
         return medicines;
     }
+
+    public static ArrayList<Appointment> initAppointments(ArrayList<Patient> patients, ArrayList<Doctor> doctors) {
+        ArrayList<Appointment> appointments = new ArrayList<>();
+
+        List<List<String>> records = readFile("data/Appointment_List.csv");
+        String name;
+        String patientId;
+        String doctorId;
+        Patient patient = null;
+        Doctor doctor = null;
+        for (List<String> record : records) {
+            patientId = record.get(3);
+            for (Patient p : patients){
+                if (Objects.equals(p.getUserId(),patientId)){
+                    patient = p;
+                    break;
+                }
+            }
+            doctorId = record.get(4);
+            for (Doctor d : doctors){
+                if (Objects.equals(d.getUserId(),doctorId)){
+                    doctor = d;
+                    break;
+                }
+            }
+            appointments.add(new Appointment(Integer.parseInt(record.get(0)), record.get(5),record.get(6),Status.valueOf(record.get(1)),patient,doctor));
+        }
+
+        return appointments;
+
+    }
+
     public static List<List<String>> readFile(String fileName) {
         List<List<String>> records = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {

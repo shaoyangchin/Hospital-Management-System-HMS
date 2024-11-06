@@ -3,12 +3,14 @@ public class MedicalRecord {
     private String prescription;
     private String email;
     private String phoneNum;
+    private String patientId;
 
-    public MedicalRecord(String diagnosis, String prescription, String email, String phoneNum) {
+    public MedicalRecord(String diagnosis, String prescription, String email, String phoneNum,String patientId) {
         this.diagnosis = diagnosis;
         this.prescription = prescription;
         this.email = email;
         this.phoneNum = phoneNum;
+        this.patientId = patientId;
     }
 
     public void addDiagnosisAndPrescription(String diagnosis, String prescription) {
@@ -20,6 +22,7 @@ public class MedicalRecord {
         this.email = email;
         this.phoneNum = phoneNum;
     }
+    public String getPatientId(){ return patientId; }
 
     @Override
     public String toString() {

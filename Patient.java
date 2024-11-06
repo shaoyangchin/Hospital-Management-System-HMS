@@ -1,7 +1,9 @@
+import java.util.ArrayList;
+
 public class Patient extends User{
     private int patientID;
     private String name;
-    private MedicalRecord medicalRecord;
+    private ArrayList<MedicalRecord> medicalRecord;
     private String dateOfBirth;
     private String gender;
     private String bloodType;
@@ -10,7 +12,7 @@ public class Patient extends User{
     
     
 
-    public Patient(int patientID, String name, String userId, String password, String dateOfBirth, String gender, String bloodType, String contactInformation, MedicalRecord medicalRecord) {
+    public Patient(int patientID, String name, String userId, String password, String dateOfBirth, String gender, String bloodType, String contactInformation, ArrayList<MedicalRecord> medicalRecord) {
         super(userId, password);
         this.patientID = patientID;
         this.name = name;
@@ -45,7 +47,7 @@ public class Patient extends User{
         return contactInformation;
     }
 
-    public MedicalRecord getMedicalRecord() {
+    public ArrayList<MedicalRecord> getMedicalRecords() {
         return medicalRecord;
     }
 
@@ -55,11 +57,11 @@ public class Patient extends User{
 
     public void viewMedicalRecord(Patient patient) {
         System.out.println("Viewing medical records for patient ID: " + patient.getPatientID() + ", Name: " + patient.getName() + ", DOB: " + patient.getDateOfBirth() + ", gender: " + patient.getGender() + ", Blood Type: " + patient.getBloodType());
-        System.out.println(patient.getMedicalRecord());
+        System.out.println(patient.getMedicalRecords());
     }
 
     public void updateRecord(Patient patient, String email, String phoneNum) {
-        patient.getMedicalRecord().patientUpdateRecord(email, phoneNum);
+        patient.getMedicalRecords().patientUpdateRecord(email, phoneNum); //***fix
         System.out.println("Updated medical record for patient ID: " + patient.getPatientID());
     }
 

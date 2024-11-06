@@ -87,7 +87,7 @@ public class Main {
         //patient file
 
         ///temporary var for testing
-        MedicalRecord mr1 = new MedicalRecord("cancer", "chemotherapy", "john56@gmail.com", "80913772");
+        //MedicalRecord mr1 = new MedicalRecord("cancer", "chemotherapy", "john56@gmail.com", "80913772");
 
         File patientFile = new File("./data/Patient_List.xlsx");   //creating a new file instance
         XSSFSheet patientSheet = null;

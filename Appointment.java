@@ -20,6 +20,15 @@ public class Appointment {
         this.doctor = null;
         //appts.add(this);
     }
+    public Appointment(int appointmentID, String date, String time, Status status,Patient patient, Doctor doctor) {
+        this.appointmentID = appointmentID;
+        this.status = status;
+        this.date = date;
+        this.time = time;
+        this.patient = patient;
+        this.doctor = doctor;
+        //appts.add(this);
+    }
 
     public int getAppointmentID() {
         return appointmentID;
