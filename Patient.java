@@ -1,9 +1,10 @@
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class Patient extends User{
-    private int patientID;
+    private String patientId;
     private String name;
-    private ArrayList<MedicalRecord> medicalRecord;
+    private ArrayList<MedicalRecord> medicalRecords;
     private String dateOfBirth;
     private String gender;
     private String bloodType;
@@ -12,19 +13,19 @@ public class Patient extends User{
     
     
 
-    public Patient(int patientID, String name, String userId, String password, String dateOfBirth, String gender, String bloodType, String contactInformation, ArrayList<MedicalRecord> medicalRecord) {
-        super(userId, password);
-        this.patientID = patientID;
+    public Patient(String name, String userId, String password, String dateOfBirth, String gender, String bloodType, String contactInformation, ArrayList<MedicalRecord> medicalRecords, UserType userType) {
+        super(userId, password, userType);
+        this.patientId = userId;
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.bloodType = bloodType;
         this.contactInformation = contactInformation;
-        this.medicalRecord = medicalRecord;
+        this.medicalRecords = medicalRecords;
     }
 
-    public int getPatientID() {
-        return patientID;
+    public String getPatientId() {
+        return patientId;
     }
 
     public String getName() {
@@ -47,22 +48,28 @@ public class Patient extends User{
         return contactInformation;
     }
 
-    public ArrayList<MedicalRecord> getMedicalRecords() {
-        return medicalRecord;
+
+    public MedicalRecord getRecordForPatient(Patient patient) {
+        for (MedicalRecord record : medicalRecords) {
+            if (record.getPatientId().equals(patientId)) {
+                return record;
+            }
+        }
+        return null; // Return null if not found
     }
+    
 
     public Appointment getAppt() {
         return appt;
     }
 
     public void viewMedicalRecord(Patient patient) {
-        System.out.println("Viewing medical records for patient ID: " + patient.getPatientID() + ", Name: " + patient.getName() + ", DOB: " + patient.getDateOfBirth() + ", gender: " + patient.getGender() + ", Blood Type: " + patient.getBloodType());
-        System.out.println(patient.getMedicalRecords());
+        System.out.println("Viewing medical records for patient ID: " + patient.getPatientID() + ", Name: " + patient.getName() + ", DOB: " + patient.getDateOfBirth() + ", gender: " + patient.getGender() + ", Blood Type: " + patient.getBloodType() + ", Contact: "+patient.getContact());
+        System.out.println(getRecordForPatient(patient));
     }
 
-    public void updateRecord(Patient patient, String email, String phoneNum) {
-        patient.getMedicalRecords().patientUpdateRecord(email, phoneNum); //***fix
-        System.out.println("Updated medical record for patient ID: " + patient.getPatientID());
+    public void updateRecord(Patient patient, String contact) {
+        this.contactInformation = contact;
     }
 
     ApptManager manager = new ApptManager();

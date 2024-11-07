@@ -8,8 +8,8 @@ public class Pharmacist extends User {
     private ApptManager appointmentManager;    // Reference to ApptManager for managing appointments ****SHOULD BE STATIC
     private ArrayList<ReplenishmentRequest> requests;  // Track submitted replenishment requests
 
-    public Pharmacist(int pharmacistID, String name, String userId, String password, Map<String, Medicine> inventory, ApptManager appointmentManager) {
-        super(userId, password);
+    public Pharmacist(int pharmacistID, String name, String userId, String password, Map<String, Medicine> inventory, ApptManager appointmentManager, UserType userType) {
+        super(userId, password, userType);
         this.pharmacistID = pharmacistID;
         this.name = name;
         this.inventory = inventory;

@@ -29,10 +29,12 @@ public class PatientView {
                     break;
                 case 2:
                     System.out.print("Enter email: ");
-                    String email = scanner.nextLine();
-                    System.out.print("Enter phone number: ");
-                    String phoneNum = scanner.nextLine();
-                    patient.updateRecord(patient, email, phoneNum);
+                    String contact = scanner.nextLine();
+                  
+                    patient.updateRecord(patient, contact);
+
+                    System.out.println("Updated medical record for patient ID: ");
+                    patient.viewMedicalRecord(patient);
                     break;
                 case 3:
                     patient.viewAvailAppts();

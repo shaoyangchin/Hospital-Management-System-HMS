@@ -9,9 +9,10 @@ public abstract class User {
     //public abstract void displayMenu();
 
 
-    User(String userId, String password) {
+    User(String userId, String password, UserType userType) {
         this.userId = userId;
         this.password = password;
+        this.userType = userType;
     }
 
     public AccountType getAccountType() {return accountType;}

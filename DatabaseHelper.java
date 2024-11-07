@@ -10,13 +10,16 @@ public class DatabaseHelper {
     public static ArrayList<User> initUsers() {
         ArrayList<User> users = new ArrayList<>();
         List<List<String>> records = readFile("data/Staff_List.csv");
+        UserType doc = UserType.DOCTOR;
+        UserType pharmacist = UserType.PHARMACIST;
+
         for (List<String> record : records) {
             if (Objects.equals(record.get(2), "Doctor")){
-                users.add(new Doctor(record.get(1), "temp" , record.get(3), Integer.parseInt(record.get(4)),record.get(0), "password" ) );
+                users.add(new Doctor(record.get(1), "temp" , record.get(3), Integer.parseInt(record.get(4)),record.get(0), "password" , doc) );
             }
             else if (Objects.equals(record.get(2), "Pharmacist")){
                 Map<String, Medicine> inventory = Collections.emptyMap(); //do we rly need this? should it not be static
-                users.add(new Pharmacist(1, record.get(0), record.get(0), "password", inventory, new ApptManager()));
+                users.add(new Pharmacist(1, record.get(0), record.get(0), "password", inventory, new ApptManager(), pharmacist));
             }
             else{
                 //users.add(new Administrator());
@@ -26,20 +29,23 @@ public class DatabaseHelper {
         List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
         ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
         for (List<String> medrecord : medRecords) {
-            medicalRecords.add(new MedicalRecord(medrecord.get(0),medrecord.get(1),null,null,medrecord.get(2)));
+            medicalRecords.add(new MedicalRecord(medrecord.get(0),medrecord.get(1),medrecord.get(2)));
         }
 
 
 
         records = readFile("data/Patient_List.csv");
         for (List<String> record : records) {
-            ArrayList<MedicalRecord> temp = null;
+            ArrayList<MedicalRecord> temp = new ArrayList<>();
             for (MedicalRecord mr : medicalRecords) {
                 if (Objects.equals(mr.getPatientId(), record.get(0))) {
                     temp.add(mr);
                 }
             }
-            users.add(new Patient(1, record.get(1),record.get(0), "password",record.get(2),record.get(3),record.get(4),record.get(5),temp ));
+            UserType p = UserType.PATIENT;
+            Patient patient1 = new Patient(record.get(1),record.get(0), "password",record.get(2),record.get(3),record.get(4),record.get(5),temp , p);
+            users.add(patient1);
+            
         }
 
         //System.out.println(users);
@@ -54,18 +60,19 @@ public class DatabaseHelper {
         List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
         ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
         for (List<String> medrecord : medRecords) {
-            medicalRecords.add(new MedicalRecord(medrecord.get(0),medrecord.get(1),null,null,medrecord.get(2)));
+            medicalRecords.add(new MedicalRecord(medrecord.get(0),medrecord.get(1),medrecord.get(2)));
         }
 
         List<List<String>> records = readFile("data/Patient_List.csv");
         for (List<String> record : records) {
-            ArrayList<MedicalRecord> temp = null;
+            ArrayList<MedicalRecord> temp = new ArrayList<>();
             for (MedicalRecord mr : medicalRecords) {
                 if (Objects.equals(mr.getPatientId(), record.get(0))) {
                     temp.add(mr);
                 }
             }
-            patients.add(new Patient(1, record.get(1),record.get(0), "password",record.get(2),record.get(3),record.get(4),record.get(5),temp ));
+            UserType p = UserType.PATIENT;
+            patients.add(new Patient(record.get(1),record.get(0), "password",record.get(2),record.get(3),record.get(4),record.get(5),temp, p ));
         }
 
         return patients;
