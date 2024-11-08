@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Patient extends User{
@@ -48,6 +49,10 @@ public class Patient extends User{
         return contactInformation;
     }
 
+    // New method to expose medical records
+    public List<MedicalRecord> getMedicalRecords() {
+        return medicalRecords;
+    }
 
     public MedicalRecord getRecordForPatient(Patient patient) {
         for (MedicalRecord record : medicalRecords) {
@@ -64,7 +69,7 @@ public class Patient extends User{
     }
 
     public void viewMedicalRecord(Patient patient) {
-        System.out.println("Viewing medical records for patient ID: " + patient.getPatientID() + ", Name: " + patient.getName() + ", DOB: " + patient.getDateOfBirth() + ", gender: " + patient.getGender() + ", Blood Type: " + patient.getBloodType() + ", Contact: "+patient.getContact());
+        System.out.println("Viewing medical records for patient ID: " + patient.getPatientId() + ", Name: " + patient.getName() + ", DOB: " + patient.getDateOfBirth() + ", gender: " + patient.getGender() + ", Blood Type: " + patient.getBloodType() + ", Contact: "+patient.getContact());
         System.out.println(getRecordForPatient(patient));
     }
 

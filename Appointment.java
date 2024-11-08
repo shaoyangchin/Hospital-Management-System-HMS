@@ -1,9 +1,5 @@
-
-
 public class Appointment {
     private int appointmentID;
-    //private String patientName;
-    //private int patientID;
     private Status status;
     private String outcome;
     private Patient patient;
@@ -11,35 +7,31 @@ public class Appointment {
     private String date;
     private String time;
 
+    // Constructor without Patient and Doctor
     public Appointment(int appointmentID, String date, String time) {
         this.appointmentID = appointmentID;
         this.status = Status.PENDING;
         this.date = date;
         this.time = time;
-        this.patient = null;
-        this.doctor = null;
-        //appts.add(this);
     }
-    public Appointment(int appointmentID, String date, String time, Status status,Patient patient, Doctor doctor) {
+
+    // Constructor with Patient and Doctor
+    public Appointment(int appointmentID, String date, String time, Status status, Patient patient, Doctor doctor) {
         this.appointmentID = appointmentID;
         this.status = status;
         this.date = date;
         this.time = time;
         this.patient = patient;
         this.doctor = doctor;
-        //appts.add(this);
     }
 
+    // Getter methods
     public int getAppointmentID() {
         return appointmentID;
     }
 
     public Status getStatus() {
         return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 
     public String getOutcome() {
@@ -58,17 +50,34 @@ public class Appointment {
         return doctor;
     }
 
-    public void schedule(Patient patient, Doctor doctor) {
+    // New setter methods
+    public void setPatient(Patient patient) {
         this.patient = patient;
+    }
+
+    public void setDoctor(Doctor doctor) {
         this.doctor = doctor;
-        //this.status = "Confirmed"; 
-        System.out.println("Appointment scheduled successfully.");
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     @Override
     public String toString() {
-        return "Appointment ID: " + appointmentID + ", Patient: " + (patient != null ? (patient.getName()+", Patient ID: "+patient.getPatientID()) : "No patient assigned") 
-        + ", Doctor: " + (doctor != null ? (doctor.getName()) : "No doctor assigned") + ", Status: " + status + ", Date: " + date 
-        + ", Time: " + time;
+        return "Appointment ID: " + appointmentID 
+                + ", Patient: " + (patient != null ? (patient.getName() + ", Patient ID: " + patient.getPatientId()) : "No patient assigned") 
+                + ", Doctor: " + (doctor != null ? doctor.getName() : "No doctor assigned") 
+                + ", Status: " + status 
+                + ", Date: " + date 
+                + ", Time: " + time;
     }
 }

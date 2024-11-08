@@ -4,15 +4,13 @@ import java.util.Scanner;
 
 public class Doctor extends User{
     private String name;
-    private String specialization;
     private List<Appointment> appointments;
     private String gender;
     private int age;
 
-    public Doctor(String name, String specialization, String gender, int age, String userId, String password, UserType userType) {
+    public Doctor(String name , String gender, int age, String userId, String password, UserType userType) {
         super(userId, password, userType);
         this.name = name;
-        this.specialization = specialization;
         this.appointments = new ArrayList<>();
         this.gender = gender;
         this.age = age;
@@ -20,10 +18,6 @@ public class Doctor extends User{
     
     public String getName() {
         return name;
-    }
-
-    public String getSpecialization() {
-        return specialization;
     }
 
     public List<Appointment> getAppointments() {
@@ -37,22 +31,51 @@ public class Doctor extends User{
             num++;
             System.out.printf("%d. %s\n",num , patient.getName());
         }
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Select Option:");
-        int choice = scanner.nextInt();
-        return patients.get(choice-1);
+        try (Scanner scanner = new Scanner(System.in)) {
+            System.out.println("Select Option:");
+            int choice = scanner.nextInt();
+            return patients.get(choice-1);
+        }
     }
 
+    
 
-    public void viewPatientRecords(Patient patient) {
-        System.out.println("Viewing medical records for patient ID: " + patient.getPatientID());
-        System.out.println(patient.getMedicalRecord());
-    }
 
-    public void updatePatientRecord(Patient patient, String diagnosis, String prescription) {
-        patient.getMedicalRecord().addDiagnosisAndPrescription(diagnosis, prescription);
-        System.out.println("Updated medical record for patient ID: " + patient.getPatientID());
+    public MedicalRecord getRecordForPatient(List<Patient> patients, String patientId) {
+        for (Patient patient : patients) {
+            if (patient.getPatientId().equals(patientId)) {
+                // Return the first record found, or you can add further criteria if needed
+                if (!patient.getMedicalRecords().isEmpty()) {
+                    return patient.getMedicalRecords().get(0); // Retrieves the first record as an example
+                }
+            }
+        }
+        System.out.println("Patient with ID " + patientId + " not found or has no records.");
+        return null; // Return null if patient or records are not found
     }
+    
+    
+
+    public void updatePatientRecord(List<Patient> patients, String patientId, String diagnosis, String prescription) {
+        for (Patient patient : patients) {
+            if (patient.getPatientId().equals(patientId)) {
+                // Check if the patient has any existing medical records
+                if (!patient.getMedicalRecords().isEmpty()) {
+                    // Update the first record as an example (or apply criteria to find a specific record)
+                    MedicalRecord recordToUpdate = patient.getMedicalRecords().get(0);
+                    recordToUpdate.addDiagnosisAndPrescription(diagnosis, prescription);
+                    System.out.println("Updated medical record for patient ID: " + patientId);
+                    return;
+                } else {
+                    System.out.println("No existing medical records for patient ID: " + patientId);
+                    return;
+                }
+            }
+        }
+        System.out.println("Patient with ID " + patientId + " not found.");
+    }
+    
+    
 
     public void viewSchedule() {
         System.out.println("Doctor's Schedule:");
