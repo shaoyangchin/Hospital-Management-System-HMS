@@ -12,27 +12,29 @@ public class DatabaseHelper {
         List<List<String>> records = readFile("data/Staff_List.csv");
         UserType doc = UserType.DOCTOR;
         UserType pharmacist = UserType.PHARMACIST;
+        UserType admin = UserType.ADMINISTRATOR;
 
         for (List<String> record : records) {
-            if (Objects.equals(record.get(2), "Doctor")){
-                users.add(new Doctor(record.get(1), "temp" , record.get(3), Integer.parseInt(record.get(4)),record.get(0), "password" , doc) );
-            }
-            else if (Objects.equals(record.get(2), "Pharmacist")){
-                Map<String, Medicine> inventory = Collections.emptyMap(); //do we rly need this? should it not be static
-                users.add(new Pharmacist(1, record.get(0), record.get(0), "password", inventory, new ApptManager(), pharmacist));
-            }
-            else{
-                //users.add(new Administrator());
+            if (Objects.equals(record.get(2), "Doctor")) {
+                users.add(new Doctor(record.get(1), "temp", record.get(3), Integer.parseInt(record.get(4)),
+                        record.get(0), "password", doc));
+            } else if (Objects.equals(record.get(2), "Pharmacist")) {
+                Map<String, Medicine> inventory = Collections.emptyMap(); // do we rly need this? should it not be
+                                                                          // static
+                users.add(new Pharmacist(1, record.get(0), record.get(0), "password", inventory, new ApptManager(),
+                        pharmacist));
+            } else if (Objects.equals(record.get(2), "Administrator")) {
+                users.add(new Administrator(record.get(1), record.get(3), Integer.parseInt(record.get(4)),
+                        record.get(0), "password",
+                        admin));
             }
         }
 
         List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
         ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
         for (List<String> medrecord : medRecords) {
-            medicalRecords.add(new MedicalRecord(medrecord.get(0),medrecord.get(1),medrecord.get(2)));
+            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2)));
         }
-
-
 
         records = readFile("data/Patient_List.csv");
         for (List<String> record : records) {
@@ -43,12 +45,13 @@ public class DatabaseHelper {
                 }
             }
             UserType p = UserType.PATIENT;
-            Patient patient1 = new Patient(record.get(1),record.get(0), "password",record.get(2),record.get(3),record.get(4),record.get(5),temp , p);
+            Patient patient1 = new Patient(record.get(1), record.get(0), "password", record.get(2), record.get(3),
+                    record.get(4), record.get(5), temp, p);
             users.add(patient1);
-            
+
         }
 
-        //System.out.println(users);
+        // System.out.println(users);
         return users;
     }
 
@@ -60,7 +63,7 @@ public class DatabaseHelper {
         List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
         ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
         for (List<String> medrecord : medRecords) {
-            medicalRecords.add(new MedicalRecord(medrecord.get(0),medrecord.get(1),medrecord.get(2)));
+            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2)));
         }
 
         List<List<String>> records = readFile("data/Patient_List.csv");
@@ -72,7 +75,8 @@ public class DatabaseHelper {
                 }
             }
             UserType p = UserType.PATIENT;
-            patients.add(new Patient(record.get(1),record.get(0), "password",record.get(2),record.get(3),record.get(4),record.get(5),temp, p ));
+            patients.add(new Patient(record.get(1), record.get(0), "password", record.get(2), record.get(3),
+                    record.get(4), record.get(5), temp, p));
         }
 
         return patients;
@@ -84,8 +88,9 @@ public class DatabaseHelper {
         ArrayList<Doctor> doctors = new ArrayList<>();
         List<List<String>> records = readFile("data/Staff_List.csv");
         for (List<String> record : records) {
-            if (Objects.equals(record.get(2), "Doctor")){
-                doctors.add(new Doctor(record.get(1), "temp" , record.get(3), Integer.parseInt(record.get(4)),record.get(0), "password" ) );
+            if (Objects.equals(record.get(2), "Doctor")) {
+                doctors.add(new Doctor(record.get(1), "temp", record.get(3), Integer.parseInt(record.get(4)),
+                        record.get(0), "password"));
             }
         }
         return doctors;
@@ -97,9 +102,11 @@ public class DatabaseHelper {
 
         List<List<String>> records = readFile("data/Staff_List.csv");
         for (List<String> record : records) {
-            if (Objects.equals(record.get(2), "Pharmacist")){
-                Map<String, Medicine> inventory = Collections.emptyMap(); //do we rly need this? should it not be static
-                pharmacists.add(new Pharmacist(1, record.get(0), record.get(0), "password", inventory, new ApptManager()));
+            if (Objects.equals(record.get(2), "Pharmacist")) {
+                Map<String, Medicine> inventory = Collections.emptyMap(); // do we rly need this? should it not be
+                                                                          // static
+                pharmacists
+                        .add(new Pharmacist(1, record.get(0), record.get(0), "password", inventory, new ApptManager()));
             }
         }
 
@@ -107,11 +114,18 @@ public class DatabaseHelper {
     }
 
     // Method to initialize administrators (dummy data for testing)
-    //public static ArrayList<Administrator> initAdministrators() {
-        //ArrayList<Administrator> administrators = new ArrayList<>();
-
-        //return administrators;
-    //}
+    public static ArrayList<Administrator> initAdministrators() {
+        ArrayList<Administrator> administrators = new ArrayList<>();
+        UserType admin = UserType.ADMINISTRATOR;
+        List<List<String>> records = readFile("data/Staff_List.csv");
+        for (List<String> record : records) {
+            if (Objects.equals(record.get(2), "Administrator")) {
+                administrators.add(new Administrator(record.get(1), record.get(3), Integer.parseInt(record.get(4)),
+                        record.get(0), "password", admin));
+            }
+        }
+        return administrators;
+    }
 
     public static Map<String, Medicine> initMedicines() {
         Map<String, Medicine> medicines = new HashMap<>();
@@ -119,7 +133,10 @@ public class DatabaseHelper {
         String name;
         for (List<String> record : records) {
             name = record.get(0);
-            medicines.put(name,new Medicine(name,"temp", Integer.parseInt(record.get(1)),"temp"));
+            // medicines.put(name, new Medicine(name, "temp",
+            // Integer.parseInt(record.get(1)), "temp"));
+            medicines.put(name, new Medicine(name, "temp", Integer.parseInt(record.get(1)),
+                    Integer.parseInt(record.get(2)), "temp"));
         }
         return medicines;
     }
@@ -135,20 +152,21 @@ public class DatabaseHelper {
         Doctor doctor = null;
         for (List<String> record : records) {
             patientId = record.get(3);
-            for (Patient p : patients){
-                if (Objects.equals(p.getUserId(),patientId)){
+            for (Patient p : patients) {
+                if (Objects.equals(p.getUserId(), patientId)) {
                     patient = p;
                     break;
                 }
             }
             doctorId = record.get(4);
-            for (Doctor d : doctors){
-                if (Objects.equals(d.getUserId(),doctorId)){
+            for (Doctor d : doctors) {
+                if (Objects.equals(d.getUserId(), doctorId)) {
                     doctor = d;
                     break;
                 }
             }
-            appointments.add(new Appointment(Integer.parseInt(record.get(0)), record.get(5),record.get(6),Status.valueOf(record.get(1)),patient,doctor));
+            appointments.add(new Appointment(Integer.parseInt(record.get(0)), record.get(5), record.get(6),
+                    Status.valueOf(record.get(1)), patient, doctor));
         }
 
         return appointments;
@@ -159,9 +177,31 @@ public class DatabaseHelper {
         ArrayList<ReplenishmentRequest> replenishmentRequests = new ArrayList<>();
         List<List<String>> records = readFile("data/ReplenishmentRequest_List.csv");
         for (List<String> record : records) {
-            replenishmentRequests.add(new ReplenishmentRequest(record.get(0),Integer.parseInt(record.get(1)),record.get(2)));
+            replenishmentRequests
+                    .add(new ReplenishmentRequest(record.get(0), Integer.parseInt(record.get(1)), record.get(2)));
         }
         return replenishmentRequests;
+    }
+
+    public static ArrayList<Staff> initStafflist() {
+        ArrayList<Staff> stafflist = new ArrayList<>();
+        List<List<String>> records = readFile("data/Staff_List.csv");
+
+        for (List<String> record : records) {
+            UserType type = null;
+            switch (record.get(2)) {
+                case "Administrator":
+                    type = UserType.ADMINISTRATOR;
+                case "Doctor":
+                    type = UserType.DOCTOR;
+                case "Pharmacist":
+                    type = UserType.PHARMACIST;
+
+            }
+            stafflist.add(new Staff(record.get(1), record.get(2), record.get(3), Integer.parseInt(record.get(4)),
+                    record.get(0), "password", type));
+        }
+        return stafflist;
     }
 
     public static List<List<String>> readFile(String fileName) {
@@ -172,7 +212,7 @@ public class DatabaseHelper {
             while ((line = br.readLine()) != null) {
                 String[] values = line.split(",");
                 records.add(Arrays.asList(values));
-                //System.out.println(Arrays.toString(records.toArray()));
+                // System.out.println(Arrays.toString(records.toArray()));
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -182,7 +222,7 @@ public class DatabaseHelper {
         return records;
     }
 
-    //public static void main(String[] args) {
-    //    initUsers();
-    //}
+    // public static void main(String[] args) {
+    // initUsers();
+    // }
 }

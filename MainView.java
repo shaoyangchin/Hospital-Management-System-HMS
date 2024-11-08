@@ -4,8 +4,6 @@ import java.util.Scanner;
 
 public class MainView {
 
-
-
     public static User login(ArrayList<User> userList) {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter your hospital ID: ");
@@ -31,25 +29,27 @@ public class MainView {
     public static void main(String[] args) {
         HMSDatabase db = new HMSDatabase();
         User user = login(db.getUsers());
-        switch (user.getUserType()){
+        switch (user.getUserType()) {
             case DOCTOR:
-                //run DoctorView
+                // run DoctorView
                 Doctor doctor = (Doctor) user;
                 DoctorView.doctorView(doctor, db);
                 break;
             case PATIENT:
-                //run PatientView
+                // run PatientView
                 Patient patient = (Patient) user;
                 PatientView.patientView(patient, db);
                 break;
             case PHARMACIST:
-                //run PharmacistView
+                // run PharmacistView
                 Pharmacist pharmacist = (Pharmacist) user;
                 PharmacistView.pharmacistView(pharmacist, db);
                 break;
 
             case ADMINISTRATOR:
-                //run AdminView
+                // run AdminView
+                Administrator administrator = (Administrator) user;
+                AdminView.AdminView(administrator, db);
                 break;
             default:
                 System.out.println("User Error");

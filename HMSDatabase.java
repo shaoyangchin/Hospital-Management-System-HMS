@@ -7,34 +7,36 @@ public class HMSDatabase {
     private ArrayList<Patient> patients;
     private ArrayList<Doctor> doctors;
     private ArrayList<Pharmacist> pharmacists;
-    //private ArrayList<Administrator> administrators;
+    private ArrayList<Administrator> administrators;
     private Map<String, Medicine> medicineInventory;
     private ArrayList<Appointment> appointments;
     private ApptManager apptManager;
     private ArrayList<ReplenishmentRequest> replenishmentRequests;
-
+    private ArrayList<Staff> stafflist;
 
     // Constructor to initialize the database
     public HMSDatabase() {
-        users = DatabaseHelper.initUsers();          // Initialize users
-        patients = DatabaseHelper.initPatients();    // Initialize patients
-        doctors = DatabaseHelper.initDoctors();      // Initialize doctors
+        users = DatabaseHelper.initUsers(); // Initialize users
+        patients = DatabaseHelper.initPatients(); // Initialize patients
+        doctors = DatabaseHelper.initDoctors(); // Initialize doctors
         pharmacists = DatabaseHelper.initPharmacists(); // Initialize pharmacists
-        //administrators = DatabaseHelper.initAdministrators(); // Initialize administrators
-        medicineInventory = DatabaseHelper.initMedicines();         // Initialize an empty medicine inventory
+        administrators = DatabaseHelper.initAdministrators(); // Initialize administrators
+        medicineInventory = DatabaseHelper.initMedicines(); // Initialize an empty medicine inventory
         appointments = DatabaseHelper.initAppointments(patients, doctors);
         replenishmentRequests = DatabaseHelper.initReplenishmentRequests();
+        stafflist = DatabaseHelper.initStafflist();
     }
 
-    //Method to get Appt manager
-
+    // Method to get Appt manager
 
     public ApptManager getApptManager() {
         return apptManager;
     }
 
-    //Method to get all users
-    public ArrayList<User> getUsers() {return users;}
+    // Method to get all users
+    public ArrayList<User> getUsers() {
+        return users;
+    }
 
     // Method to add a new user
     public void addUser(User user) {
@@ -101,6 +103,14 @@ public class HMSDatabase {
         medicineInventory.remove(name);
     }
 
+    public Map<String, Medicine> getInventory() {
+        return medicineInventory;
+    }
+
+    public ArrayList<Staff> getStaff() {
+        return stafflist;
+    }
+
     // Method to get all patients
     public ArrayList<Patient> getAllPatients() {
         return patients;
@@ -116,10 +126,8 @@ public class HMSDatabase {
         return pharmacists;
     }
 
-
-
     // Method to get all administrators
-    //public ArrayList<Administrator> getAllAdministrators() {
-        //return administrators;
-    //}
+    public ArrayList<Administrator> getAllAdministrators() {
+        return administrators;
+    }
 }
