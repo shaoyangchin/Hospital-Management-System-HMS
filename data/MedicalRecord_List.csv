@@ -1,4 +1,4 @@
-Diagnosis,Prescription,PatientId
+Diagnosis,Prescription,PatientId,
 Fever,Paracetamol,P1001
 Flu,Ibuprofen,P1001
 IDK,Amoxicillin,P1001

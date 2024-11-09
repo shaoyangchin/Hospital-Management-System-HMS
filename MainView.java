@@ -16,9 +16,11 @@ public class MainView {
         for (User user : userList) {
             if (user.validateUser(userId, password)) {
                 valid = true;
-                if (user != null) {
-                    System.out.println("Login successful! Welcome.");
+                if (password.equals("Password")) {
+                    System.out.println("First login, Please Reset Password");
+                    user.resetPassword();
                 }
+                System.out.println("Login successful! Welcome.");
                 return user;
             }
         }

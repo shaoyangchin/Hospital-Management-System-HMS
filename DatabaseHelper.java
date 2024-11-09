@@ -1,10 +1,17 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DatabaseHelper {
+    public static List<String> appListFields = getHeader("data/Appointment_List.csv");
+    public static List<String> medRecFields = getHeader("data/MedicalRecord_List.csv");
+    public static List<String> medicineFields = getHeader("data/Medicine_List.csv");
+    public static List<String> patientFields = getHeader("data/Patient_List.csv");
+    public static List<String> replenishmentFields = getHeader("data/Replenishment_List.csv");
+    public static List<String> staffFields = getHeader("data/Staff_List.csv");
+
 
     // Method to initialize users (dummy data for testing)
     public static ArrayList<User> initUsers() {
@@ -14,9 +21,10 @@ public class DatabaseHelper {
         UserType pharmacist = UserType.PHARMACIST;
         UserType admin = UserType.ADMINISTRATOR;
 
+
         for (List<String> record : records) {
             if (Objects.equals(record.get(2), "Doctor")) {
-                users.add(new Doctor(record.get(1), "temp", record.get(3), Integer.parseInt(record.get(4)),
+                users.add(new Doctor(record.get(1), record.get(3), Integer.parseInt(record.get(4)),
                         record.get(0), "password", doc));
             } else if (Objects.equals(record.get(2), "Pharmacist")) {
                 Map<String, Medicine> inventory = Collections.emptyMap(); // do we rly need this? should it not be
@@ -82,6 +90,15 @@ public class DatabaseHelper {
         return patients;
     }
 
+    public static ArrayList<MedicalRecord> initMedicalRecords() {
+        List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
+        ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
+        for (List<String> medrecord : medRecords) {
+            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2)));
+        }
+        return medicalRecords;
+    }
+
     // Method to initialize doctors (dummy data for testing)
     public static ArrayList<Doctor> initDoctors() {
 
@@ -89,8 +106,8 @@ public class DatabaseHelper {
         List<List<String>> records = readFile("data/Staff_List.csv");
         for (List<String> record : records) {
             if (Objects.equals(record.get(2), "Doctor")) {
-                doctors.add(new Doctor(record.get(1), "temp", record.get(3), Integer.parseInt(record.get(4)),
-                        record.get(0), "password"));
+                doctors.add(new Doctor(record.get(1),record.get(3), Integer.parseInt(record.get(4)),
+                        record.get(0), "password",UserType.DOCTOR));
             }
         }
         return doctors;
@@ -106,7 +123,7 @@ public class DatabaseHelper {
                 Map<String, Medicine> inventory = Collections.emptyMap(); // do we rly need this? should it not be
                                                                           // static
                 pharmacists
-                        .add(new Pharmacist(1, record.get(0), record.get(0), "password", inventory, new ApptManager()));
+                        .add(new Pharmacist(1, record.get(0), record.get(0), "password", inventory, new ApptManager(),UserType.PHARMACIST));
             }
         }
 
@@ -175,7 +192,7 @@ public class DatabaseHelper {
 
     public static ArrayList<ReplenishmentRequest> initReplenishmentRequests() {
         ArrayList<ReplenishmentRequest> replenishmentRequests = new ArrayList<>();
-        List<List<String>> records = readFile("data/ReplenishmentRequest_List.csv");
+        List<List<String>> records = readFile("data/Replenishment_List.csv");
         for (List<String> record : records) {
             replenishmentRequests
                     .add(new ReplenishmentRequest(record.get(0), Integer.parseInt(record.get(1)), record.get(2)));
@@ -222,7 +239,196 @@ public class DatabaseHelper {
         return records;
     }
 
-    // public static void main(String[] args) {
-    // initUsers();
-    // }
+    public static void getFields(){
+
+    }
+
+    public static List<String> getHeader(String fileName){
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            return Arrays.asList(br.readLine().split(","));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+/*    public static <T> void writeArrayListToCSV(ArrayList<T> list, String filePath) {
+        if (list == null || list.isEmpty()) {
+            System.out.println("The list is empty; no data to write.");
+            return;
+        }
+
+        try (FileWriter writer = new FileWriter(filePath)) {
+            // Get all fields of the first object (assuming all objects have the same fields)
+            T firstItem = list.get(0);
+            Field[] fields = firstItem.getClass().getDeclaredFields();
+
+            // header
+            for (Field field : fields) {
+                writer.append(field.getName()).append(",");
+            }
+            writer.append("\n");
+
+            //  rows
+            for (T item : list) {
+                for (Field field : fields) {
+                    field.setAccessible(true);  // Allow access to private fields
+                    Object value = field.get(item);  // Get the value of the field
+                    writer.append(value != null ? value.toString() : "").append(",");
+                }
+                writer.append("\n");
+            }
+
+            System.out.println("CSV file created successfully at " + filePath);
+        } catch (IOException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }*/
+
+
+    public static void resetFile(String ref, String destination) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(ref));
+             FileWriter writer = new FileWriter(destination)) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                writer.write(line);
+                writer.write("\n");
+            }
+
+            System.out.println("File reset successful. Destination file overwritten with reference file content.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void resetAllFiles(){
+        resetFile("data/Patient_List_Reference.csv", "data/Patient_List.csv");
+        resetFile("data/Appointment_List_Reference.csv", "data/Appointment_List.csv");
+        resetFile("data/Medicine_List_Reference.csv", "data/Medicine_List.csv");
+        resetFile("data/Replenishment_List_Reference.csv", "data/Replenishment_List.csv");
+        resetFile("data/Staff_List_Reference.csv", "data/Staff_List.csv");
+        System.out.println("All Files Reset.");
+    }
+
+
+    public static void updateFiles(HMSDatabase database) {
+
+
+        System.out.println("All CSV files have been updated.");
+    }
+
+
+
+    public static <T> void saveToCsv(ArrayList<T> list, String filePath, List<String> fieldNames,int listIndex) {
+        if (list == null || list.isEmpty()) {
+            System.out.println("The list is empty; no data to write for " + filePath);
+            return;
+        }
+
+        try (FileWriter writer = new FileWriter(filePath)) {
+            // Write CSV header
+            for (String fieldName : fieldNames) {
+                writer.append(fieldName).append(",");
+            }
+            writer.append("\n");
+
+            // Write CSV rows
+            switch (listIndex){
+                //Appt
+                case 0:
+                    for (T item : list) {
+                        //item = (Appointment)item;
+                        writer.append(item != null ? String.valueOf(((Appointment) item).getAppointmentID() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((Appointment) item).getStatus() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((Appointment) item).getOutcome() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((Appointment) item).getPatient().getUserId() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((Appointment) item).getDoctor().getUserId() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((Appointment) item).getDate() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((Appointment) item).getTime() ): "");
+                        writer.append("\n");
+                    }
+                    break;
+                //Med Rec
+                case 1:
+                    for (T item : list) {
+                        //item = (Appointment)item;
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getDiagnosis() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getPrescription() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getPatientId() ): "");
+                        writer.append("\n");
+                    }
+                    break;
+                //Patient
+                case 2:
+                    for (T item : list) {
+                        //item = (Appointment)item;
+                        writer.append(item != null ? String.valueOf(((Patient) item).getUserId() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((Patient) item).getName() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((Patient) item).getDateOfBirth() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((Patient) item).getGender() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((Patient) item).getBloodType() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((Patient) item).getContact() ): "");
+                        writer.append("\n");
+                    }
+                    break;
+
+                //Replenishment
+                case 3:
+                    for (T item : list) {
+                        //item = (Appointment)item;
+                        writer.append(item != null ? String.valueOf(((ReplenishmentRequest) item).getMedicineName() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((ReplenishmentRequest) item).getRequestedQuantity() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((ReplenishmentRequest) item).getPharmacistId() ): "");
+                        writer.append("\n");
+                    }
+                    break;
+
+                //Staff
+                case 4:
+                    for (T item : list) {
+                        //item = (Appointment)item;
+                        writer.append(item != null ? String.valueOf(((Staff) item).getUserId() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((Staff) item).getName() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((Staff) item).getRole() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((Staff) item).getGender() ): "").append(",");
+                        writer.append(item != null ? String.valueOf(((Staff) item).getAge() ): "");
+                        writer.append("\n");
+                    }
+
+                    break;
+                //
+                case 5:
+                    break;
+
+            }
+
+
+            System.out.println("CSV file updated successfully at " + filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void saveDatabase(HMSDatabase database){
+        saveToCsv(database.getStaff(),"data/Staff_List.csv",staffFields,4);
+        saveToCsv(database.getAppointments(),"data/Appointment_List.csv",appListFields,0);
+        saveToCsv(database.getMedicalRecords(),"data/MedicalRecord_List.csv",medRecFields,1);
+        saveToCsv(database.getPatients(),"data/Patient_List.csv",patientFields,2);
+        saveToCsv(database.getReplenishmentRequests(),"data/Replenishment_List.csv",replenishmentFields,3);
+    }
+
+        // Helper method to get Field from class or its superclasses
+
+
+    public static void main(String[] args) throws IOException {
+        resetAllFiles();
+        HMSDatabase database = new HMSDatabase();
+        ArrayList<Patient> patients= initPatients();
+        //writeArrayListToCSV(patients, "test.csv");
+        resetFile("data/Patient_List.csv", "test.csv");
+        saveDatabase(database);
+        //updateFiles(database);
+    }
 }

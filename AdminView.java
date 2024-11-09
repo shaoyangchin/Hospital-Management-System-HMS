@@ -9,7 +9,9 @@ public class AdminView {
             System.out.println("2. View Appointment Details");
             System.out.println("3. View and Manage Medication Inventory");
             System.out.println("4. Approve Replenishment Requests");
-            System.out.println("5. Exit");
+            System.out.println("6. Save Database");
+            System.out.println("7. Reset Database: ");
+            System.out.println("8. Exit");
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -68,8 +70,16 @@ public class AdminView {
                     database.getApptManager().displayAllAppointments();
                     break;
                 case 5:
+                    database.saveDatabase();
+                    return;
+                case 6:
+                    database.resetDatabase();
+                    return;
+                case 7:
                     System.out.println("Exiting Administrator Menu...");
                     return;
+
+
                 default:
                     System.out.println("Invalid option. Please try again.");
             }

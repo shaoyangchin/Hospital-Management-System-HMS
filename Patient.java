@@ -87,7 +87,7 @@ public class Patient extends User{
     }
 
     public void rescheduleAppt(int apptId, Patient patient) {
-        manager.reschedulePatient(apptId, patient);
+        //manager.reschedulePatient(apptId, patient);
     }
 
     public void cancelAppt(int apptId, Patient patient) {

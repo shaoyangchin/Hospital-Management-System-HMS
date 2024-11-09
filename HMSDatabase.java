@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 public class HMSDatabase {
@@ -13,6 +12,8 @@ public class HMSDatabase {
     private ApptManager apptManager;
     private ArrayList<ReplenishmentRequest> replenishmentRequests;
     private ArrayList<Staff> stafflist;
+    private ArrayList<MedicalRecord> medicalRecords;
+
 
     // Constructor to initialize the database
     public HMSDatabase() {
@@ -25,6 +26,7 @@ public class HMSDatabase {
         appointments = DatabaseHelper.initAppointments(patients, doctors);
         replenishmentRequests = DatabaseHelper.initReplenishmentRequests();
         stafflist = DatabaseHelper.initStafflist();
+        medicalRecords = DatabaseHelper.initMedicalRecords();
     }
 
     // Method to get Appt manager
@@ -130,4 +132,30 @@ public class HMSDatabase {
     public ArrayList<Administrator> getAllAdministrators() {
         return administrators;
     }
+
+    public ArrayList<Patient> getPatients() {
+        return patients;
+    }
+
+    public ArrayList<Staff> getStaffList() {
+        return stafflist;
+    }
+
+    public Map<String, Medicine> getMedicines() {
+        return medicineInventory;
+    }
+
+    public ArrayList<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public ArrayList<ReplenishmentRequest> getReplenishmentRequests() {
+        return replenishmentRequests;
+    }
+
+    public ArrayList<MedicalRecord> getMedicalRecords() {return medicalRecords;}
+
+    public void resetDatabase() {DatabaseHelper.resetAllFiles();}
+
+    public void saveDatabase() {DatabaseHelper.saveDatabase(this);}
 }

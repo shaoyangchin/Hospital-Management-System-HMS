@@ -110,9 +110,9 @@ public class Main {
             String bloodType = row.getCell(4).getStringCellValue();
             String contact = row.getCell(5).getStringCellValue();
 
-            Patient patient = new Patient(1, name, userId, "password", dob, gender, bloodType, contact, mr1);
-            patients.add(patient);
-            users.add(patient);
+            //Patient patient = new Patient(1, name, userId, "password", dob, gender, bloodType, contact, mr1);
+            //patients.add(patient);
+            //users.add(patient);
         }
 
 
@@ -228,7 +228,7 @@ public class Main {
                 switch (choice) {
                     case 1:
                         Patient patient = Doctor.selectPatient(main.patients);
-                        doctor.viewPatientRecords(patient);
+                        //doctor.viewPatientRecords(patient);
                         break;
                     case 2:
                         Patient patientRecord = Doctor.selectPatient(main.patients);
@@ -236,7 +236,7 @@ public class Main {
                         String diagnosis = scanner.nextLine();
                         System.out.print("Enter prescription: ");
                         String prescription = scanner.nextLine();
-                        doctor.updatePatientRecord(patientRecord, diagnosis, prescription);
+                        //doctor.updatePatientRecord(patientRecord, diagnosis, prescription);
                         break;
                     case 3:
                         doctor.viewSchedule();
@@ -296,7 +296,7 @@ public class Main {
                         String email = scanner.nextLine();
                         System.out.print("Enter phone number: ");
                         String phoneNum = scanner.nextLine();
-                        patient.updateRecord(patient, email, phoneNum);
+                        //patient.updateRecord(patient, email, phoneNum);
                         break;
                     case 3:
                         //apptManager.displayAvail();

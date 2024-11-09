@@ -24,4 +24,10 @@ public class MedicalRecord {
     public String toString() {
         return "Diagnosis: " + diagnosis + ", Prescription: " + prescription ;
     }
+
+    public String getDiagnosis() {
+        return diagnosis;
+    }
+    public String getPrescription() {return prescription;}
+
 }

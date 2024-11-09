@@ -71,6 +71,10 @@ public class Appointment {
         this.time = time;
     }
 
+    public String getDate() {return date;}
+
+    public String getTime() {return time;}
+
     @Override
     public String toString() {
         return "Appointment ID: " + appointmentID 
