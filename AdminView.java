@@ -40,8 +40,7 @@ public class AdminView {
                     }
                     break;
                 case 2:
-                    System.out.println("Current Hospital Appointments: ");
-                    // apptManager.displayAppointments();
+                    admin.viewAppts(database.getAppointments());
                     break;
                 case 3:
                     admin.viewInventory(database.getInventory());
@@ -66,8 +65,7 @@ public class AdminView {
                     }
                     break;
                 case 4:
-                    System.out.println("All current appointments:");
-                    database.getApptManager().displayAllAppointments();
+                    admin.approveRequest(database.getInventory(), database.getReplenishmentRequests());
                     break;
                 case 5:
                     database.saveDatabase();
@@ -78,8 +76,6 @@ public class AdminView {
                 case 7:
                     System.out.println("Exiting Administrator Menu...");
                     return;
-
-
                 default:
                     System.out.println("Invalid option. Please try again.");
             }

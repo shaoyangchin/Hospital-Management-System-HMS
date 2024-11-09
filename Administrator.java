@@ -8,7 +8,6 @@ public class Administrator extends User {
     private String name;
     private String gender;
     private int age;
-    // private ArrayList<Staff> stafflist;
     // private Map<String, Medicine> inventory;
     Scanner scanner = new Scanner(System.in);
 
@@ -17,7 +16,6 @@ public class Administrator extends User {
         this.name = name;
         this.gender = gender;
         this.age = age;
-        // this.stafflist = stafflist;
         // this.inventory = inventory;
     }
 
@@ -34,7 +32,7 @@ public class Administrator extends User {
         }
         while (true) {
             System.out.println("Filter by: \n" + "1. Role: Doctors\n" + "2. Role: Pharmacists\n" +
-                    "3. Gender: Male\n" + "4. Gender: Female\n" + "5. Manage Staff");
+                    "3. Gender: Male\n" + "4. Gender: Female\n" + "5. Manage Staff\n" + "6. Exit\n");
             int filter = scanner.nextInt();
             switch (filter) {
                 case 0:
@@ -141,22 +139,57 @@ public class Administrator extends User {
         while (iterator.hasNext()) {
             Staff staff = iterator.next();
             if (staff.getUserId().equals(updateID)) {
-                System.out.println("Enter name of staff to update: ");
-                staff.setName(scanner.nextLine());
-                System.out.println("Enter role of staff to update: ");
-                staff.setRole(scanner.nextLine());
-                System.out.println("Enter gender of staff to update: ");
-                staff.setGender(scanner.nextLine());
-                System.out.println("Enter age of staff to update: ");
-                staff.setAge(scanner.nextInt());
-                System.out.println("Staff ID " + staff.getUserId() + " has been updated.");
-                break;
+                found = true;
+                while (true) {
+                    System.out.println(
+                            "Update: \n" + "1. ID\n" + "2. Name\n" + "3. Role\n"
+                                    +
+                                    "4. Gender\n" + "5. Age\n" + "6. Exit");
+                    int option = scanner.nextInt();
+                    switch (option) {
+                        case 1:
+                            scanner.nextLine();
+                            System.out.println("Enter new ID:");
+                            staff.setHospitalId(scanner.nextLine());
+                            break;
+                        case 2:
+                            scanner.nextLine();
+                            System.out.println("Enter new name:");
+                            staff.setName(scanner.nextLine());
+                            break;
+                        case 3:
+                            scanner.nextLine();
+                            System.out.println("Enter new role:");
+                            staff.setRole(scanner.nextLine());
+                            break;
+                        case 4:
+                            scanner.nextLine();
+                            System.out.println("Enter new gender:");
+                            staff.setGender(scanner.nextLine());
+                            break;
+                        case 5:
+                            System.out.println("Enter new age:");
+                            staff.setAge(scanner.nextInt());
+                            break;
+                        case 6:
+                            return;
+                        default:
+                            System.out.println("Invalid option. Please try again.");
+                    }
+                }
             }
         }
         if (!found) {
             System.out.println("Staff ID does not exist.");
         }
         return;
+    }
+
+    public void viewAppts(ArrayList<Appointment> appts) {
+        System.out.println("Viewing all current appointments:");
+        for (Appointment appointment : appts) {
+            System.out.println(appointment);
+        }
     }
 
     public void viewInventory(Map<String, Medicine> inventory) {
@@ -227,7 +260,7 @@ public class Administrator extends User {
         for (ReplenishmentRequest request : replenishmentRequests) {
             Medicine med = inventory.get(request.getMedicineName());
             if (med != null) {
-                System.out.println(med.getName() + "does not exist in the inventory.");
+                System.out.println(med.getName() + " does not exist in the inventory.");
                 return;
             }
             if (med.isLowStock()) {

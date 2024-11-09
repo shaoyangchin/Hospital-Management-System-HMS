@@ -6,8 +6,7 @@ public abstract class User {
     protected String password;
     private AccountType accountType; // Staff or Patient
     private UserType userType; // Patient, Doctor, Pharmacist, Admin
-    //public abstract void displayMenu();
-
+    // public abstract void displayMenu();
 
     User(String userId, String password, UserType userType) {
         this.userId = userId;
@@ -15,8 +14,13 @@ public abstract class User {
         this.userType = userType;
     }
 
-    public AccountType getAccountType() {return accountType;}
-    public UserType getUserType() {return userType;}
+    public AccountType getAccountType() {
+        return accountType;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
 
     public boolean validateUser(String userId, String password) {
         return Objects.equals(this.userId, userId) && this.password.equals(password);
@@ -38,6 +42,6 @@ public abstract class User {
     }
 
     public void setHospitalId(String hospitalId) {
-        this.userId = userId;
+        this.userId = hospitalId;
     }
 }
