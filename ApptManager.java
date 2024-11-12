@@ -105,4 +105,55 @@ public class ApptManager {
             System.out.println("No completed appointments.");
         }
     }
-}
+
+        // Add this new method for updating prescription status
+        public void updatePrescriptionStatus(int apptId, String prescriptionStatus) {
+            // Input validation
+            if (prescriptionStatus == null || prescriptionStatus.trim().isEmpty()) {
+                System.out.println("Error: Prescription status cannot be empty");
+                return;
+            }
+        
+            // Standardize status format
+            String status = prescriptionStatus.trim().toUpperCase();
+            if (!isValidPrescriptionStatus(status)) {
+                System.out.println("Error: Invalid prescription status. Must be PENDING, DISPENSED, or CANCELLED");
+                return;
+            }
+        
+            for (Appointment appt : appts) {
+                if (appt.getAppointmentID() == apptId) {
+                    if (appt.getStatus() != Status.COMPLETED) {
+                        System.out.println("Error: Can only update prescription status for completed appointments.");
+                        return;
+                    }
+        
+                    String currentOutcome = appt.getOutcome();
+                    String newOutcome;
+                    
+                    if (currentOutcome == null || currentOutcome.trim().isEmpty()) {
+                        newOutcome = "Prescription Status: " + status;
+                    } else if (currentOutcome.contains("Prescription Status:")) {
+                        newOutcome = currentOutcome.replaceAll(
+                            "Prescription Status: .*",
+                            "Prescription Status: " + status
+                        );
+                    } else {
+                        newOutcome = currentOutcome + "\nPrescription Status: " + status;
+                    }
+        
+                    appt.setOutcome(newOutcome);
+                    System.out.println("Prescription status updated successfully for Appointment ID: " + apptId);
+                    return;
+                }
+            }
+            System.out.println("Appointment with ID " + apptId + " not found.");
+        }
+        
+        // Helper method to validate prescription status
+        private boolean isValidPrescriptionStatus(String status) {
+            return status.equals("PENDING") || 
+                   status.equals("DISPENSED") || 
+                   status.equals("CANCELLED");
+        }
+    }
