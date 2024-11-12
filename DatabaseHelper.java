@@ -29,8 +29,8 @@ public class DatabaseHelper {
             } else if (Objects.equals(record.get(2), "Pharmacist")) {
                 Map<String, Medicine> inventory = Collections.emptyMap(); // do we rly need this? should it not be
                                                                           // static
-                users.add(new Pharmacist(1, record.get(0), record.get(0), "password", inventory, new ApptManager(),
-                        pharmacist));
+                users.add(new Pharmacist(record.get(0), record.get(1), Integer.parseInt(record.get(2)),
+                        record.get(0), "password", UserType.PHARMACIST));
             } else if (Objects.equals(record.get(2), "Administrator")) {
                 users.add(new Administrator(record.get(1), record.get(3), Integer.parseInt(record.get(4)),
                         record.get(0), "password",
@@ -123,7 +123,8 @@ public class DatabaseHelper {
                 Map<String, Medicine> inventory = Collections.emptyMap(); // do we rly need this? should it not be
                                                                           // static
                 pharmacists
-                        .add(new Pharmacist(1, record.get(0), record.get(0), "password", inventory, new ApptManager(),UserType.PHARMACIST));
+                        .add(new Pharmacist(record.get(0), record.get(1), Integer.parseInt(record.get(2)),
+                            record.get(0), "password", UserType.PHARMACIST));
             }
         }
 
