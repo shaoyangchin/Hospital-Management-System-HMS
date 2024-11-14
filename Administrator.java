@@ -8,7 +8,6 @@ public class Administrator extends User {
     private String name;
     private String gender;
     private int age;
-    // private Map<String, Medicine> inventory;
     Scanner scanner = new Scanner(System.in);
 
     public Administrator(String name, String gender, int age, String userId, String password, UserType userType) {
@@ -16,14 +15,7 @@ public class Administrator extends User {
         this.name = name;
         this.gender = gender;
         this.age = age;
-        // this.inventory = inventory;
     }
-
-    /*
-     * public Map<String, Medicine> getInventory() {
-     * return inventory;
-     * }
-     */
 
     public void viewStaff(ArrayList<Staff> stafflist) {
         System.out.println("Hospital Staff:");
@@ -32,7 +24,8 @@ public class Administrator extends User {
         }
         while (true) {
             System.out.println("Filter by: \n" + "1. Role: Doctors\n" + "2. Role: Pharmacists\n" +
-                    "3. Gender: Male\n" + "4. Gender: Female\n" + "5. Manage Staff\n" + "6. Exit\n");
+                    "3. Gender: Male\n" + "4. Gender: Female\n" + "5. Age: 21-30\n" + "6. Age: 31-40\n"
+                    + "7. Age: 41-50\n" + "8. Exit\n");
             int filter = scanner.nextInt();
             switch (filter) {
                 case 0:
@@ -74,6 +67,30 @@ public class Administrator extends User {
                     }
                     break;
                 case 5:
+                    System.out.println("Hospital Staff (Age: 21-30):");
+                    for (Staff staff : stafflist) {
+                        if (staff.getAge() >= 21 && staff.getAge() <= 30) {
+                            System.out.println(staff);
+                        }
+                    }
+                    break;
+                case 6:
+                    System.out.println("Hospital Staff (Age: 31-40):");
+                    for (Staff staff : stafflist) {
+                        if (staff.getAge() >= 31 && staff.getAge() <= 40) {
+                            System.out.println(staff);
+                        }
+                    }
+                    break;
+                case 7:
+                    System.out.println("Hospital Staff (Age: 41-50):");
+                    for (Staff staff : stafflist) {
+                        if (staff.getAge() >= 41 && staff.getAge() <= 50) {
+                            System.out.println(staff);
+                        }
+                    }
+                    break;
+                case 8:
                     return;
                 default:
                     System.out.println("Invalid option. Please try again.");
@@ -257,20 +274,36 @@ public class Administrator extends User {
     }
 
     public void approveRequest(Map<String, Medicine> inventory, ArrayList<ReplenishmentRequest> replenishmentRequests) {
+        System.out.println("The current replenishment requests are:");
         for (ReplenishmentRequest request : replenishmentRequests) {
-            Medicine med = inventory.get(request.getMedicineName());
-            if (med != null) {
-                System.out.println(med.getName() + " does not exist in the inventory.");
-                return;
-            }
-            if (med.isLowStock()) {
-                med.setQuantity(request.getRequestedQuantity());
-                request.approveRequest();
-                System.out.println("Request for " + med.getName() + "has been approved.");
-            } else {
-                System.out.println("There is sufficient stock for" + med.getName());
+            System.out.println(request);
+        }
+        System.out.println("Enter the name of the medicine whose request is to be approved/declined: ");
+        String medicineName = scanner.nextLine();
+        Medicine med = inventory.get(medicineName);
+        if (med == null) {
+            System.out.println("Medicine " + medicineName + " does not exist.");
+            return;
+        }
+        ReplenishmentRequest request = null;
+        for (ReplenishmentRequest req : replenishmentRequests) {
+            if (req.getMedicineName().equalsIgnoreCase(medicineName)) {
+                request = req;
+                break;
             }
         }
-
+        if (request == null) {
+            System.out.println("There is no replenishment requested for this medicine.");
+            return;
+        }
+        if (med.isLowStock()) {
+            med.setQuantity(request.getRequestedQuantity());
+            request.approveRequest();
+            System.out.println(
+                    "Request for " + med.getName() + " has been approved. The medicine's stock is now "
+                            + med.getQuantity());
+        } else {
+            System.out.println(med.getName() + " has sufficient stock.");
+        }
     }
 }

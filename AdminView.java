@@ -9,9 +9,9 @@ public class AdminView {
             System.out.println("2. View Appointment Details");
             System.out.println("3. View and Manage Medication Inventory");
             System.out.println("4. Approve Replenishment Requests");
-            System.out.println("6. Save Database");
-            System.out.println("7. Reset Database: ");
-            System.out.println("8. Exit");
+            System.out.println("5. Save Database");
+            System.out.println("6. Reset Database");
+            System.out.println("7. Exit");
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
