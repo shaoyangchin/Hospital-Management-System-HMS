@@ -10,6 +10,7 @@ public class Patient extends User{
     private String gender;
     private String bloodType;
     private String contactInformation;
+    private String phoneNum = null;
     private Appointment appt;
     
     
@@ -49,6 +50,13 @@ public class Patient extends User{
         return contactInformation;
     }
 
+    public String getPhoneNum() {
+        if (phoneNum == null) {
+            return "not available";
+        }
+        return phoneNum;
+    }
+
     // New method to expose medical records
     public List<MedicalRecord> getMedicalRecords() {
         return medicalRecords;
@@ -63,43 +71,59 @@ public class Patient extends User{
         return null; // Return null if not found
     }
     
+    public void setAppointment(Appointment appt) {
+        this.appt = appt;
+    }
 
     public Appointment getAppt() {
         return appt;
     }
 
     public void viewMedicalRecord(Patient patient) {
-        System.out.println("Viewing medical records for patient ID: " + patient.getPatientId() + ", Name: " + patient.getName() + ", DOB: " + patient.getDateOfBirth() + ", gender: " + patient.getGender() + ", Blood Type: " + patient.getBloodType() + ", Contact: "+patient.getContact());
+        System.out.println("Viewing medical records for patient ID: " + patient.getPatientId() + ", Name: " + patient.getName() + ", DOB: " + patient.getDateOfBirth() + ", gender: " + patient.getGender() + ", Blood Type: " + patient.getBloodType() + ", Email: "+patient.getContact()+", Phone number: "+patient.getPhoneNum());
         System.out.println(getRecordForPatient(patient));
     }
 
-    public void updateRecord(Patient patient, String contact) {
+    public void updateRecord(Patient patient, String contact, String phone) {
         this.contactInformation = contact;
+        this.phoneNum = phone;
     }
 
     ApptManager manager = new ApptManager();
-    public void viewAvailAppts() {
-        manager.displayAvailAppointments();
+    public void viewAvailAppts(ArrayList<Appointment> appts) {
+        // Displays all available (PENDING) appointments for all patients
+        // for (Appointment appointment : appts) {
+        //     if (appointment.getStatus() == Status.PENDING) {
+        //         System.out.println(appointment);
+        //     }
+        // }
+        // Displays all available (PENDING) appointments for patient logged in
+        for (Appointment appointment : appts) {
+            if (appointment.getStatus() == Status.PENDING && appointment.getPatient() == null) {
+                System.out.println(appointment);
+            }
+        }
+        
     }
 
-    public void scheduleAppt(Patient patient, int apptId, Doctor doc1) {
-        manager.schedulePatient(patient, apptId, doc1);
+    public void scheduleAppt(Patient patient, int apptId, ApptManager apptM, ArrayList<Appointment> appts) {
+        apptM.schedulePatient(patient, apptId, appts);
     }
 
-    public void rescheduleAppt(int apptId, Patient patient) {
-        //manager.reschedulePatient(apptId, patient);
+    public void rescheduleAppt(int oldApptId, int newApptId, Patient patient, ApptManager apptM, ArrayList<Appointment> appts) {
+        apptM.reschedulePatient(oldApptId, newApptId, patient, appts);
     }
 
-    public void cancelAppt(int apptId, Patient patient) {
-        manager.cancelPatient(apptId, patient);
+    public void cancelAppt(int apptId, Patient patient, ApptManager apptM, ArrayList<Appointment> appts) {
+        apptM.cancelPatient(apptId, patient, appts);
     }
 
-    public void viewScheduledAppts(Patient patient) {
-        manager.viewScheduled(patient);
+    public void viewScheduledAppts(Patient patient, ApptManager apptM, ArrayList<Appointment> appts) {
+        apptM.viewScheduled(patient, appts);
     }
 
-    public void viewPastApptOutcomes(Patient patient) {
-        manager.viewPastOutcomes(patient);
+    public void viewPastApptOutcomes(Patient patient, ApptManager apptM, ArrayList<Appointment> appts) {
+        apptM.viewPastOutcomes(patient, appts);
     }
-    
+
 }

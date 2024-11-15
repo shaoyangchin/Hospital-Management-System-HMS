@@ -169,10 +169,15 @@ public class DatabaseHelper {
         Patient patient = null;
         Doctor doctor = null;
         for (List<String> record : records) {
+            //System.out.println("Record size: " + record.size() + ", Record contents: " + record); //debugging
             patientId = record.get(3);
             for (Patient p : patients) {
                 if (Objects.equals(p.getUserId(), patientId)) {
                     patient = p;
+                    break;
+                }
+                else if (Objects.equals("null", patientId)) {
+                    patient = null;
                     break;
                 }
             }
@@ -183,7 +188,7 @@ public class DatabaseHelper {
                     break;
                 }
             }
-            appointments.add(new Appointment(Integer.parseInt(record.get(0)), record.get(5), record.get(6),
+            appointments.add(new Appointment(Integer.parseInt(record.get(0)), record.get(2), record.get(5), record.get(6),
                     Status.valueOf(record.get(1)), patient, doctor));
         }
 

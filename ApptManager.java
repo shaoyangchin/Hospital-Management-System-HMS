@@ -2,69 +2,95 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ApptManager {
-    private List<Appointment> appts = new ArrayList<>();
+    //private List<Appointment> appts = new ArrayList<>();
 
     public ApptManager() {}
 
-    // Adds a new appointment to the list
-    public void addAppointment(Appointment appointment) {
-        appts.add(appointment);
+    int haveAppt = 0;
+
+    
+    public int getNumOfAppts() {
+        return haveAppt;
     }
 
     // Displays all appointments in the system
-    public void displayAllAppointments() {
+    public void displayAllAppointments(ArrayList<Appointment> appts) {
         for (Appointment appointment : appts) {
             System.out.println(appointment);
         }
     }
 
-    // Displays all available (PENDING) appointments
-    public void displayAvailAppointments() {
-        for (Appointment appointment : appts) {
-            if (appointment.getStatus() == Status.PENDING) {
-                System.out.println(appointment);
-            }
-        }
-    }
+    
 
     // Schedules an appointment for a specific patient and doctor by appointment ID
-    public void schedulePatient(Patient patient, int apptId, Doctor doctor) {
+    public void schedulePatient(Patient patient, int apptId, ArrayList<Appointment> appts) {
+        Boolean doesApptIdExist = false;
         for (Appointment appt : appts) {
-            if (appt.getAppointmentID() == apptId) {
+            if (appt.getAppointmentID() == apptId && appt.getPatient() == null
+            && appt.getStatus() == Status.PENDING) {
+                patient.setAppointment(appt);
                 appt.setPatient(patient);
-                appt.setDoctor(doctor);
                 appt.setStatus(Status.CONFIRMED);
+                doesApptIdExist = true;
                 System.out.println("Appointment scheduled successfully for patient ID " + patient.getPatientId() + " with Doctor " + doctor.getName());
                 return;
             }
+            else if (appt.getAppointmentID() == apptId 
+            && appt.getPatient() != null
+            && appt.getPatient().getPatientId() != patient.getPatientId()) {
+                doesApptIdExist = true;
+                System.out.println("Error, this appointment slot is not available");
+            }
+            // else if (appt.getAppointmentID() == apptId
+            // && appt.getStatus() != Status.PENDING) {
+            //     System.out.println("Appointment is not available");
+            // }
         }
-        System.out.println("Appointment with ID " + apptId + " not found.");
+        if (!doesApptIdExist) {
+            System.out.println("AppointmentId does not exist");
+        }
     }
 
     // Reschedules a confirmed appointment to a new date and time for a specific patient
-    public void reschedulePatient(int apptId, Patient patient, String newDate, String newTime) {
+    public void reschedulePatient(int oldApptId, int newApptId, Patient patient, ArrayList<Appointment> appts) {
         for (Appointment appt : appts) {
-            if (appt.getAppointmentID() == apptId && 
-                appt.getStatus() == Status.CONFIRMED &&
-                patient.getUserId().equals(appt.getPatient().getUserId())) {
-                
-                appt.setDate(newDate);
-                appt.setTime(newTime);
-                System.out.println("Appointment rescheduled to " + newDate + " at " + newTime);
-                return;
+            if (appt.getAppointmentID() == oldApptId) {
+                if ((appt.getStatus() == Status.PENDING || appt.getStatus() == Status.CONFIRMED) &&
+                patient.getUserId() == appt.getPatient().getUserId()) {
+                    appt.setPatient(null);
+                    appt.setStatus(Status.PENDING);
+
+                    for (Appointment appt2 : appts) {
+                        if (appt2.getAppointmentID() == newApptId) {
+                            if ((appt2.getStatus() == Status.PENDING || appt2.getStatus() == Status.CONFIRMED) &&
+                            appt2.getPatient() == null) {
+                                appt2.setPatient(patient);
+                                appt2.setStatus(Status.CONFIRMED);
+                                break;
+                            }
+                            else {
+                                System.out.println("Error");
+                            }
+                        }
+                    }
+                    schedulePatient(patient, newApptId, appts);
+                }
+                else {
+                    System.out.println("Error");
+                    break;
+                }
             }
         }
-        System.out.println("Error rescheduling: Appointment with ID " + apptId + " not found or unauthorized access.");
     }
 
     // Cancels a confirmed appointment for a specific patient
-    public void cancelPatient(int apptId, Patient patient) {
+    public void cancelPatient(int apptId, Patient patient, ArrayList<Appointment> appts) {
         for (Appointment appt : appts) {
             if (appt.getAppointmentID() == apptId && 
                 patient.getUserId().equals(appt.getPatient().getUserId()) &&
                 appt.getStatus() == Status.CONFIRMED) {
-                
-                appt.setStatus(Status.CANCELLED);
+                appt.setPatient(null);
+                appt.setStatus(Status.PENDING);
                 System.out.println("Appointment canceled successfully for patient ID " + patient.getPatientId());
                 return;
             }
@@ -73,8 +99,8 @@ public class ApptManager {
     }
 
     // Views all confirmed appointments for a specific patient
-    public void viewScheduled(Patient patient) {
-        int haveAppt = 0;
+    public void viewScheduled(Patient patient, ArrayList<Appointment> appts) {
+        haveAppt = 0;
         for (Appointment appt : appts) {
             if (appt.getPatient() != null &&
                 patient.getUserId().equals(appt.getPatient().getUserId()) &&
@@ -90,7 +116,7 @@ public class ApptManager {
     }
 
     // Views all completed appointments and their outcomes for a specific patient
-    public void viewPastOutcomes(Patient patient) {
+    public void viewPastOutcomes(Patient patient, ArrayList<Appointment> appts) {
         int haveAppt = 0;
         for (Appointment appt : appts) {
             if (appt.getPatient() != null &&
@@ -98,6 +124,7 @@ public class ApptManager {
                 appt.getStatus() == Status.COMPLETED) {
                 
                 System.out.println(appt);
+                System.out.println("Outcome: "+appt.getOutcome());
                 haveAppt++;
             }
         }
@@ -107,7 +134,7 @@ public class ApptManager {
     }
 
         // Add this new method for updating prescription status
-        public void updatePrescriptionStatus(int apptId, String prescriptionStatus) {
+        public void updatePrescriptionStatus(int apptId, String prescriptionStatus, ArrayList<Appointment> appts) {
             // Input validation
             if (prescriptionStatus == null || prescriptionStatus.trim().isEmpty()) {
                 System.out.println("Error: Prescription status cannot be empty");

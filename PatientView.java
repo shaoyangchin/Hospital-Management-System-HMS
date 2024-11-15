@@ -6,6 +6,7 @@ public class PatientView {
     public static void patientView(Patient patient, HMSDatabase database) {
         Scanner scanner = new Scanner(System.in);
         ApptManager apptManager = database.getApptManager();
+        ApptManager apptM = new ApptManager();
 
         while (true) {
             System.out.println("\n--- Patient Menu ---");
@@ -30,18 +31,21 @@ public class PatientView {
                 case 2:
                     System.out.print("Enter email: ");
                     String contact = scanner.nextLine();
-                  
-                    patient.updateRecord(patient, contact);
+                    System.out.print("Enter phone number: ");
+                    String phone = scanner.nextLine();
+
+                    patient.updateRecord(patient, contact, phone);
 
                     System.out.println("Updated medical record for patient ID: ");
                     patient.viewMedicalRecord(patient);
                     break;
                 case 3:
-                    patient.viewAvailAppts();
+                    patient.viewAvailAppts(database.getAppointments());
                     break;
                 case 4:
                     System.out.println("Enter an available appointment ID: ");
                     int apptId = scanner.nextInt();
+                    scanner.nextLine();
 
                     //MIGRATE TO PATIENT CLASS
                     /*public void displayDoctorList() {
@@ -53,33 +57,55 @@ public class PatientView {
                     main.displayDoctorList();*/
 
                     //TEMP
-                    ArrayList<Doctor> doctors= database.getAllDoctors();
-                    for (Doctor doc : doctors) {
-                        System.out.println("Doctor ID: "+doc.getUserId()+", Name: "+doc.getName());
-                    }
+                    // ArrayList<Doctor> doctors= database.getAllDoctors();
+                    // for (Doctor doc : doctors) {
+                    //     System.out.println("Doctor ID: "+doc.getUserId()+", Name: "+doc.getName());
+                    // }
 
 
-                    System.out.println("Enter Doctor ID: ");
-                    String doctorId = scanner.nextLine();
+                    // System.out.println("Enter Doctor ID: ");
+                    // String doctorId = scanner.nextLine();
 
-                    Doctor doc1 = database.getDoctorById(doctorId);
-                    apptManager.schedulePatient(patient, apptId, doc1);
+                    // Doctor doc1 = database.getDoctorById(doctorId);
+                    patient.scheduleAppt(patient, apptId, apptM, database.getAppointments());
                     break;
                 case 5:
+                     System.out.println("Your scheduled appointments: ");
+                    patient.viewScheduledAppts(patient, apptM, database.getAppointments());
+                    if (apptM.getNumOfAppts() == 0) {
+                        break;
+                    }
+                    
                     System.out.println("Enter Appointment ID to reschedule: ");
-                    apptId = scanner.nextInt();
-                    patient.rescheduleAppt(apptId, patient);
+                    int oldApptId = scanner.nextInt();
+                    scanner.nextLine();
+
+                    System.out.println("Available appointments: ");
+                    patient.viewAvailAppts(database.getAppointments());
+                    System.out.println("Enter new Appointment ID: ");
+                    int newApptId = scanner.nextInt();
+                    scanner.nextLine();
+
+                    patient.rescheduleAppt(oldApptId, newApptId, patient, apptM, database.getAppointments());
                     break;
                 case 6:
+                    System.out.println("Your scheduled appointments: ");
+                    patient.viewScheduledAppts(patient, apptM, database.getAppointments());
+                    if (apptM.getNumOfAppts() == 0) {
+                        break;
+                    }
+
                     System.out.println("Enter Appointment ID to cancel: ");
                     apptId = scanner.nextInt();
-                    patient.rescheduleAppt(apptId, patient);
+                    scanner.nextLine();
+
+                    patient.cancelAppt(apptId, patient, apptM, database.getAppointments());
                     break;
                 case 7:
-                    patient.viewScheduledAppts(patient);
+                    patient.viewScheduledAppts(patient, apptM, database.getAppointments());
                     break;
                 case 8:
-                    patient.viewPastApptOutcomes(patient);
+                    patient.viewPastApptOutcomes(patient, apptM, database.getAppointments());
                     break;
                 case 9:
                     System.out.println("Exiting...");

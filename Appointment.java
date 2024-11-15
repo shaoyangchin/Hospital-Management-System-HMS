@@ -8,7 +8,7 @@ public class Appointment {
     private String time;
 
     // Constructor without Patient and Doctor
-    public Appointment(int appointmentID, String date, String time) {
+    public Appointment(int appointmentID, String date, String time, Status status) {
         this.appointmentID = appointmentID;
         this.status = Status.PENDING;
         this.date = date;
@@ -16,8 +16,9 @@ public class Appointment {
     }
 
     // Constructor with Patient and Doctor
-    public Appointment(int appointmentID, String date, String time, Status status, Patient patient, Doctor doctor) {
+    public Appointment(int appointmentID, String outcome, String date, String time, Status status, Patient patient, Doctor doctor) {
         this.appointmentID = appointmentID;
+        this.outcome = outcome;
         this.status = status;
         this.date = date;
         this.time = time;
