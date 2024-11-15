@@ -15,7 +15,7 @@ public class MainView {
                 "Health Management System   ");
 
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter your hospital ID: ");
+        System.out.print("\nEnter your hospital ID: ");
         String userId = scanner.nextLine();
         System.out.print("Enter your password: ");
         String password = scanner.nextLine();
@@ -29,7 +29,7 @@ public class MainView {
                     System.out.println("First login, Please Reset Password");
                     user.resetPassword();
                 }
-                System.out.println("Login successful! Welcome" + user.  );
+                // System.out.println("Login successful! Welcome" + user.  );
                 return user;
             }
         }
