@@ -124,6 +124,8 @@ public class ApptManager {
 
         for (MedicalRecord medicalRecord : medicalRecords) {
             if(Objects.equals(patient.getUserId(), medicalRecord.getPatientId())){
+                System.out.println("Diagnosis:" + (medicalRecord.getDiagnosis()) );
+                System.out.println("Prescription:" + (medicalRecord.getPrescription()) );
                 System.out.println("Appointment ID:" + (medicalRecord.getAppointmentId()) );
                 System.out.println("Notes:" + (medicalRecord.getNotes()) );
                 System.out.println("Service Provided:" + (medicalRecord.getService()) );

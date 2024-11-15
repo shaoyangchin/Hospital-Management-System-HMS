@@ -23,6 +23,7 @@ public class HMSDatabase {
         administrators = DatabaseHelper.initAdministrators(); // Initialize administrators
         medicineInventory = DatabaseHelper.initMedicines(); // Initialize an empty medicine inventory
         appointments = DatabaseHelper.initAppointments(patients, doctors);
+        apptManager = new ApptManager(); // Initialize ApptManager
         replenishmentRequests = DatabaseHelper.initReplenishmentRequests();
         stafflist = DatabaseHelper.initStafflist();
         medicalRecords = DatabaseHelper.initMedicalRecords();
