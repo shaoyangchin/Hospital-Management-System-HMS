@@ -169,14 +169,14 @@ public class DatabaseHelper {
         Patient patient = null;
         Doctor doctor = null;
         for (List<String> record : records) {
-            //System.out.println("Record size: " + record.size() + ", Record contents: " + record); //debugging
+            // System.out.println("Record size: " + record.size() + ", Record contents: " +
+            // record); //debugging
             patientId = record.get(3);
             for (Patient p : patients) {
                 if (Objects.equals(p.getUserId(), patientId)) {
                     patient = p;
                     break;
-                }
-                else if (Objects.equals("null", patientId)) {
+                } else if (Objects.equals("null", patientId)) {
                     patient = null;
                     break;
                 }
@@ -188,8 +188,9 @@ public class DatabaseHelper {
                     break;
                 }
             }
-            appointments.add(new Appointment(Integer.parseInt(record.get(0)), record.get(2), record.get(5), record.get(6),
-                    Status.valueOf(record.get(1)), patient, doctor));
+            appointments
+                    .add(new Appointment(Integer.parseInt(record.get(0)), record.get(2), record.get(5), record.get(6),
+                            Status.valueOf(record.get(1)), patient, doctor));
         }
 
         return appointments;
@@ -440,7 +441,7 @@ public class DatabaseHelper {
     public static void saveDatabase(HMSDatabase database) {
         saveToCsv(database.getStaff(), "data/Staff_List.csv", staffFields, 4);
         saveToCsv(database.getAppointments(), "data/Appointment_List.csv", appListFields, 0);
-        saveToCsv(database.getMedicalRecords(), "data/MedicalRecord_List.csv", medRecFields, 1);
+        saveToCsv(database.getRecords(), "data/MedicalRecord_List.csv", medRecFields, 1);
         saveToCsv(database.getPatients(), "data/Patient_List.csv", patientFields, 2);
         saveToCsv(database.getReplenishmentRequests(), "data/Replenishment_List.csv", replenishmentFields, 3);
 

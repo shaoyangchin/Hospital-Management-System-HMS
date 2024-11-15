@@ -14,7 +14,6 @@ public class HMSDatabase {
     private ArrayList<Staff> stafflist;
     private ArrayList<MedicalRecord> medicalRecords;
 
-
     // Constructor to initialize the database
     public HMSDatabase() {
         users = DatabaseHelper.initUsers(); // Initialize users
@@ -164,9 +163,15 @@ public class HMSDatabase {
         return replenishmentRequests;
     }
 
-    public ArrayList<MedicalRecord> getMedicalRecords() {return medicalRecords;}
+    public ArrayList<MedicalRecord> getRecords() {
+        return medicalRecords;
+    }
 
-    public void resetDatabase() {DatabaseHelper.resetAllFiles();}
+    public void resetDatabase() {
+        DatabaseHelper.resetAllFiles();
+    }
 
-    public void saveDatabase() {DatabaseHelper.saveDatabase(this);}
+    public void saveDatabase() {
+        DatabaseHelper.saveDatabase(this);
+    }
 }

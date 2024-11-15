@@ -1,8 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class Patient extends User{
+public class Patient extends User implements GetRecord<List<MedicalRecord>>{
     private String patientId;
     private String name;
     private ArrayList<MedicalRecord> medicalRecords;
@@ -12,10 +11,9 @@ public class Patient extends User{
     private String contactInformation;
     private String phoneNum = null;
     private Appointment appt;
-    
-    
 
-    public Patient(String name, String userId, String password, String dateOfBirth, String gender, String bloodType, String contactInformation, ArrayList<MedicalRecord> medicalRecords, UserType userType) {
+    public Patient(String name, String userId, String password, String dateOfBirth, String gender, String bloodType,
+            String contactInformation, ArrayList<MedicalRecord> medicalRecords, UserType userType) {
         super(userId, password, userType);
         this.patientId = userId;
         this.name = name;
@@ -57,10 +55,12 @@ public class Patient extends User{
         return phoneNum;
     }
 
+    @Override
     // New method to expose medical records
-    public List<MedicalRecord> getMedicalRecords() {
+    public List<MedicalRecord> getRecord() {
         return medicalRecords;
     }
+
 
     public MedicalRecord getRecordForPatient(Patient patient) {
         for (MedicalRecord record : medicalRecords) {
@@ -70,7 +70,7 @@ public class Patient extends User{
         }
         return null; // Return null if not found
     }
-    
+
     public void setAppointment(Appointment appt) {
         this.appt = appt;
     }
@@ -80,7 +80,10 @@ public class Patient extends User{
     }
 
     public void viewMedicalRecord(Patient patient) {
-        System.out.println("Viewing medical records for patient ID: " + patient.getPatientId() + ", Name: " + patient.getName() + ", DOB: " + patient.getDateOfBirth() + ", gender: " + patient.getGender() + ", Blood Type: " + patient.getBloodType() + ", Email: "+patient.getContact()+", Phone number: "+patient.getPhoneNum());
+        System.out.println("Viewing medical records for patient ID: " + patient.getPatientId() + ", Name: "
+                + patient.getName() + ", DOB: " + patient.getDateOfBirth() + ", gender: " + patient.getGender()
+                + ", Blood Type: " + patient.getBloodType() + ", Email: " + patient.getContact() + ", Phone number: "
+                + patient.getPhoneNum());
         System.out.println(getRecordForPatient(patient));
     }
 
@@ -90,12 +93,13 @@ public class Patient extends User{
     }
 
     ApptManager manager = new ApptManager();
+
     public void viewAvailAppts(ArrayList<Appointment> appts) {
         // Displays all available (PENDING) appointments for all patients
         // for (Appointment appointment : appts) {
-        //     if (appointment.getStatus() == Status.PENDING) {
-        //         System.out.println(appointment);
-        //     }
+        // if (appointment.getStatus() == Status.PENDING) {
+        // System.out.println(appointment);
+        // }
         // }
         // Displays all available (PENDING) appointments for patient logged in
         for (Appointment appointment : appts) {
@@ -103,14 +107,15 @@ public class Patient extends User{
                 System.out.println(appointment);
             }
         }
-        
+
     }
 
     public void scheduleAppt(Patient patient, int apptId, ApptManager apptM, ArrayList<Appointment> appts) {
         apptM.schedulePatient(patient, apptId, appts);
     }
 
-    public void rescheduleAppt(int oldApptId, int newApptId, Patient patient, ApptManager apptM, ArrayList<Appointment> appts) {
+    public void rescheduleAppt(int oldApptId, int newApptId, Patient patient, ApptManager apptM,
+            ArrayList<Appointment> appts) {
         apptM.reschedulePatient(oldApptId, newApptId, patient, appts);
     }
 
@@ -125,5 +130,7 @@ public class Patient extends User{
     public void viewPastApptOutcomes(Patient patient, ApptManager apptM, ArrayList<Appointment> appts) {
         apptM.viewPastOutcomes(patient, appts);
     }
+
+    
 
 }
