@@ -376,9 +376,9 @@ public class DatabaseHelper {
                                 .append(",");
                         writer.append(item != null ? String.valueOf(((MedicalRecord) item).getPrescription()) : "")
                                 .append(",");
-                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getPatientId()) : "");
-                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getAppointmentId()) : "");
-                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getNotes()) : "");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getPatientId()) : "").append(",");;
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getAppointmentId()) : "").append(",");;
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getNotes()) : "").append(",");;
                         writer.append(item != null ? String.valueOf(((MedicalRecord) item).getService()) : "");
                         writer.append("\n");
                     }
