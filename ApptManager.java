@@ -32,7 +32,7 @@ public class ApptManager {
                 appt.setPatient(patient);
                 appt.setStatus(Status.CONFIRMED);
                 doesApptIdExist = true;
-                System.out.println("Appointment scheduled successfully for patient ID " + patient.getPatientId() + " with Doctor " + doctor.getName());
+                System.out.println("Appointment scheduled successfully for patient ID " + patient.getPatientId() + " with Doctor " + appt.getDoctor().getName());
                 return;
             }
             else if (appt.getAppointmentID() == apptId 
