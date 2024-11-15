@@ -29,7 +29,7 @@ public class MainView {
                     System.out.println("First login, Please Reset Password");
                     user.resetPassword();
                 }
-                System.out.println("Login successful! Welcome" + user.  );
+                System.out.println("Login successful! Welcome " + user.getUserId());
                 return user;
             }
         }

@@ -173,7 +173,7 @@ public class DatabaseHelper {
         for (List<String> record : records) {
             // System.out.println("Record size: " + record.size() + ", Record contents: " +
             // record); //debugging
-            patientId = record.get(3);
+            patientId = record.get(2);
             for (Patient p : patients) {
                 if (Objects.equals(p.getUserId(), patientId)) {
                     patient = p;
@@ -183,7 +183,7 @@ public class DatabaseHelper {
                     break;
                 }
             }
-            doctorId = record.get(4);
+            doctorId = record.get(3);
             for (Doctor d : doctors) {
                 if (Objects.equals(d.getUserId(), doctorId)) {
                     doctor = d;
