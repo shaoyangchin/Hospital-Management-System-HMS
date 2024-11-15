@@ -5,6 +5,15 @@ import java.util.Scanner;
 public class MainView {
 
     public static User login(ArrayList<User> userList) {
+        System.out.print("  _    _ __  __  _____ \n" +
+                " | |  | |  \\/  |/ ____|\n" +
+                " | |__| | \\  / | (___  \n" +
+                " |  __  | |\\/| |\\___ \\ \n" +
+                " | |  | | |  | |____) |\n" +
+                " |_|  |_|_|  |_|_____/ \n" +
+                "        Welcome       \n" +
+                "Health Management System   ");
+
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter your hospital ID: ");
         String userId = scanner.nextLine();
@@ -20,7 +29,7 @@ public class MainView {
                     System.out.println("First login, Please Reset Password");
                     user.resetPassword();
                 }
-                System.out.println("Login successful! Welcome.");
+                System.out.println("Login successful! Welcome" + user.  );
                 return user;
             }
         }
