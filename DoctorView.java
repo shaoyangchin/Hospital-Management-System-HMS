@@ -4,6 +4,8 @@ import java.util.Scanner;
 public class DoctorView {
     public static void doctorView(Doctor doctor, HMSDatabase database) {
         Scanner scanner = new Scanner(System.in);
+        ApptManager apptManager = database.getApptManager();
+        
         while (true) {
             System.out.println("\n--- Doctor Menu ---");
             System.out.println("1. View Patient Medical Record");
@@ -23,12 +25,7 @@ public class DoctorView {
                 case 1:  // View a specific Patient Medical Record
                     System.out.print("Enter Patient ID to view their record: ");
                     String patientIdForView = scanner.nextLine();
-                    MedicalRecord record = doctor.getRecordForPatient(database.getAllPatients(), patientIdForView);
-                    if (record != null) {
-                        System.out.println("Medical Record for Patient ID " + patientIdForView + ": " + record);
-                    } else {
-                        System.out.println("No medical record found for Patient ID " + patientIdForView);
-                    }
+                    doctor.getRecordForPatient(database.getAllPatients(), patientIdForView, apptManager, database);
                     break;
 
                 case 2:  // Update a specific Patient Medical Record
@@ -40,7 +37,7 @@ public class DoctorView {
                     String prescription = scanner.nextLine();
                     System.out.print("Enter treatment plan: ");
                     String treatmentPlan = scanner.nextLine();
-                    doctor.updatePatientRecord(database.getAllPatients(), patientIdForUpdate, diagnosis, prescription, treatmentPlan);
+                    doctor.updatePatientRecord(database.getAllPatients(), patientIdForUpdate, diagnosis, prescription, treatmentPlan, database);
                     break;
 
                 case 3:  // View Personal Schedule

@@ -1,5 +1,5 @@
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 public class Doctor extends User {
     private String name;
@@ -10,7 +10,6 @@ public class Doctor extends User {
     public Doctor(String name, String gender, int age, String userId, String password, UserType userType) {
         super(userId, password, userType);
         this.name = name;
-        this.appointments = new ArrayList<>();
         this.gender = gender;
         this.age = age;
     }
@@ -24,24 +23,24 @@ public class Doctor extends User {
     }
 
     // Medical Record Management
-    public MedicalRecord getRecordForPatient(List<Patient> patients, String patientId) {
+    public void getRecordForPatient(List<Patient> patients, String patientId, ApptManager apptManager, HMSDatabase hmsDatabase) {
         for (Patient patient : patients) {
             if (patient.getUserId().equals(patientId)) {
-                if (!patient.getRecord().isEmpty()) {
-                    return patient.getRecord().get(0); // Return the first record as an example
-                }
+                apptManager.viewPastOutcomes(patient, hmsDatabase);
+                return;
             }
         }
-        return null;
+        System.out.println("No records found for Patient ID: " + patientId);
     }
 
-    public void updatePatientRecord(List<Patient> patients, String patientId, String diagnosis, String prescription, String treatmentPlan) {
+    public void updatePatientRecord(List<Patient> patients, String patientId, String diagnosis, String prescription, String treatmentPlan, HMSDatabase hmsDatabase) {
         for (Patient patient : patients) {
             if (patient.getUserId().equals(patientId)) {
                 if (!patient.getRecord().isEmpty()) {
                     MedicalRecord recordToUpdate = patient.getRecord().get(0);
                     recordToUpdate.addDiagnosisAndPrescription(diagnosis, prescription);
                     recordToUpdate.setService(treatmentPlan);
+                    hmsDatabase.saveDatabase();
                     System.out.println("Updated medical record for patient ID: " + patientId);
                     return;
                 } else {
@@ -62,14 +61,14 @@ public class Doctor extends User {
     }
 
     public void setAvailability(List<TimeSlot> availability) {
-        // Implementation to set availability
+        // Implementation for setting availability
     }
 
     public void acceptAppointment(int appointmentID) {
         for (Appointment appointment : appointments) {
             if (appointment.getAppointmentID() == appointmentID) {
                 appointment.setStatus(Status.CONFIRMED);
-                System.out.println("Appointment confirmed.");
+                System.out.println("Appointment accepted.");
                 return;
             }
         }
