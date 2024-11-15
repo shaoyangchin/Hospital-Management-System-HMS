@@ -127,8 +127,8 @@ public class Patient extends User implements GetRecord<List<MedicalRecord>>{
         apptM.viewScheduled(patient, appts);
     }
 
-    public void viewPastApptOutcomes(Patient patient, ApptManager apptM, ArrayList<Appointment> appts) {
-        apptM.viewPastOutcomes(patient, appts);
+    public void viewPastApptOutcomes(Patient patient, ApptManager apptM, HMSDatabase database) {
+        apptM.viewPastOutcomes(patient, database);
     }
 
     

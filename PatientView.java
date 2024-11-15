@@ -105,7 +105,7 @@ public class PatientView {
                     patient.viewScheduledAppts(patient, apptM, database.getAppointments());
                     break;
                 case 8:
-                    patient.viewPastApptOutcomes(patient, apptM, database.getAppointments());
+                    patient.viewPastApptOutcomes(patient, apptM, database);
                     break;
                 case 9:
                     System.out.println("Exiting...");
