@@ -120,7 +120,7 @@ public class ApptManager {
     public void viewPastOutcomes(Patient patient, HMSDatabase database) {
         int haveAppt = 0;
         ArrayList<Appointment> appts = database.getAppointments();
-        ArrayList<MedicalRecord> medicalRecords = database.getMedicalRecords();
+        ArrayList<MedicalRecord> medicalRecords = database.getRecords();
 
         for (MedicalRecord medicalRecord : medicalRecords) {
             if(Objects.equals(patient.getUserId(), medicalRecord.getPatientId())){
