@@ -265,10 +265,7 @@ public class Administrator extends User {
         int stock = scanner.nextInt();
         System.out.println("Enter low stock alert level of new medicine: ");
         int threshold = scanner.nextInt();
-        scanner.nextLine();
-        System.out.println("Enter expiration date of medicine: ");
-        String eDate = scanner.nextLine();
-        Medicine medicine = new Medicine(medicineName, "null", stock, threshold, eDate);
+        Medicine medicine = new Medicine(medicineName, "null", stock, threshold);
         inventory.add(medicine);
         System.out.println(medicineName + " has been added to the inventory");
     }
