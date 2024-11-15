@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Doctor extends User {
     private String name;
-    private List<Appointment> appointments;
+    private List<TimeSlot> availability;
     private String gender;
     private int age;
 
@@ -18,8 +18,34 @@ public class Doctor extends User {
         return name;
     }
 
-    public List<Appointment> getAppointments() {
-        return appointments;
+    public List<Appointment> getAppointments(HMSDatabase database) {
+        return database.getAppointments();
+    }
+
+    public List<TimeSlot> getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(List<TimeSlot> availability) {
+        this.availability = availability;
+    }
+
+    public void viewSchedule(HMSDatabase database) {
+        System.out.println("Doctor's Schedule:");
+        for (Appointment appointment : database.getAppointments()) {
+            System.out.println(appointment);
+        }
+    }
+
+    public void acceptAppointment(int appointmentID, HMSDatabase database) {
+        for (Appointment appointment : database.getAppointments()) {
+            if (appointment.getAppointmentID() == appointmentID) {
+                appointment.setStatus(Status.CONFIRMED);
+                System.out.println("Appointment accepted.");
+                return;
+            }
+        }
+        System.out.println("Appointment not found.");
     }
 
     // Medical Record Management
