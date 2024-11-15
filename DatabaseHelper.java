@@ -174,6 +174,8 @@ public class DatabaseHelper {
             // System.out.println("Record size: " + record.size() + ", Record contents: " +
             // record); //debugging
             patientId = record.get(2);
+
+
             for (Patient p : patients) {
                 if (Objects.equals(p.getUserId(), patientId)) {
                     patient = p;
