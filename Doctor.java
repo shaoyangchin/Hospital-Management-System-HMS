@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class Doctor extends User {
     private String name;
@@ -24,41 +23,25 @@ public class Doctor extends User {
         return appointments;
     }
 
-    public static Patient selectPatient(ArrayList<Patient> patients) {
-        int num = 0;
-        for (Patient patient : patients) {
-            num++;
-            System.out.printf("%d. %s\n", num, patient.getName());
-        }
-        try (Scanner scanner = new Scanner(System.in)) {
-            System.out.println("Select Option:");
-            int choice = scanner.nextInt();
-            return patients.get(choice - 1);
-        }
-    }
-
+    // Medical Record Management
     public MedicalRecord getRecordForPatient(List<Patient> patients, String patientId) {
         for (Patient patient : patients) {
-            if (patient.getPatientId().equals(patientId)) {
-                // Return the first record found, or you can add further criteria if needed
-                if (!patient.getRecords().isEmpty()) {
-                    return patient.getRecords().get(0); // Retrieves the first record as an example
+            if (patient.getUserId().equals(patientId)) {
+                if (!patient.getRecord().isEmpty()) {
+                    return patient.getRecord().get(0); // Return the first record as an example
                 }
             }
         }
-        System.out.println("Patient with ID " + patientId + " not found or has no records.");
-        return null; // Return null if patient or records are not found
+        return null;
     }
 
-    public void updatePatientRecord(List<Patient> patients, String patientId, String diagnosis, String prescription) {
+    public void updatePatientRecord(List<Patient> patients, String patientId, String diagnosis, String prescription, String treatmentPlan) {
         for (Patient patient : patients) {
-            if (patient.getPatientId().equals(patientId)) {
-                // Check if the patient has any existing medical records
-                if (!patient.getRecords().isEmpty()) {
-                    // Update the first record as an example (or apply criteria to find a specific
-                    // record)
-                    MedicalRecord recordToUpdate = patient.getRecords().get(0);
+            if (patient.getUserId().equals(patientId)) {
+                if (!patient.getRecord().isEmpty()) {
+                    MedicalRecord recordToUpdate = patient.getRecord().get(0);
                     recordToUpdate.addDiagnosisAndPrescription(diagnosis, prescription);
+                    recordToUpdate.setService(treatmentPlan);
                     System.out.println("Updated medical record for patient ID: " + patientId);
                     return;
                 } else {
@@ -70,6 +53,7 @@ public class Doctor extends User {
         System.out.println("Patient with ID " + patientId + " not found.");
     }
 
+    // Appointment Management
     public void viewSchedule() {
         System.out.println("Doctor's Schedule:");
         for (Appointment appointment : appointments) {
@@ -78,8 +62,7 @@ public class Doctor extends User {
     }
 
     public void setAvailability(List<TimeSlot> availability) {
-        // Logic for setting availability (out of scope for now)
-        System.out.println("Availability updated.");
+        // Implementation to set availability
     }
 
     public void acceptAppointment(int appointmentID) {
@@ -104,10 +87,20 @@ public class Doctor extends User {
         System.out.println("Appointment not found.");
     }
 
-    public void recordAppointmentOutcome(int appointmentID, String outcome) {
+    public void viewUpcomingAppointments() {
+        System.out.println("Upcoming Appointments:");
+        for (Appointment appointment : appointments) {
+            if (appointment.getStatus() == Status.CONFIRMED) {
+                System.out.println(appointment);
+            }
+        }
+    }
+
+    // Appointment Outcome Record
+    public void recordAppointmentOutcome(int appointmentID, String date, String serviceType, List<Medicine> medications, String notes) {
         for (Appointment appointment : appointments) {
             if (appointment.getAppointmentID() == appointmentID) {
-                appointment.setOutcome(outcome);
+                appointment.setOutcome("Date: " + date + "\nService: " + serviceType + "\nMedications: " + medications + "\nNotes: " + notes);
                 System.out.println("Appointment outcome recorded.");
                 return;
             }

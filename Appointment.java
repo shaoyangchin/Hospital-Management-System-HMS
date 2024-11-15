@@ -35,10 +35,6 @@ public class Appointment {
         return status;
     }
 
-    public String getOutcome() {
-        //return outcome;
-    }
-
     public void setOutcome(String outcome) {
         //this.outcome = outcome;
     }
@@ -90,7 +86,6 @@ public class Appointment {
                 + (doctor != null ? (doctor.getName() + ", Doctor ID: " + doctor.getUserId()) : "No doctor assigned")
                 + ", Status: " + status
                 + ", Date: " + date
-                + ", Time: " + time
-                + ", Outcome: " + (outcome != null ? outcome : "Pending");
+                + ", Time: " + time;
     }
 }
