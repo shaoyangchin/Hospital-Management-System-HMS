@@ -19,25 +19,28 @@ public class AdminView {
             switch (choice) {
                 case 1:
                     admin.viewStaff(database.getStaff());
-                    System.out.println("Manage Staff: \n" + "1. Add Staff\n" + "2. Remove Staff\n"
-                            + "3. Update Staff details\n" + "4. Exit");
-                    int manage = scanner.nextInt();
-                    switch (manage) {
-                        case 1:
-                            admin.addStaff(database.getStaff());
-                            break;
-                        case 2:
-                            admin.removeStaff(database.getStaff());
-                            break;
-                        case 3:
-                            admin.updateStaff(database.getStaff());
-                            break;
-                        case 4:
-                            System.out.println("Exiting manager...");
-                            break;
-                        default:
-                            System.out.println("Invalid option. Please try again.");
-                    }
+                    int manage = 0;
+                    do {
+                        System.out.println("Manage Staff: \n" + "1. Add Staff\n" + "2. Remove Staff\n"
+                                + "3. Update Staff details\n" + "4. Exit");
+                        manage = scanner.nextInt();
+                        switch (manage) {
+                            case 1:
+                                admin.addStaff(database.getStaff());
+                                break;
+                            case 2:
+                                admin.removeStaff(database.getStaff());
+                                break;
+                            case 3:
+                                admin.updateStaff(database.getStaff());
+                                break;
+                            case 4:
+                                System.out.println("Exiting manager...");
+                                break;
+                            default:
+                                System.out.println("Invalid option. Please try again.");
+                        }
+                    } while (manage != 4);
                     break;
                 case 2:
                     admin.viewAppts(database.getAppointments());

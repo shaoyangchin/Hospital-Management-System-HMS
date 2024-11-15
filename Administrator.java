@@ -17,6 +17,30 @@ public class Administrator extends User {
         this.age = age;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public String returnGender() {
+        return gender;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
     public void viewStaff(ArrayList<Staff> stafflist) {
         System.out.println("Hospital Staff:");
         for (Staff staff : stafflist) {
@@ -25,7 +49,7 @@ public class Administrator extends User {
         while (true) {
             System.out.println("Filter by: \n" + "1. Role: Doctors\n" + "2. Role: Pharmacists\n" +
                     "3. Gender: Male\n" + "4. Gender: Female\n" + "5. Age: 21-30\n" + "6. Age: 31-40\n"
-                    + "7. Age: 41-50\n" + "8. Exit\n");
+                    + "7. Age: 41-50\n" + "8. Exit View Staff\n");
             int filter = scanner.nextInt();
             switch (filter) {
                 case 0:
@@ -130,6 +154,10 @@ public class Administrator extends User {
         scanner.nextLine();
         System.out.println("Enter ID of staff to be removed: ");
         String removeID = scanner.nextLine();
+        if (removeID.equalsIgnoreCase(this.getUserId())) {
+            System.out.println("Cannot remove current user!");
+            return;
+        }
         boolean found = false;
         Iterator<Staff> iterator = stafflist.iterator();
         while (iterator.hasNext()) {
@@ -167,12 +195,26 @@ public class Administrator extends User {
                         case 1:
                             scanner.nextLine();
                             System.out.println("Enter new ID:");
-                            staff.setHospitalId(scanner.nextLine());
+                            String newID = scanner.nextLine();
+                            for (Staff worker : stafflist) {
+                                if (newID.equalsIgnoreCase(worker.getUserId())) {
+                                    System.out.println("ID already exists.");
+                                    break;
+                                }
+                            }
+                            staff.setHospitalId(newID);
                             break;
                         case 2:
                             scanner.nextLine();
                             System.out.println("Enter new name:");
-                            staff.setName(scanner.nextLine());
+                            String newName = scanner.nextLine();
+                            for (Staff worker : stafflist) {
+                                if (newName.equalsIgnoreCase(worker.getName())) {
+                                    System.out.println("Staff" + newName + "already exists.");
+                                    break;
+                                }
+                            }
+                            staff.setName(newName);
                             break;
                         case 3:
                             scanner.nextLine();
@@ -202,8 +244,8 @@ public class Administrator extends User {
         return;
     }
 
-    public void viewAppts(ArrayList<Appointment> appts) {
-        System.out.println("Viewing all current appointments:");
+    public void viewAppts(ArrayList<Appointment> appts/* , ArrayList<Patient> patients */) {
+        System.out.println("All current appointments:");
         for (Appointment appointment : appts) {
             System.out.println(appointment);
         }
