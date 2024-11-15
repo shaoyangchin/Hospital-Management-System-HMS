@@ -47,25 +47,30 @@ public class AdminView {
                     break;
                 case 3:
                     admin.viewInventory(database.getInventory());
-                    System.out.println("Manage inventory: \n" + "1. Add Medicine\n" + "2. Remove Medicine\n"
-                            + "3. Update Medicine Stocks\n" + "4. Update Medicine Low Stock Level\n");
-                    int choose = scanner.nextInt();
-                    switch (choose) {
-                        case 1:
-                            admin.addMedicine(database.getInventory());
-                            break;
-                        case 2:
-                            admin.removeMedicine(database.getInventory());
-                            break;
-                        case 3:
-                            admin.setMedStock(database.getInventory());
-                            break;
-                        case 4:
-                            admin.setMedStockLevel(database.getInventory());
-                            break;
-                        default:
-                            System.out.println("Invalid option. Please try again.");
-                    }
+                    int choose = 0;
+                    do {
+                        System.out.println("Manage inventory: \n" + "1. Add Medicine\n" + "2. Remove Medicine\n"
+                                + "3. Update Medicine Stocks\n" + "4. Update Medicine Low Stock Level\n" + "5. Exit\n");
+                        choose = scanner.nextInt();
+                        switch (choose) {
+                            case 1:
+                                admin.addMedicine(database.getInventory());
+                                break;
+                            case 2:
+                                admin.removeMedicine(database.getInventory());
+                                break;
+                            case 3:
+                                admin.setMedStock(database.getInventory());
+                                break;
+                            case 4:
+                                admin.setMedStockLevel(database.getInventory());
+                                break;
+                            case 5:
+                                break;
+                            default:
+                                System.out.println("Invalid option. Please try again.");
+                        }
+                    } while (choose != 5);
                     break;
                 case 4:
                     admin.approveRequest(database.getInventory(), database.getReplenishmentRequests());
