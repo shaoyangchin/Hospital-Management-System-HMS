@@ -47,9 +47,10 @@ public class Administrator extends User {
             System.out.println(staff);
         }
         while (true) {
-            System.out.println("Filter by: \n" + "1. Role: Doctors\n" + "2. Role: Pharmacists\n" +
-                    "3. Gender: Male\n" + "4. Gender: Female\n" + "5. Age: 21-30\n" + "6. Age: 31-40\n"
-                    + "7. Age: 41-50\n" + "8. Exit View Staff\n");
+            System.out.println(
+                    "Filter by: \n" + "1. Role: Doctors\n" + "2. Role: Pharmacists\n" + "3. Role: Administrators\n" +
+                            "4. Gender: Male\n" + "5. Gender: Female\n" + "6. Age: 21-30\n" + "7. Age: 31-40\n"
+                            + "8. Age: 41-50\n" + "9. Exit View Staff\n");
             int filter = scanner.nextInt();
             switch (filter) {
                 case 0:
@@ -75,6 +76,13 @@ public class Administrator extends User {
                     }
                     break;
                 case 3:
+                    System.out.println("Hospital Staff(Administrators):");
+                    for (Staff staff : stafflist) {
+                        if (staff.getRole().equalsIgnoreCase("Administrator")) {
+                            System.out.println(staff);
+                        }
+                    }
+                case 4:
                     System.out.println("Hospital Staff(Male):");
                     for (Staff staff : stafflist) {
                         if (staff.getGender().equalsIgnoreCase("Male")) {
@@ -82,7 +90,7 @@ public class Administrator extends User {
                         }
                     }
                     break;
-                case 4:
+                case 5:
                     System.out.println("Hospital Staff(Female):");
                     for (Staff staff : stafflist) {
                         if (staff.getGender().equalsIgnoreCase("Female")) {
@@ -90,7 +98,7 @@ public class Administrator extends User {
                         }
                     }
                     break;
-                case 5:
+                case 6:
                     System.out.println("Hospital Staff (Age: 21-30):");
                     for (Staff staff : stafflist) {
                         if (staff.getAge() >= 21 && staff.getAge() <= 30) {
@@ -98,7 +106,7 @@ public class Administrator extends User {
                         }
                     }
                     break;
-                case 6:
+                case 7:
                     System.out.println("Hospital Staff (Age: 31-40):");
                     for (Staff staff : stafflist) {
                         if (staff.getAge() >= 31 && staff.getAge() <= 40) {
@@ -106,7 +114,7 @@ public class Administrator extends User {
                         }
                     }
                     break;
-                case 7:
+                case 8:
                     System.out.println("Hospital Staff (Age: 41-50):");
                     for (Staff staff : stafflist) {
                         if (staff.getAge() >= 41 && staff.getAge() <= 50) {
@@ -114,7 +122,7 @@ public class Administrator extends User {
                         }
                     }
                     break;
-                case 8:
+                case 9:
                     return;
                 default:
                     System.out.println("Invalid option. Please try again.");
