@@ -4,6 +4,7 @@ import java.util.ArrayList;
 public class Doctor extends User {
     private String name;
     private List<Appointment> appointments;
+    private List<TimeSlot> availability;
     private String gender;
     private int age;
 
@@ -20,6 +21,32 @@ public class Doctor extends User {
 
     public List<Appointment> getAppointments() {
         return appointments;
+    }
+
+    public List<TimeSlot> getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(List<TimeSlot> availability) {
+        this.availability = availability;
+    }
+
+    public void viewSchedule() {
+        System.out.println("Doctor's Schedule:");
+        for (Appointment appointment : appointments) {
+            System.out.println(appointment);
+        }
+    }
+
+    public void acceptAppointment(int appointmentID) {
+        for (Appointment appointment : appointments) {
+            if (appointment.getAppointmentID() == appointmentID) {
+                appointment.setStatus(Status.CONFIRMED);
+                System.out.println("Appointment accepted.");
+                return;
+            }
+        }
+        System.out.println("Appointment not found.");
     }
 
     // Medical Record Management
