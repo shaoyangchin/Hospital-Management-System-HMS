@@ -40,7 +40,8 @@ public class DatabaseHelper {
         List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
         ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
         for (List<String> medrecord : medRecords) {
-            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2)));
+            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2), Integer.parseInt(medrecord.get(3)),medrecord.get(4),medrecord.get(5)));
+
         }
 
         records = readFile("data/Patient_List.csv");
@@ -70,7 +71,8 @@ public class DatabaseHelper {
         List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
         ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
         for (List<String> medrecord : medRecords) {
-            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2)));
+            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2), Integer.parseInt(medrecord.get(3)),medrecord.get(4),medrecord.get(5)));
+
         }
 
         List<List<String>> records = readFile("data/Patient_List.csv");
@@ -93,7 +95,7 @@ public class DatabaseHelper {
         List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
         ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
         for (List<String> medrecord : medRecords) {
-            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2)));
+            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2), Integer.parseInt(medrecord.get(3)),medrecord.get(4),medrecord.get(5)));
         }
         return medicalRecords;
     }
@@ -188,7 +190,7 @@ public class DatabaseHelper {
                     break;
                 }
             }
-            appointments.add(new Appointment(Integer.parseInt(record.get(0)), record.get(2), record.get(5), record.get(6),
+            appointments.add(new Appointment(Integer.parseInt(record.get(0)), record.get(4), record.get(5),
                     Status.valueOf(record.get(1)), patient, doctor));
         }
 
@@ -348,8 +350,6 @@ public class DatabaseHelper {
                         writer.append(item != null ? String.valueOf(((Appointment) item).getAppointmentID()) : "")
                                 .append(",");
                         writer.append(item != null ? String.valueOf(((Appointment) item).getStatus()) : "").append(",");
-                        writer.append(item != null ? String.valueOf(((Appointment) item).getOutcome()) : "")
-                                .append(",");
                         writer.append(item != null ? String.valueOf(((Appointment) item).getPatient().getUserId()) : "")
                                 .append(",");
                         writer.append(item != null ? String.valueOf(((Appointment) item).getDoctor().getUserId()) : "")
@@ -368,6 +368,9 @@ public class DatabaseHelper {
                         writer.append(item != null ? String.valueOf(((MedicalRecord) item).getPrescription()) : "")
                                 .append(",");
                         writer.append(item != null ? String.valueOf(((MedicalRecord) item).getPatientId()) : "");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getAppointmentId()) : "");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getNotes()) : "");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getService()) : "");
                         writer.append("\n");
                     }
                     break;

@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ApptManager {
     //private List<Appointment> appts = new ArrayList<>();
@@ -116,17 +117,19 @@ public class ApptManager {
     }
 
     // Views all completed appointments and their outcomes for a specific patient
-    public void viewPastOutcomes(Patient patient, ArrayList<Appointment> appts) {
+    public void viewPastOutcomes(Patient patient, HMSDatabase database) {
         int haveAppt = 0;
-        for (Appointment appt : appts) {
-            if (appt.getPatient() != null &&
-                patient.getUserId().equals(appt.getPatient().getUserId()) &&
-                appt.getStatus() == Status.COMPLETED) {
-                
-                System.out.println(appt);
-                System.out.println("Outcome: "+appt.getOutcome());
+        ArrayList<Appointment> appts = database.getAppointments();
+        ArrayList<MedicalRecord> medicalRecords = database.getMedicalRecords();
+
+        for (MedicalRecord medicalRecord : medicalRecords) {
+            if(Objects.equals(patient.getUserId(), medicalRecord.getPatientId())){
+                System.out.println("Appointment ID:" + (medicalRecord.getAppointmentId()) );
+                System.out.println("Notes:" + (medicalRecord.getNotes()) );
+                System.out.println("Service Provided:" + (medicalRecord.getService()) );
                 haveAppt++;
             }
+
         }
         if (haveAppt == 0) {
             System.out.println("No completed appointments.");

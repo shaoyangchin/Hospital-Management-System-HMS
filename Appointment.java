@@ -1,7 +1,6 @@
 public class Appointment {
     private int appointmentID;
     private Status status;
-    private String outcome;
     private Patient patient;
     private Doctor doctor;
     private String date;
@@ -16,10 +15,10 @@ public class Appointment {
     }
 
     // Constructor with Patient and Doctor
-    public Appointment(int appointmentID, String outcome, String date, String time, Status status, Patient patient,
+    public Appointment(int appointmentID/*, String outcome*/, String date, String time, Status status, Patient patient,
             Doctor doctor) {
         this.appointmentID = appointmentID;
-        this.outcome = outcome;
+        //this.outcome = outcome;
         this.status = status;
         this.date = date;
         this.time = time;
@@ -37,11 +36,11 @@ public class Appointment {
     }
 
     public String getOutcome() {
-        return outcome;
+        //return outcome;
     }
 
     public void setOutcome(String outcome) {
-        this.outcome = outcome;
+        //this.outcome = outcome;
     }
 
     public Patient getPatient() {
