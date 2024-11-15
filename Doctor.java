@@ -3,7 +3,6 @@ import java.util.ArrayList;
 
 public class Doctor extends User {
     private String name;
-    private List<Appointment> appointments;
     private List<TimeSlot> availability;
     private String gender;
     private int age;
@@ -19,8 +18,8 @@ public class Doctor extends User {
         return name;
     }
 
-    public List<Appointment> getAppointments() {
-        return appointments;
+    public List<Appointment> getAppointments(HMSDatabase database) {
+        return database.getAppointments();
     }
 
     public List<TimeSlot> getAvailability() {
@@ -31,15 +30,15 @@ public class Doctor extends User {
         this.availability = availability;
     }
 
-    public void viewSchedule() {
+    public void viewSchedule(HMSDatabase database) {
         System.out.println("Doctor's Schedule:");
-        for (Appointment appointment : appointments) {
+        for (Appointment appointment : database.getAppointments()) {
             System.out.println(appointment);
         }
     }
 
-    public void acceptAppointment(int appointmentID) {
-        for (Appointment appointment : appointments) {
+    public void acceptAppointment(int appointmentID, HMSDatabase database) {
+        for (Appointment appointment : database.getAppointments()) {
             if (appointment.getAppointmentID() == appointmentID) {
                 appointment.setStatus(Status.CONFIRMED);
                 System.out.println("Appointment accepted.");
