@@ -148,13 +148,13 @@ public class DatabaseHelper {
     public static ArrayList<Medicine> initMedicines() {
         ArrayList<Medicine> medicines = new ArrayList<>();
         List<List<String>> records = readFile("data/Medicine_List.csv");
-        String name;
         for (List<String> record : records) {
-            name = record.get(0);
-            // medicines.put(name, new Medicine(name, "temp",
-            // Integer.parseInt(record.get(1)), "temp"));
-            medicines.add(new Medicine(record.get(0), "temp", Integer.parseInt(record.get(1)),
-                    Integer.parseInt(record.get(2)), "temp"));
+            medicines.add(new Medicine(
+                record.get(0),    // name
+                "Standard",       // default dosage
+                Integer.parseInt(record.get(1)),  // quantity
+                Integer.parseInt(record.get(2))   // threshold
+            ));
         }
         return medicines;
     }
@@ -197,13 +197,20 @@ public class DatabaseHelper {
     }
 
     public static ArrayList<ReplenishmentRequest> initReplenishmentRequests() {
-        ArrayList<ReplenishmentRequest> replenishmentRequests = new ArrayList<>();
+        ArrayList<ReplenishmentRequest> requests = new ArrayList<>();
         List<List<String>> records = readFile("data/Replenishment_List.csv");
         for (List<String> record : records) {
-            replenishmentRequests
-                    .add(new ReplenishmentRequest(record.get(0), Integer.parseInt(record.get(1)), record.get(2)));
+            ReplenishmentRequest request = new ReplenishmentRequest(
+                record.get(0),
+                Integer.parseInt(record.get(1)),
+                record.get(2)
+            );
+            if (record.size() > 3 && Boolean.parseBoolean(record.get(3))) {
+                request.approveRequest();
+            }
+            requests.add(request);
         }
-        return replenishmentRequests;
+        return requests;
     }
 
     public static ArrayList<Staff> initStafflist() {
@@ -399,6 +406,8 @@ public class DatabaseHelper {
                                 .append(",");
                         writer.append(
                                 item != null ? String.valueOf(((ReplenishmentRequest) item).getPharmacistId()) : "");
+                        writer.append(
+                                item != null ? String.valueOf(((ReplenishmentRequest) item).isApproved()) : "");
                         writer.append("\n");
                     }
                     break;
@@ -438,6 +447,40 @@ public class DatabaseHelper {
         saveToCsv(database.getMedicines(), "data/Replenishment_List.csv", replenishmentFields, 3);
     }
 
+    public static void saveReplenishmentRequest(ReplenishmentRequest request) {
+        try (FileWriter writer = new FileWriter("data/Replenishment_List.csv", true)) { // Append mode
+            // Write header if file is empty
+            if (new File("data/Replenishment_List.csv").length() == 0) {
+                writer.write("medicineName,requestedQuantity,pharmacistId,isApproved\n");
+            }
+            
+            // Append new request
+            writer.append(request.getMedicineName()).append(",")
+                 .append(String.valueOf(request.getRequestedQuantity())).append(",")
+                 .append(request.getPharmacistId()).append(",")
+                 .append(String.valueOf(request.isApproved())).append("\n");
+        } catch (IOException e) {
+            System.out.println("Error saving replenishment request: " + e.getMessage());
+        }
+    }
+    
+    public static void updateReplenishmentRequests(ArrayList<ReplenishmentRequest> requests) {
+        try (FileWriter writer = new FileWriter("data/Replenishment_List.csv")) {
+            // Write header
+            writer.write("medicineName,requestedQuantity,pharmacistId,isApproved\n");
+            
+            // Write all requests
+            for (ReplenishmentRequest req : requests) {
+                writer.append(req.getMedicineName()).append(",")
+                     .append(String.valueOf(req.getRequestedQuantity())).append(",")
+                     .append(req.getPharmacistId()).append(",")
+                     .append(String.valueOf(req.isApproved())).append("\n");
+            }
+        } catch (IOException e) {
+            System.out.println("Error updating replenishment requests: " + e.getMessage());
+        }
+    }
+    
     // Helper method to get Field from class or its superclasses
 
     public static void main(String[] args) throws IOException {
