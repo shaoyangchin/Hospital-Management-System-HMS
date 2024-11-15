@@ -23,16 +23,16 @@ public class DatabaseHelper {
         for (List<String> record : records) {
             if (Objects.equals(record.get(2), "Doctor")) {
                 users.add(new Doctor(record.get(1), record.get(3), Integer.parseInt(record.get(4)),
-                        record.get(0), "password", doc));
+                        record.get(0), record.get(5), doc));
             } else if (Objects.equals(record.get(2), "Pharmacist")) {
                 // Map<String, Medicine> inventory = Collections.emptyMap(); // do we rly need
                 // this? should it not be
                 // static
                 users.add(new Pharmacist(record.get(1), record.get(3), Integer.parseInt(record.get(4)),
-                        record.get(0), "password", UserType.PHARMACIST));
+                        record.get(0), record.get(5), UserType.PHARMACIST));
             } else if (Objects.equals(record.get(2), "Administrator")) {
                 users.add(new Administrator(record.get(1), record.get(3), Integer.parseInt(record.get(4)),
-                        record.get(0), "password",
+                        record.get(0), record.get(5),
                         admin));
             }
         }
@@ -52,7 +52,7 @@ public class DatabaseHelper {
                 }
             }
             UserType p = UserType.PATIENT;
-            Patient patient1 = new Patient(record.get(1), record.get(0), "password", record.get(2), record.get(3),
+            Patient patient1 = new Patient(record.get(1), record.get(0), record.get(6), record.get(2), record.get(3),
                     record.get(4), record.get(5), temp, p);
             users.add(patient1);
 
@@ -82,7 +82,7 @@ public class DatabaseHelper {
                 }
             }
             UserType p = UserType.PATIENT;
-            patients.add(new Patient(record.get(1), record.get(0), "password", record.get(2), record.get(3),
+            patients.add(new Patient(record.get(1), record.get(0), record.get(6), record.get(2), record.get(3),
                     record.get(4), record.get(5), temp, p));
         }
 
@@ -106,7 +106,7 @@ public class DatabaseHelper {
         for (List<String> record : records) {
             if (Objects.equals(record.get(2), "Doctor")) {
                 doctors.add(new Doctor(record.get(1), record.get(3), Integer.parseInt(record.get(4)),
-                        record.get(0), "password", UserType.DOCTOR));
+                        record.get(0), record.get(5), UserType.DOCTOR));
             }
         }
         return doctors;
@@ -124,7 +124,7 @@ public class DatabaseHelper {
                 // static
                 pharmacists
                         .add(new Pharmacist(record.get(1), record.get(3), Integer.parseInt(record.get(4)),
-                                record.get(0), "password", UserType.PHARMACIST));
+                                record.get(0), record.get(5), UserType.PHARMACIST));
             }
         }
 
@@ -139,21 +139,21 @@ public class DatabaseHelper {
         for (List<String> record : records) {
             if (Objects.equals(record.get(2), "Administrator")) {
                 administrators.add(new Administrator(record.get(1), record.get(3), Integer.parseInt(record.get(4)),
-                        record.get(0), "password", admin));
+                        record.get(0), record.get(5), admin));
             }
         }
         return administrators;
     }
 
-    public static Map<String, Medicine> initMedicines() {
-        Map<String, Medicine> medicines = new HashMap<>();
+    public static ArrayList<Medicine> initMedicines() {
+        ArrayList<Medicine> medicines = new ArrayList<>();
         List<List<String>> records = readFile("data/Medicine_List.csv");
         String name;
         for (List<String> record : records) {
             name = record.get(0);
             // medicines.put(name, new Medicine(name, "temp",
             // Integer.parseInt(record.get(1)), "temp"));
-            medicines.put(name, new Medicine(name, "temp", Integer.parseInt(record.get(1)),
+            medicines.add(new Medicine(record.get(0), "temp", Integer.parseInt(record.get(1)),
                     Integer.parseInt(record.get(2)), "temp"));
         }
         return medicines;
@@ -434,6 +434,8 @@ public class DatabaseHelper {
         saveToCsv(database.getMedicalRecords(), "data/MedicalRecord_List.csv", medRecFields, 1);
         saveToCsv(database.getPatients(), "data/Patient_List.csv", patientFields, 2);
         saveToCsv(database.getReplenishmentRequests(), "data/Replenishment_List.csv", replenishmentFields, 3);
+
+        saveToCsv(database.getMedicines(), "data/Replenishment_List.csv", replenishmentFields, 3);
     }
 
     // Helper method to get Field from class or its superclasses

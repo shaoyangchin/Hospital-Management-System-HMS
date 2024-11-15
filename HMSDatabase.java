@@ -7,7 +7,7 @@ public class HMSDatabase {
     private ArrayList<Doctor> doctors;
     private ArrayList<Pharmacist> pharmacists;
     private ArrayList<Administrator> administrators;
-    private Map<String, Medicine> medicineInventory;
+    private ArrayList<Medicine> medicineInventory;
     private ArrayList<Appointment> appointments;
     private ApptManager apptManager;
     private ArrayList<ReplenishmentRequest> replenishmentRequests;
@@ -86,18 +86,29 @@ public class HMSDatabase {
     }
 
     // Method to add a new medicine to the inventory
-    public void addMedicine(String name, Medicine medicine) {
-        medicineInventory.put(name, medicine);
+    public void addMedicine(Medicine medicine) {
+        medicineInventory.add(medicine);
     }
 
     // Method to get a medicine by name
     public Medicine getMedicineByName(String name) {
-        return medicineInventory.get(name);
+        for (Medicine medicine : medicineInventory) {
+            if (medicine.getName().equals(name)) {
+                return medicine;
+            }
+        }
+        return null;
     }
 
     // Method to check if a medicine exists in the inventory
     public boolean isMedicineAvailable(String name) {
-        return medicineInventory.containsKey(name);
+        for (Medicine medicine : medicineInventory) {
+            if (medicine.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+
     }
 
     // Method to remove a medicine from the inventory
@@ -105,7 +116,7 @@ public class HMSDatabase {
         medicineInventory.remove(name);
     }
 
-    public Map<String, Medicine> getInventory() {
+    public ArrayList<Medicine> getInventory() {
         return medicineInventory;
     }
 
@@ -141,7 +152,7 @@ public class HMSDatabase {
         return stafflist;
     }
 
-    public Map<String, Medicine> getMedicines() {
+    public ArrayList<Medicine> getMedicines() {
         return medicineInventory;
     }
 
