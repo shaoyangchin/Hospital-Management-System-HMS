@@ -47,9 +47,10 @@ public class Administrator extends User {
             System.out.println(staff);
         }
         while (true) {
-            System.out.println("Filter by: \n" + "1. Role: Doctors\n" + "2. Role: Pharmacists\n" +
-                    "3. Gender: Male\n" + "4. Gender: Female\n" + "5. Age: 21-30\n" + "6. Age: 31-40\n"
-                    + "7. Age: 41-50\n" + "8. Exit View Staff\n");
+            System.out.println(
+                    "Filter by: \n" + "1. Role: Doctors\n" + "2. Role: Pharmacists\n" + "3. Role: Administrators\n" +
+                            "4. Gender: Male\n" + "5. Gender: Female\n" + "6. Age: 21-30\n" + "7. Age: 31-40\n"
+                            + "8. Age: 41-50\n" + "9. Exit View Staff\n");
             int filter = scanner.nextInt();
             switch (filter) {
                 case 0:
@@ -75,6 +76,13 @@ public class Administrator extends User {
                     }
                     break;
                 case 3:
+                    System.out.println("Hospital Staff(Administrators):");
+                    for (Staff staff : stafflist) {
+                        if (staff.getRole().equalsIgnoreCase("Administrator")) {
+                            System.out.println(staff);
+                        }
+                    }
+                case 4:
                     System.out.println("Hospital Staff(Male):");
                     for (Staff staff : stafflist) {
                         if (staff.getGender().equalsIgnoreCase("Male")) {
@@ -82,7 +90,7 @@ public class Administrator extends User {
                         }
                     }
                     break;
-                case 4:
+                case 5:
                     System.out.println("Hospital Staff(Female):");
                     for (Staff staff : stafflist) {
                         if (staff.getGender().equalsIgnoreCase("Female")) {
@@ -90,7 +98,7 @@ public class Administrator extends User {
                         }
                     }
                     break;
-                case 5:
+                case 6:
                     System.out.println("Hospital Staff (Age: 21-30):");
                     for (Staff staff : stafflist) {
                         if (staff.getAge() >= 21 && staff.getAge() <= 30) {
@@ -98,7 +106,7 @@ public class Administrator extends User {
                         }
                     }
                     break;
-                case 6:
+                case 7:
                     System.out.println("Hospital Staff (Age: 31-40):");
                     for (Staff staff : stafflist) {
                         if (staff.getAge() >= 31 && staff.getAge() <= 40) {
@@ -106,7 +114,7 @@ public class Administrator extends User {
                         }
                     }
                     break;
-                case 7:
+                case 8:
                     System.out.println("Hospital Staff (Age: 41-50):");
                     for (Staff staff : stafflist) {
                         if (staff.getAge() >= 41 && staff.getAge() <= 50) {
@@ -114,7 +122,7 @@ public class Administrator extends User {
                         }
                     }
                     break;
-                case 8:
+                case 9:
                     return;
                 default:
                     System.out.println("Invalid option. Please try again.");
@@ -244,85 +252,102 @@ public class Administrator extends User {
         return;
     }
 
-    public void viewAppts(ArrayList<Appointment> appts/* , ArrayList<Patient> patients */) {
+    public void viewAppts(ArrayList<Appointment> appts) {
         System.out.println("All current appointments:");
         for (Appointment appointment : appts) {
             System.out.println(appointment);
         }
     }
 
-    public void viewInventory(Map<String, Medicine> inventory) {
+    public void viewInventory(ArrayList<Medicine> inventory) {
         System.out.println("Viewing Medication Inventory:");
-        for (Medicine medicine : inventory.values()) {
+        for (Medicine medicine : inventory) {
             System.out.println(medicine);
         }
     }
 
-    public void addMedicine(Map<String, Medicine> inventory) {
+    public void addMedicine(ArrayList<Medicine> inventory) {
         System.out.println("Enter name of new medicine: ");
         String medicineName = scanner.nextLine();
         System.out.println("Enter stock of new medicine: ");
         int stock = scanner.nextInt();
         System.out.println("Enter low stock alert level of new medicine: ");
         int threshold = scanner.nextInt();
-        System.out.println("Enter expiration date of medicine: ");
-        String eDate = scanner.nextLine();
-        Medicine medicine = new Medicine(medicineName, "null", stock, threshold, eDate);
-        inventory.put(medicineName, medicine);
+        Medicine medicine = new Medicine(medicineName, "null", stock, threshold);
+        inventory.add(medicine);
         System.out.println(medicineName + " has been added to the inventory");
     }
 
-    public void removeMedicine(Map<String, Medicine> inventory) {
+    public void removeMedicine(ArrayList<Medicine> inventory) {
 
         System.out.println("Enter name of medicine to be removed: ");
         String medicineName = scanner.nextLine();
-        Medicine med = inventory.get(medicineName);
+        Medicine med = null;
+        for (Medicine medicine : inventory) {
+            if (medicine.getName().equalsIgnoreCase(medicineName)) {
+                med = medicine;
+            }
+        }
         if (med != null) {
-            inventory.remove(medicineName);
+            inventory.remove(med);
             System.out.println(medicineName + " has been removed.");
         } else {
             System.out.println(medicineName + "does not exist.");
         }
     }
 
-    public void setMedStock(Map<String, Medicine> inventory) {
+    public void setMedStock(ArrayList<Medicine> inventory) {
         System.out.println("Enter name of medicine to be restocked: ");
         String medicineName = scanner.nextLine();
         System.out.println("Enter new stock level: ");
         int stock = scanner.nextInt();
-        Medicine med = inventory.get(medicineName);
+        Medicine med = null;
+        for (Medicine medicine : inventory) {
+            if (medicine.getName().equalsIgnoreCase(medicineName)) {
+                med = medicine;
+            }
+        }
         if (med != null) {
             med.setQuantity(stock);
-            inventory.replace(medicineName, med);
             System.out.println(medicineName + "'s stock has been updated to " + stock);
         } else {
             System.out.println(medicineName + " does not exist");
         }
     }
 
-    public void setMedStockLevel(Map<String, Medicine> inventory) {
+    public void setMedStockLevel(ArrayList<Medicine> inventory) {
+        scanner.nextLine();
         System.out.println("Enter name of medicine to change low stock alert level: ");
         String medicineName = scanner.nextLine();
         System.out.println("Enter new alert level:");
         int stocklevel = scanner.nextInt();
-        Medicine med = inventory.get(medicineName);
+        Medicine med = null;
+        for (Medicine medicine : inventory) {
+            if (medicine.getName().equalsIgnoreCase(medicineName)) {
+                med = medicine;
+            }
+        }
         if (med != null) {
             med.setThreshold(stocklevel);
-            inventory.replace(medicineName, med);
             System.out.println(medicineName + "'s low stock alert level has been updated to " + stocklevel);
         } else {
             System.out.println(medicineName + " does not exist");
         }
     }
 
-    public void approveRequest(Map<String, Medicine> inventory, ArrayList<ReplenishmentRequest> replenishmentRequests) {
+    public void approveRequest(ArrayList<Medicine> inventory, ArrayList<ReplenishmentRequest> replenishmentRequests) {
         System.out.println("The current replenishment requests are:");
         for (ReplenishmentRequest request : replenishmentRequests) {
             System.out.println(request);
         }
         System.out.println("Enter the name of the medicine whose request is to be approved/declined: ");
         String medicineName = scanner.nextLine();
-        Medicine med = inventory.get(medicineName);
+        Medicine med = null;
+        for (Medicine medicine : inventory) {
+            if (medicine.getName().equalsIgnoreCase(medicineName)) {
+                med = medicine;
+            }
+        }
         if (med == null) {
             System.out.println("Medicine " + medicineName + " does not exist.");
             return;

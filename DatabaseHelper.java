@@ -150,13 +150,13 @@ public class DatabaseHelper {
     public static ArrayList<Medicine> initMedicines() {
         ArrayList<Medicine> medicines = new ArrayList<>();
         List<List<String>> records = readFile("data/Medicine_List.csv");
-        String name;
         for (List<String> record : records) {
-            name = record.get(0);
-            // medicines.put(name, new Medicine(name, "temp",
-            // Integer.parseInt(record.get(1)), "temp"));
-            medicines.add(new Medicine(record.get(0), "temp", Integer.parseInt(record.get(1)),
-                    Integer.parseInt(record.get(2)), "temp"));
+            medicines.add(new Medicine(
+                record.get(0),    // name
+                "Standard",       // default dosage
+                Integer.parseInt(record.get(1)),  // quantity
+                Integer.parseInt(record.get(2))   // threshold
+            ));
         }
         return medicines;
     }
@@ -171,14 +171,14 @@ public class DatabaseHelper {
         Patient patient = null;
         Doctor doctor = null;
         for (List<String> record : records) {
-            //System.out.println("Record size: " + record.size() + ", Record contents: " + record); //debugging
+            // System.out.println("Record size: " + record.size() + ", Record contents: " +
+            // record); //debugging
             patientId = record.get(3);
             for (Patient p : patients) {
                 if (Objects.equals(p.getUserId(), patientId)) {
                     patient = p;
                     break;
-                }
-                else if (Objects.equals("null", patientId)) {
+                } else if (Objects.equals("null", patientId)) {
                     patient = null;
                     break;
                 }
@@ -199,13 +199,20 @@ public class DatabaseHelper {
     }
 
     public static ArrayList<ReplenishmentRequest> initReplenishmentRequests() {
-        ArrayList<ReplenishmentRequest> replenishmentRequests = new ArrayList<>();
+        ArrayList<ReplenishmentRequest> requests = new ArrayList<>();
         List<List<String>> records = readFile("data/Replenishment_List.csv");
         for (List<String> record : records) {
-            replenishmentRequests
-                    .add(new ReplenishmentRequest(record.get(0), Integer.parseInt(record.get(1)), record.get(2)));
+            ReplenishmentRequest request = new ReplenishmentRequest(
+                record.get(0),
+                Integer.parseInt(record.get(1)),
+                record.get(2)
+            );
+            if (record.size() > 3 && Boolean.parseBoolean(record.get(3))) {
+                request.approveRequest();
+            }
+            requests.add(request);
         }
-        return replenishmentRequests;
+        return requests;
     }
 
     public static ArrayList<Staff> initStafflist() {
@@ -402,6 +409,8 @@ public class DatabaseHelper {
                                 .append(",");
                         writer.append(
                                 item != null ? String.valueOf(((ReplenishmentRequest) item).getPharmacistId()) : "");
+                        writer.append(
+                                item != null ? String.valueOf(((ReplenishmentRequest) item).isApproved()) : "");
                         writer.append("\n");
                     }
                     break;
@@ -434,11 +443,45 @@ public class DatabaseHelper {
     public static void saveDatabase(HMSDatabase database) {
         saveToCsv(database.getStaff(), "data/Staff_List.csv", staffFields, 4);
         saveToCsv(database.getAppointments(), "data/Appointment_List.csv", appListFields, 0);
-        saveToCsv(database.getMedicalRecords(), "data/MedicalRecord_List.csv", medRecFields, 1);
+        saveToCsv(database.getRecords(), "data/MedicalRecord_List.csv", medRecFields, 1);
         saveToCsv(database.getPatients(), "data/Patient_List.csv", patientFields, 2);
         saveToCsv(database.getReplenishmentRequests(), "data/Replenishment_List.csv", replenishmentFields, 3);
 
         saveToCsv(database.getMedicines(), "data/Replenishment_List.csv", replenishmentFields, 3);
+    }
+
+    public static void saveReplenishmentRequest(ReplenishmentRequest request) {
+        try (FileWriter writer = new FileWriter("data/Replenishment_List.csv", true)) { // Append mode
+            // Write header if file is empty
+            if (new File("data/Replenishment_List.csv").length() == 0) {
+                writer.write("medicineName,requestedQuantity,pharmacistId,isApproved\n");
+            }
+
+            // Append new request
+            writer.append(request.getMedicineName()).append(",")
+                 .append(String.valueOf(request.getRequestedQuantity())).append(",")
+                 .append(request.getPharmacistId()).append(",")
+                 .append(String.valueOf(request.isApproved())).append("\n");
+        } catch (IOException e) {
+            System.out.println("Error saving replenishment request: " + e.getMessage());
+        }
+    }
+
+    public static void updateReplenishmentRequests(ArrayList<ReplenishmentRequest> requests) {
+        try (FileWriter writer = new FileWriter("data/Replenishment_List.csv")) {
+            // Write header
+            writer.write("medicineName,requestedQuantity,pharmacistId,isApproved\n");
+
+            // Write all requests
+            for (ReplenishmentRequest req : requests) {
+                writer.append(req.getMedicineName()).append(",")
+                     .append(String.valueOf(req.getRequestedQuantity())).append(",")
+                     .append(req.getPharmacistId()).append(",")
+                     .append(String.valueOf(req.isApproved())).append("\n");
+            }
+        } catch (IOException e) {
+            System.out.println("Error updating replenishment requests: " + e.getMessage());
+        }
     }
 
     // Helper method to get Field from class or its superclasses
