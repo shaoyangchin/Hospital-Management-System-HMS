@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Pharmacist extends User {
@@ -47,30 +48,34 @@ public class Pharmacist extends User {
     }
 
 
+
     public void viewMedicationInventory(ArrayList<Medicine> medicines) {
         if (medicines.isEmpty()) {
             System.out.println("No medicines in inventory");
             return;
         }
         
-        System.out.println("\nCurrent Medication Inventory:");
-        System.out.println("============================");
+        System.out.println("\n=== Current Medication Inventory ===");
+        System.out.println("------------------------------------------------");
         System.out.printf("%-20s %-15s %-15s%n", "Medicine Name", "Quantity", "Threshold");
-        System.out.println("----------------------------------------------------");
+        System.out.println("------------------------------------------------");
         
         for (Medicine medicine : medicines) {
-            System.out.printf("%-20s %-15d %-15d%n", 
+            System.out.printf("%-20s %-15d %-15d", 
                 medicine.getName(), 
                 medicine.getQuantity(), 
                 medicine.getThreshold());
-
-            if (medicine.isLowStock()) {
-                System.out.println("⚠️ Low stock warning!");
+                
+            // Check low stock on new line for clearer warning
+            if (medicine.getQuantity() <= medicine.getThreshold()) {
+                System.out.println("\n Low stock warning!");
+            } else {
+                System.out.println(); // Just new line if no warning
             }
         }
-        System.out.println("============================");
+        System.out.println("------------------------------------------------");
     }
-
+    // Submit Replenishment Request
     public ReplenishmentRequest submitReplenishmentRequest(String medicineName, int requestedQuantity) {
         if (medicineName == null || medicineName.trim().isEmpty()) {
             System.out.println("Error: Invalid medicine name");
@@ -80,21 +85,24 @@ public class Pharmacist extends User {
             System.out.println("Error: Invalid quantity requested");
             return null;
         }
-    
+
         ReplenishmentRequest request = new ReplenishmentRequest(medicineName, requestedQuantity, this.getUserId());
+        ArrayList<ReplenishmentRequest> requests = new ArrayList<>();
         requests.add(request);
-    
+
         // Save the request to the CSV immediately to ensure persistence
         if (dbHelper != null) {
-            dbHelper.saveReplenishmentRequest(request); // Append request to CSV file for persistence
+            List<String> fieldNames = Arrays.asList("MedicineName", "RequestedQuantity", "PharmacistId", "IsApproved");
+            dbHelper.saveToCsv(requests, "data/Replenishment_List.csv", fieldNames, 3);
         } else {
             System.out.println("Error: Database helper is not set");
         }
-    
+
         System.out.println("\nReplenishment Request Submitted Successfully");
         System.out.println("Medicine: " + medicineName);
         System.out.println("Quantity Requested: " + requestedQuantity);
         System.out.println("Request Status: Pending administrator approval");
         return request;
     }
+
 }

@@ -447,22 +447,22 @@ public class DatabaseHelper {
 
                 // Replenishment
                 case 3:
-                    for (T item : list) {
-                        // item = (Appointment)item;
-                        writer.append(
-                                item != null ? String.valueOf(((ReplenishmentRequest) item).getMedicineName()) : "")
-                                .append(",");
-                        writer.append(
-                                item != null ? String.valueOf(((ReplenishmentRequest) item).getRequestedQuantity())
-                                        : "")
-                                .append(",");
-                        writer.append(
-                                item != null ? String.valueOf(((ReplenishmentRequest) item).getPharmacistId()) : "");
-                        writer.append(
-                                item != null ? String.valueOf(((ReplenishmentRequest) item).isApproved()) : "");
-                        writer.append("\n");
-                    }
-                    break;
+                for (T item : list) {
+                    writer.append(
+                            item != null ? String.valueOf(((ReplenishmentRequest) item).getMedicineName()) : "")
+                            .append(",");
+                    writer.append(
+                            item != null ? String.valueOf(((ReplenishmentRequest) item).getRequestedQuantity())
+                                    : "")
+                            .append(",");
+                    writer.append(
+                            item != null ? String.valueOf(((ReplenishmentRequest) item).getPharmacistId()) : "")
+                            .append(",");  // Add this comma
+                    writer.append(
+                            item != null ? String.valueOf(((ReplenishmentRequest) item).isApproved()) : "");
+                    writer.append("\n");
+                }
+                break;
 
                 // Staff
                 case 4:

@@ -48,7 +48,7 @@ public class PharmacistView {
                         break;
                     case 4:
                         // Handle submission of a replenishment request
-                        handleReplenishmentRequest(pharmacist, scanner, database);
+                        handleReplenishmentRequest(pharmacist, scanner);
                         break;
                     case 5:
                         System.out.println("Exiting Pharmacist Menu...");
@@ -63,15 +63,9 @@ public class PharmacistView {
         }
     }
 
-    private static void handleReplenishmentRequest(Pharmacist pharmacist, Scanner scanner, HMSDatabase database) {
+    private static void handleReplenishmentRequest(Pharmacist pharmacist, Scanner scanner) {
         System.out.print("\nEnter medicine name for replenishment: ");
         String medicineName = scanner.nextLine();
-
-        Medicine medicine = database.getMedicineByName(medicineName);
-        if (medicine == null) {
-            System.out.println("Medicine not found in inventory.");
-            return;
-        }
 
         try {
             System.out.print("Enter quantity to request: ");
@@ -86,7 +80,6 @@ public class PharmacistView {
             // Submit replenishment request through Pharmacist
             ReplenishmentRequest request = pharmacist.submitReplenishmentRequest(medicineName, requestedQuantity);
             if (request != null) {
-                database.saveDatabase();
                 System.out.println("Replenishment request submitted successfully and saved.");
             }
         } catch (InputMismatchException e) {
