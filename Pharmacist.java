@@ -3,11 +3,13 @@ import java.util.List;
 
 public class Pharmacist extends User {
     private String name;
-    private List<ReplenishmentRequest> requests;
     private String gender;
     private int age;
     private ApptManager appointmentManager;
+    private DatabaseHelper dbHelper;
+    private List<ReplenishmentRequest> requests;
 
+    // Constructor
     public Pharmacist(String name, String gender, int age, String userId, String password, UserType userType) {
         super(userId, password, userType);
         this.name = name;
@@ -16,94 +18,124 @@ public class Pharmacist extends User {
         this.requests = new ArrayList<>();
     }
 
-    // Changed from static to instance method
+    // Set DatabaseHelper
+    public void setDatabaseHelper(DatabaseHelper dbHelper) {
+        this.dbHelper = dbHelper;
+    }
+
+    // Set AppointmentManager
     public void setAppointmentManager(ApptManager apptManager) {
         this.appointmentManager = apptManager;
     }
 
-    public String getName() {
-        return name;
-    }
+    // View Medical Records with PENDING Prescription Status
+    public void viewPendingPrescriptions() {
+        if (dbHelper == null) {
+            System.out.println("Error: Database helper is not set");
+            return;
+        }
 
-    public String getGender() {
-        return gender;
-    }
+        ArrayList<MedicalRecord> medicalRecords = dbHelper.initMedicalRecords();
+        System.out.println("\nViewing all PENDING prescriptions:");
+        System.out.println("----------------------------------------");
 
-    public int getAge() {
-        return age;
-    }
-
-    public void viewPendingPrescriptions(ArrayList<Appointment> appts) {
-        System.out.println("\nPending Prescriptions:");
-        System.out.println("---------------------");
         boolean found = false;
-        
-        for (Appointment appt : appts) {
-            if (appt.getPrescribedMedicine() != null && 
-                appt.getPrescriptionStatus().equals("PENDING")) {
-                System.out.println("Appointment ID: " + appt.getAppointmentID());
-                System.out.println("Patient: " + appt.getPatient().getName());
-                System.out.println("Prescribed Medicine: " + appt.getPrescribedMedicine());
-                System.out.println("Quantity Required: " + appt.getPrescribedQuantity());
-                System.out.println("---------------------");
+        for (MedicalRecord record : medicalRecords) {
+            if ("PENDING".equalsIgnoreCase(record.getPrescriptionStatus())) {
+                System.out.println("Appointment ID: " + record.getAppointmentId());
+                System.out.println("Patient ID: " + record.getPatientId());
+                System.out.println("Prescription: " + record.getPrescription());
+                System.out.println("Service: " + record.getService());
+                System.out.println("Notes: " + record.getNotes());
+                System.out.println("----------------------------------------");
                 found = true;
             }
         }
-        
+
         if (!found) {
-            System.out.println("No pending prescriptions found.");
+            System.out.println("No PENDING prescriptions found.");
         }
     }
 
-    public void updatePrescriptionStatus(int appointmentId, Medicine medicine, ArrayList<Appointment> appts, HMSDatabase database) {
-        if (appointmentManager == null || medicine == null) {
-            System.out.println("Error: Invalid appointment system or medicine");
+    // Update Prescription Status via ApptManager
+    public void updatePrescriptionStatus(int appointmentId) {
+        if (appointmentManager == null || dbHelper == null) {
+            System.out.println("Error: Appointment manager or Database helper is not set");
             return;
         }
-
-        // Find appointment and check prescribed quantity
-        Appointment targetAppt = null;
-        for (Appointment appt : appts) {
-            if (appt.getAppointmentID() == appointmentId) {
-                targetAppt = appt;
+    
+        // Load Medical Records and Medicines
+        ArrayList<MedicalRecord> medicalRecords = dbHelper.initMedicalRecords();
+        ArrayList<Medicine> medicines = dbHelper.initMedicines();
+    
+        // Find the medical record corresponding to the appointment ID
+        MedicalRecord targetRecord = null;
+        for (MedicalRecord record : medicalRecords) {
+            if (record.getAppointmentId() == appointmentId) {
+                targetRecord = record;
                 break;
             }
         }
-
-        if (targetAppt == null) {
-            System.out.println("Appointment not found.");
+    
+        // If no record found, print error and return
+        if (targetRecord == null) {
+            System.out.println("Error: No medical record found for Appointment ID: " + appointmentId);
             return;
         }
-
-        int prescribedQuantity = targetAppt.getPrescribedQuantity();
-        System.out.println("\nPerforming pre-dispensing checks...");
-
-        if (medicine.getQuantity() < prescribedQuantity) {
-            System.out.println("\n⚠️ CANNOT DISPENSE - Insufficient stock");
-            System.out.println("Current stock: " + medicine.getQuantity());
-            System.out.println("Required quantity: " + prescribedQuantity);
-            
-            int requestQuantity = prescribedQuantity + medicine.getThreshold() - medicine.getQuantity();
-            submitReplenishmentRequest(medicine.getName(), requestQuantity);
-            
-            appointmentManager.updatePrescriptionStatus(appointmentId, "PENDING", appts);
-            System.out.println("Prescription status remains PENDING until stock is replenished");
+    
+        // Get the prescription details
+        String medicineName = targetRecord.getPrescription();
+        int quantityToDispense = targetRecord.getQuantity();
+    
+        // Display prescription details
+        System.out.println("\nPrescription Details:");
+        System.out.println("----------------------");
+        System.out.println("Medicine Prescribed: " + medicineName);
+        System.out.println("Quantity Required: " + quantityToDispense);
+        System.out.println("----------------------");
+    
+        // Find the corresponding medicine in the inventory
+        Medicine targetMedicine = null;
+        for (Medicine medicine : medicines) {
+            if (medicine.getName().equalsIgnoreCase(medicineName)) {
+                targetMedicine = medicine;
+                break;
+            }
+        }
+    
+        // If no medicine found, print error and return
+        if (targetMedicine == null) {
+            System.out.println("Error: Medicine " + medicineName + " not found in inventory.");
             return;
         }
-
-        // Update medicine quantity
-        medicine.setQuantity(medicine.getQuantity() - prescribedQuantity);
-        
-        System.out.println("\n✓ Pre-dispensing checks passed:");
-        System.out.println("- Sufficient stock available");
-        appointmentManager.updatePrescriptionStatus(appointmentId, "DISPENSED", appts);
-        
-        // Save changes
-        database.saveDatabase();
-        
-        System.out.println("Prescription successfully dispensed");
-        System.out.println("Updated stock level: " + medicine.getQuantity());
+    
+        // Display available stock
+        System.out.println("\nAvailable Stock:");
+        System.out.println("----------------------");
+        System.out.println("Medicine Name: " + targetMedicine.getName());
+        System.out.println("Current Stock: " + targetMedicine.getQuantity());
+        System.out.println("----------------------");
+    
+        // Check if there is enough stock to dispense
+        if (targetMedicine.getQuantity() >= quantityToDispense) {
+            // Dispense the medicine
+            System.out.println("\nDispensing " + quantityToDispense + " units of " + medicineName + "...");
+            
+            // Update the prescription status to DISPENSED using ApptManager
+            appointmentManager.updatePrescriptionStatus(appointmentId, "DISPENSED");
+    
+            // Deduct the quantity from the medicine inventory
+            targetMedicine.setQuantity(targetMedicine.getQuantity() - quantityToDispense);
+            System.out.println("Successfully dispensed " + quantityToDispense + " of " + medicineName + ". Updated inventory.");
+    
+            // Save the updated medicine list to CSV
+            dbHelper.saveToCsv(medicines, "data/Medicine_List.csv", DatabaseHelper.medicineFields, 5);
+        } else {
+            // If not enough stock, print a warning message
+            System.out.println("Error: Not enough stock to dispense " + medicineName + ". Required: " + quantityToDispense + ", Available: " + targetMedicine.getQuantity());
+        }
     }
+    
 
     
     public void viewMedicationInventory(ArrayList<Medicine> medicines) {
@@ -139,30 +171,21 @@ public class Pharmacist extends User {
             System.out.println("Error: Invalid quantity requested");
             return null;
         }
-
+    
         ReplenishmentRequest request = new ReplenishmentRequest(medicineName, requestedQuantity, this.getUserId());
         requests.add(request);
-        
+    
+        // Save the request to the CSV immediately to ensure persistence
+        if (dbHelper != null) {
+            dbHelper.saveReplenishmentRequest(request); // Append request to CSV file for persistence
+        } else {
+            System.out.println("Error: Database helper is not set");
+        }
+    
         System.out.println("\nReplenishment Request Submitted Successfully");
         System.out.println("Medicine: " + medicineName);
         System.out.println("Quantity Requested: " + requestedQuantity);
         System.out.println("Request Status: Pending administrator approval");
         return request;
-    }
-
-    public void viewReplenishmentRequests() {
-        if (requests.isEmpty()) {
-            System.out.println("No replenishment requests found");
-            return;
-        }
-
-        System.out.println("\nReplenishment Requests Status:");
-        System.out.println("------------------------------");
-        for (ReplenishmentRequest request : requests) {
-            System.out.println("Medicine: " + request.getMedicineName());
-            System.out.println("Quantity Requested: " + request.getRequestedQuantity());
-            System.out.println("Status: " + (request.isApproved() ? "Approved ✓" : "Pending Administrator Approval"));
-            System.out.println("------------------------------");
-        }
     }
 }
