@@ -42,92 +42,267 @@ public class Administrator extends User {
     }
 
     public void viewStaff(ArrayList<Staff> stafflist) {
-        System.out.println("Hospital Staff:");
+
+        /*
+         * System.out.println("Hospital Staff:");
+         * for (Staff staff : stafflist) {
+         * System.out.println(staff);
+         * }
+         */
+        System.out.println("                    --- Hospital Staff ---                     ");
+        System.out.println("=====================================================================");
+        System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender", "Age");
+        System.out.println("=====================================================================");
         for (Staff staff : stafflist) {
-            System.out.println(staff);
+            System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5d |\n",
+                    staff.getUserId(),
+                    staff.getName(),
+                    staff.getRole(),
+                    staff.getGender(),
+                    staff.getAge());
         }
+        System.out.println("====================================================================");
         while (true) {
             System.out.println(
-                    "Filter by: \n" + "1. Role: Doctors\n" + "2. Role: Pharmacists\n" + "3. Role: Administrators\n" +
-                            "4. Gender: Male\n" + "5. Gender: Female\n" + "6. Age: 21-30\n" + "7. Age: 31-40\n"
+                    "Filter by: \n" + "0. No Filter\n" + "1. Role: Doctors\n" + "2. Role: Pharmacists\n" +
+                            "3. Role: Administrators\n" +
+                            "4. Gender: Male\n" + "5. Gender: Female\n" + "6. Age: 21-30\n" +
+                            "7. Age: 31-40\n"
                             + "8. Age: 41-50\n" + "9. Exit View Staff\n");
             int filter = scanner.nextInt();
             switch (filter) {
                 case 0:
-                    System.out.println("Hospital Staff:");
+                    // Display all staff
+                    System.out.println("                       --- Hospital Staff ---                        ");
+                    System.out.println("=====================================================================");
+                    System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
+                            "Age");
+                    System.out.println("=====================================================================");
+                    boolean foundAll = false;
                     for (Staff staff : stafflist) {
-                        System.out.println(staff);
+                        System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5d |\n",
+                                staff.getUserId(),
+                                staff.getName(),
+                                staff.getRole(),
+                                staff.getGender(),
+                                staff.getAge());
+                        foundAll = true;
                     }
+                    if (!foundAll) {
+                        System.out.println("| No matching staff found.                                         |");
+                    }
+                    System.out.println("=====================================================================");
                     break;
+
                 case 1:
-                    System.out.println("Hospital Staff(Doctors):");
+                    // Filter by role (Doctors)
+                    System.out.println("                    --- Hospital Staff (Doctors) ---                     ");
+                    System.out.println("=====================================================================");
+                    System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
+                            "Age");
+                    System.out.println("=====================================================================");
+                    boolean foundDoctor = false;
                     for (Staff staff : stafflist) {
                         if (staff.getRole().equalsIgnoreCase("Doctor")) {
-                            System.out.println(staff);
+                            System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5d |\n",
+                                    staff.getUserId(),
+                                    staff.getName(),
+                                    staff.getRole(),
+                                    staff.getGender(),
+                                    staff.getAge());
+                            foundDoctor = true;
                         }
                     }
+                    if (!foundDoctor) {
+                        System.out.println("| No matching staff found.                                         |");
+                    }
+                    System.out.println("=====================================================================");
                     break;
+
                 case 2:
-                    System.out.println("Hospital Staff(Pharmacists):");
+                    // Filter by role (Pharmacists)
+                    System.out.println("                    --- Hospital Staff (Pharmacists) ---                     ");
+                    System.out.println("=====================================================================");
+                    System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
+                            "Age");
+                    System.out.println("=====================================================================");
+                    boolean foundPharmacist = false;
                     for (Staff staff : stafflist) {
                         if (staff.getRole().equalsIgnoreCase("Pharmacist")) {
-                            System.out.println(staff);
+                            System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5d |\n",
+                                    staff.getUserId(),
+                                    staff.getName(),
+                                    staff.getRole(),
+                                    staff.getGender(),
+                                    staff.getAge());
+                            foundPharmacist = true;
                         }
                     }
+                    if (!foundPharmacist) {
+                        System.out.println("| No matching staff found.                                         |");
+                    }
+                    System.out.println("=====================================================================");
                     break;
+
                 case 3:
-                    System.out.println("Hospital Staff(Administrators):");
+                    // Filter by role (Administrators)
+                    System.out.println(
+                            "                    --- Hospital Staff (Administrators) ---                     ");
+                    System.out.println("=====================================================================");
+                    System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
+                            "Age");
+                    System.out.println("=====================================================================");
+                    boolean foundAdmin = false;
                     for (Staff staff : stafflist) {
                         if (staff.getRole().equalsIgnoreCase("Administrator")) {
-                            System.out.println(staff);
+                            System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5d |\n",
+                                    staff.getUserId(),
+                                    staff.getName(),
+                                    staff.getRole(),
+                                    staff.getGender(),
+                                    staff.getAge());
+                            foundAdmin = true;
                         }
                     }
+                    if (!foundAdmin) {
+                        System.out.println("| No matching staff found.                                         |");
+                    }
+                    System.out.println("=====================================================================");
+                    break;
+
                 case 4:
-                    System.out.println("Hospital Staff(Male):");
+                    // Filter by gender (Male)
+                    System.out.println("                    --- Hospital Staff (Male) ---                     ");
+                    System.out.println("=====================================================================");
+                    System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
+                            "Age");
+                    System.out.println("=====================================================================");
+                    boolean foundMale = false;
                     for (Staff staff : stafflist) {
                         if (staff.getGender().equalsIgnoreCase("Male")) {
-                            System.out.println(staff);
+                            System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5d |\n",
+                                    staff.getUserId(),
+                                    staff.getName(),
+                                    staff.getRole(),
+                                    staff.getGender(),
+                                    staff.getAge());
+                            foundMale = true;
                         }
                     }
+                    if (!foundMale) {
+                        System.out.println("| No matching staff found.                                         |");
+                    }
+                    System.out.println("=====================================================================");
                     break;
+
                 case 5:
-                    System.out.println("Hospital Staff(Female):");
+                    // Filter by gender (Female)
+                    System.out.println("                    --- Hospital Staff (Female) ---                     ");
+                    System.out.println("=====================================================================");
+                    System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
+                            "Age");
+                    System.out.println("=====================================================================");
+                    boolean foundFemale = false;
                     for (Staff staff : stafflist) {
                         if (staff.getGender().equalsIgnoreCase("Female")) {
-                            System.out.println(staff);
+                            System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5d |\n",
+                                    staff.getUserId(),
+                                    staff.getName(),
+                                    staff.getRole(),
+                                    staff.getGender(),
+                                    staff.getAge());
+                            foundFemale = true;
                         }
                     }
+                    if (!foundFemale) {
+                        System.out.println("| No matching staff found.                                         |");
+                    }
+                    System.out.println("=====================================================================");
                     break;
+
                 case 6:
-                    System.out.println("Hospital Staff (Age: 21-30):");
+                    // Filter by age range (21-30)
+                    System.out.println("                    --- Hospital Staff (Age: 21-30) ---                     ");
+                    System.out.println("=====================================================================");
+                    System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
+                            "Age");
+                    System.out.println("=====================================================================");
+                    boolean foundAge21to30 = false;
                     for (Staff staff : stafflist) {
                         if (staff.getAge() >= 21 && staff.getAge() <= 30) {
-                            System.out.println(staff);
+                            System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5d |\n",
+                                    staff.getUserId(),
+                                    staff.getName(),
+                                    staff.getRole(),
+                                    staff.getGender(),
+                                    staff.getAge());
+                            foundAge21to30 = true;
                         }
                     }
+                    if (!foundAge21to30) {
+                        System.out.println("| No matching staff found.                                         |");
+                    }
+                    System.out.println("=====================================================================");
                     break;
+
                 case 7:
-                    System.out.println("Hospital Staff (Age: 31-40):");
+                    // Filter by age range (31-40)
+                    System.out.println("                    --- Hospital Staff (Age: 31-40) ---                     ");
+                    System.out.println("=====================================================================");
+                    System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
+                            "Age");
+                    System.out.println("=====================================================================");
+                    boolean foundAge31to40 = false;
                     for (Staff staff : stafflist) {
                         if (staff.getAge() >= 31 && staff.getAge() <= 40) {
-                            System.out.println(staff);
+                            System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5d |\n",
+                                    staff.getUserId(),
+                                    staff.getName(),
+                                    staff.getRole(),
+                                    staff.getGender(),
+                                    staff.getAge());
+                            foundAge31to40 = true;
                         }
                     }
+                    if (!foundAge31to40) {
+                        System.out.println("| No matching staff found.                                         |");
+                    }
+                    System.out.println("=====================================================================");
                     break;
+
                 case 8:
-                    System.out.println("Hospital Staff (Age: 41-50):");
+                    // Filter by age range (41-50)
+                    System.out.println("                    --- Hospital Staff (Age: 41-50) ---                     ");
+                    System.out.println("=====================================================================");
+                    System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
+                            "Age");
+                    System.out.println("=====================================================================");
+                    boolean foundAge41to50 = false;
                     for (Staff staff : stafflist) {
                         if (staff.getAge() >= 41 && staff.getAge() <= 50) {
-                            System.out.println(staff);
+                            System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5d |\n",
+                                    staff.getUserId(),
+                                    staff.getName(),
+                                    staff.getRole(),
+                                    staff.getGender(),
+                                    staff.getAge());
+                            foundAge41to50 = true;
                         }
                     }
+                    if (!foundAge41to50) {
+                        System.out.println("| No matching staff found.                                         |");
+                    }
+                    System.out.println("=====================================================================");
                     break;
                 case 9:
                     return;
                 default:
-                    System.out.println("Invalid option. Please try again.");
+                    System.out.println("Invalid choice. Please try again.");
+                    break;
             }
+
         }
+
     }
 
     public void addStaff(ArrayList<Staff> stafflist) {
@@ -252,22 +427,79 @@ public class Administrator extends User {
         return;
     }
 
-    public void viewAppts(ArrayList<Appointment> appts) {
-        System.out.println("All appointments:");
+    /*
+     * public void viewAppts(ArrayList<Appointment> appts, ArrayList<MedicalRecord>
+     * records) {
+     * System.out.println("Viewing all appointments:");
+     * for (Appointment appointment : appts) {
+     * System.out.println(appointment);
+     * if (appointment.getStatus() == Status.COMPLETED) {
+     * for (MedicalRecord record : records) {
+     * if (record.getAppointmentId() == appointment.getAppointmentID())
+     * System.out.println(
+     * "(OUTCOME) Diagnosis: " + record.getDiagnosis() +
+     * ", Prescription: " + record.getPrescription() +
+     * ", Service: " + record.getService() +
+     * ", Notes: " + record.getNotes());
+     * }
+     * }
+     * }
+     * }
+     */
+
+    public void viewAppts(ArrayList<Appointment> appts, ArrayList<MedicalRecord> records) {
+        System.out.println(
+                "                                                         --- All Appointments ---                                                       ");
+        System.out.println(
+                "========================================================================================================================================");
+        System.out.printf("| %-10s | %-15s | %-15s | %-20s | %-12s | %-20s | %-10s | %-10s|\n",
+                "Appt ID", "Patient Name", "Patient ID", "Doctor Name", "Doctor ID", "Status", "Date", "Time");
+        System.out.println(
+                "========================================================================================================================================");
+
         for (Appointment appointment : appts) {
-            System.out.println(appointment);
+            System.out.printf("| %-10d | %-15s | %-15s | %-20s | %-12s | %-20s | %-10s | %-10s|\n",
+                    appointment.getAppointmentID(),
+                    appointment.getPatient().getName(),
+                    appointment.getPatient().getPatientId(),
+                    appointment.getDoctor().getName(),
+                    appointment.getDoctor().getUserId(),
+                    appointment.getStatus(),
+                    appointment.getDate(),
+                    appointment.getTime());
+        }
+        System.out.println(
+                "========================================================================================================================================");
+        System.out.println("Outcomes:");
+        for (Appointment appointment : appts) {
             if (appointment.getStatus() == Status.COMPLETED) {
-                System.out.println("Outcome:");
-                // get outcome from apptOutcomes
+                for (MedicalRecord record : records) {
+                    if (record.getAppointmentId() == appointment.getAppointmentID()) {
+                        System.out.println(
+                                "Appointment ID: " + record.getAppointmentId() + ", Diagnosis: " + record.getDiagnosis()
+                                        +
+                                        ", Prescription: " + record.getPrescription() +
+                                        ", Service: " + record.getService() +
+                                        ", Notes: " + record.getNotes());
+                    }
+                }
             }
         }
     }
 
     public void viewInventory(ArrayList<Medicine> inventory) {
-        System.out.println("Viewing Medication Inventory:");
+        System.out.println("           --- Medication Inventory ---           ");
+        System.out.println("==================================================");
+        System.out.printf("| %-20s | %-10s | %-10s |\n", "Medicine Name", "Quantity", "Threshold");
+        System.out.println("==================================================");
+
         for (Medicine medicine : inventory) {
-            System.out.println(medicine);
+            System.out.printf("| %-20s | %-10d | %-10d |\n",
+                    medicine.getName(),
+                    medicine.getQuantity(),
+                    medicine.getThreshold());
         }
+        System.out.println("==================================================");
     }
 
     public void addMedicine(ArrayList<Medicine> inventory) {
@@ -341,10 +573,20 @@ public class Administrator extends User {
     }
 
     public void approveRequest(ArrayList<Medicine> inventory, ArrayList<ReplenishmentRequest> replenishmentRequests) {
-        System.out.println("The current replenishment requests are:");
+        System.out.println("                     --- Replenishment Requests ---                      ");
+        System.out.println("=========================================================================");
+        System.out.printf("| %-15s | %-20s | %-15s | %-10s |\n", "Name", "Requested Quantity", "Pharmacist ID",
+                "Approved?");
+        System.out.println("=========================================================================");
+
         for (ReplenishmentRequest request : replenishmentRequests) {
-            System.out.println(request);
+            System.out.printf("| %-15s | %-20d | %-15s | %-10s |\n",
+                    request.getMedicineName(),
+                    request.getRequestedQuantity(),
+                    request.getPharmacistId(), // false
+                    request.isApproved() ? "Yes" : "No");
         }
+        System.out.println("=========================================================================");
         System.out.println("Enter the name of the medicine whose request is to be approved/declined: ");
         String medicineName = scanner.nextLine();
         Medicine med = null;

@@ -21,7 +21,7 @@ public class AdminView {
                     admin.viewStaff(database.getStaff());
                     int manage = 0;
                     do {
-                        System.out.println("Manage Staff: \n" + "1. Add Staff\n" + "2. Remove Staff\n"
+                        System.out.println("--- Manage Staff ---\n" + "1. Add Staff\n" + "2. Remove Staff\n"
                                 + "3. Update Staff details\n" + "4. Exit");
                         manage = scanner.nextInt();
                         switch (manage) {
@@ -43,7 +43,7 @@ public class AdminView {
                     } while (manage != 4);
                     break;
                 case 2:
-                    admin.viewAppts(database.getAppointments());
+                    admin.viewAppts(database.getAppointments(), database.getRecords());
                     break;
                 case 3:
                     admin.viewInventory(database.getInventory());
