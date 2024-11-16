@@ -42,7 +42,7 @@ public class DatabaseHelper {
         List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
         ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
         for (List<String> medrecord : medRecords) {
-            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2), Integer.parseInt(medrecord.get(3)),medrecord.get(4),medrecord.get(5)));
+  //          medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2), Integer.parseInt(medrecord.get(3)),medrecord.get(4),medrecord.get(5)));
 
         }
 
@@ -73,7 +73,7 @@ public class DatabaseHelper {
         List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
         ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
         for (List<String> medrecord : medRecords) {
-            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2), Integer.parseInt(medrecord.get(3)),medrecord.get(4),medrecord.get(5)));
+    //        medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2), Integer.parseInt(medrecord.get(3)),medrecord.get(4),medrecord.get(5)));
 
         }
 
@@ -95,9 +95,23 @@ public class DatabaseHelper {
 
     public static ArrayList<MedicalRecord> initMedicalRecords() {
         List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
-        ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
+        ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();  
         for (List<String> medrecord : medRecords) {
-            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2), Integer.parseInt(medrecord.get(3)),medrecord.get(4),medrecord.get(5)));
+            try {
+                medicalRecords.add(new MedicalRecord(
+                    medrecord.get(0),  // Diagnosis
+                    medrecord.get(1),  // Prescription
+                    medrecord.get(2),  // Patient ID
+                    Integer.parseInt(medrecord.get(3)),  // Appointment ID
+                    medrecord.get(4),  // Notes
+                    medrecord.get(5),  // Service
+                    Integer.parseInt(medrecord.get(6)),  // Quantity
+                    medrecord.get(7)   // Prescription Status
+                ));
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println("Error reading MedicalRecord data from CSV. Please ensure all columns are correct.");
+                e.printStackTrace();
+            }
         }
         return medicalRecords;
     }
@@ -401,18 +415,26 @@ public class DatabaseHelper {
                 // Med Rec
                 case 1:
                     for (T item : list) {
-                        // item = (Appointment)item;
+                        // Append the details of each MedicalRecord to the CSV
                         writer.append(item != null ? String.valueOf(((MedicalRecord) item).getDiagnosis()) : "")
                                 .append(",");
                         writer.append(item != null ? String.valueOf(((MedicalRecord) item).getPrescription()) : "")
                                 .append(",");
-                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getPatientId()) : "").append(",");;
-                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getAppointmentId()) : "").append(",");;
-                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getNotes()) : "").append(",");;
-                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getService()) : "");
-                        writer.append("\n");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getPatientId()) : "")
+                                .append(",");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getAppointmentId()) : "")
+                                .append(",");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getNotes()) : "")
+                                .append(",");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getService()) : "")
+                                .append(",");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getQuantity()) : "")
+                                .append(",");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getPrescriptionStatus()) : "")
+                                .append("\n");
                     }
                     break;
+
                 // Patient
                 case 2:
                     for (T item : list) {
