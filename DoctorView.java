@@ -22,31 +22,36 @@ public class DoctorView {
             int choice = scanner.nextInt();
             scanner.nextLine();  // Consume newline
             switch (choice) {
-                case 1:  // View a specific Patient Medical Record
+
+                // ------------------------ View Patient Medical Record ------------------------
+                case 1:
                     System.out.print("Enter Patient ID to view their record: ");
                     String patientIdForView = scanner.nextLine();
-                    doctor.getRecordForPatient(database.getAllPatients(), patientIdForView, apptManager, database);
+                    doctor.viewPatientMedicalRecord(patientIdForView, database);
                     break;
 
-
+                // ------------------------ Update Patient Record ------------------------    
                 case 2: // Update Patient Record
                     System.out.print("Enter Patient ID: ");
                     String patientIdForUpdate = scanner.nextLine();
                     doctor.updatePatientRecord(patientIdForUpdate, database);
                     break;
                 
-
                 // ------------------------ View Personal Schedule ------------------------
                 case 3:
                     System.out.print("Enter the date to view your schedule (dd-MMM, e.g., 17-Nov): ");
-                    String scheduleDate = scanner.nextLine();
-                
-                    // View personal schedule for the specified date
+                    String scheduleDate = scanner.nextLine().trim(); // Collect the date once
+
+                    // Validate input date format
+                    while (!scheduleDate.matches("\\d{2}-[A-Za-z]{3}")) {
+                        System.out.print("Invalid format. Please enter the date in the format (dd-MMM, e.g., 17-Nov): ");
+                        scheduleDate = scanner.nextLine().trim();
+                    }
+
+                    // Pass the valid scheduleDate directly to the AppointmentManager
                     apptManager.viewPersonalScheduleForDate(doctor, scheduleDate, database);
                     break;
                 
-
-
                 // ------------------------ Set Availability ------------------------
     
                 case 4:
@@ -204,17 +209,7 @@ public class DoctorView {
         }
     }
 
-    private static List<TimeSlot> parseAvailability(String availabilityInput) {
-        List<TimeSlot> availability = new ArrayList<>();
-        String[] slots = availabilityInput.split(",");
-        for (String slot : slots) {
-            String[] parts = slot.trim().split(" ");
-            if (parts.length == 2) {
-                availability.add(new TimeSlot(parts[0], parts[1]));
-            }
-        }
-        return availability;
-    }
+
 
     private static List<Medicine> parseMedications(String medicationsInput) {
         List<Medicine> medications = new ArrayList<>();

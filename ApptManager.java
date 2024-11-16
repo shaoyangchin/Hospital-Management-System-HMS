@@ -178,38 +178,7 @@ public class ApptManager {
 
 
 
-    // SY DOCTOR DONE
-    // 1. View Patient Medical Record
-    public void viewPastOutcomes(Patient patient, HMSDatabase database) {
-        int haveAppt = 0;
-        ArrayList<Appointment> appts = database.getAppointments();
-        ArrayList<MedicalRecord> medicalRecords = database.getRecords();
-
-        for (MedicalRecord medicalRecord : medicalRecords) {
-            if(Objects.equals(patient.getUserId(), medicalRecord.getPatientId())){
-                for (Appointment appt : appts) {
-                    if (Objects.equals(appt.getAppointmentID(), medicalRecord.getAppointmentId())) {
-                        System.out.println("Appointment ID: "+medicalRecord.getAppointmentId()+", Doctor: "+appt.getDoctor().getName()+", Date: "+appt.getDate()+", Time: "+appt.getTime());
-                        System.out.println("Diagnosis:" + (medicalRecord.getDiagnosis()) );
-                        System.out.println("Prescription:" + (medicalRecord.getPrescription()) );
-                        System.out.println("Notes:" + (medicalRecord.getNotes()) );
-                        System.out.println("Service Provided:" + (medicalRecord.getService()) );
-                        System.out.println(); //spacing between each entry
-                        haveAppt++;
-                    }
-                }
-                
-            }
-
-        }
-        if (haveAppt == 0) {
-            System.out.println("No completed appointments.");
-        }
-    }
-
-    // 2. Update Patient Medical Record
-
-
+    // SY DOCTOR METHODS
     // 3. View Personal Schedule
     public void viewPersonalScheduleForDate(Doctor doctor, String date, HMSDatabase database) {
         ArrayList<Appointment> appointments = database.getAppointments();
@@ -228,27 +197,11 @@ public class ApptManager {
             schedule.add("Free");
         }
     
-        // DEBUG: Display all appointments
-        System.out.println("--- Debug: All Appointments ---");
-        for (Appointment appt : appointments) {
-            System.out.println("Appointment ID: " + appt.getAppointmentID() +
-                               ", Status: " + appt.getStatus() +
-                               ", Doctor ID: " + appt.getDoctor().getUserId() +
-                               ", Date: " + appt.getDate() +
-                               ", Time: " + appt.getTime());
-        }
-    
-        // DEBUG: Confirmed appointments for the doctor
-        System.out.println("--- Debug: CONFIRMED Appointments for Dr. " + doctor.getUserId() + " on " + date + " ---");
-    
+        // Populate schedule with confirmed appointments for the specified doctor and date
         for (Appointment appt : appointments) {
             if (appt.getDoctor().getUserId().equals(doctor.getUserId()) &&
                 appt.getDate().equalsIgnoreCase(date) &&
                 appt.getStatus() == Status.CONFIRMED) {
-                
-                System.out.println("Appointment ID: " + appt.getAppointmentID() +
-                                   ", Patient: " + (appt.getPatient() != null ? appt.getPatient().getName() : "N/A") +
-                                   ", Time: " + appt.getTime());
     
                 String appointmentTime = appt.getTime();
     
@@ -262,15 +215,24 @@ public class ApptManager {
             }
         }
     
-        // Print the schedule in a table format
-        System.out.println("--- Personal Schedule for Dr. " + doctor.getName() + " on " + date + " ---");
-        System.out.printf("%1$-10s | %2$-20s%n", "Time", "Appointment");
-        System.out.println("-------------------------------------");
+        // Print the schedule in a formatted table
+        String header = String.format("| %-10s | %-20s |", "Time", "Appointment");
+        String separator = "=".repeat(header.length());
+        System.out.println("\n--- Personal Schedule for Dr. " + doctor.getName() + " on " + date + " ---");
+        System.out.println(separator);
+        System.out.println(header);
+        System.out.println(separator);
     
         for (int i = 0; i < timeSlots.length; i++) {
-            System.out.printf("%1$-10s | %2$-20s%n", timeSlots[i], schedule.get(i));
+            System.out.printf("| %-10s | %-20s |%n", timeSlots[i], schedule.get(i));
         }
+    
+        System.out.println(separator); // Closing line of the table
     }
+    
+    
+    
+    
     
     
     
