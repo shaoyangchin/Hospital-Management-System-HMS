@@ -6,6 +6,12 @@ import java.util.Scanner;
 
 public class ApptManager {
     //private List<Appointment> appts = new ArrayList<>();
+    private DatabaseHelper dbHelper;
+
+    // Constructor
+    public ApptManager(DatabaseHelper dbHelper) {
+        this.dbHelper = dbHelper;
+    }
 
     public ApptManager() {}
 
@@ -432,37 +438,43 @@ public class ApptManager {
     
 
     // Add this new method for updating prescription status
-    public void updatePrescriptionStatus(int apptId, String prescriptionStatus, ArrayList<Appointment> appts) {
-        if (prescriptionStatus == null || prescriptionStatus.trim().isEmpty()) {
-            System.out.println("Error: Prescription status cannot be empty");
+    public void updatePrescriptionStatus(int appointmentId, String newStatus) {
+        if (dbHelper == null) {
+            System.out.println("Error: Database helper is not set");
             return;
         }
-
-        String status = prescriptionStatus.trim().toUpperCase();
-        if (!isValidPrescriptionStatus(status)) {
-            System.out.println("Error: Invalid prescription status. Must be PENDING, DISPENSED, or CANCELLED");
+    
+        // Validate the new status to ensure it's allowed
+        if (!isValidPrescriptionStatus(newStatus)) {
+            System.out.println("Error: Invalid prescription status. Must be PENDING, DISPENSED, or CANCELLED.");
             return;
         }
-
-        for (Appointment appt : appts) {
-            if (appt.getAppointmentID() == apptId) {
-                if (appt.getPrescribedMedicine() == null) {
-                    System.out.println("Error: No prescription found for this appointment.");
-                    return;
-                }
-
-                appt.setPrescriptionStatus(status);
-                System.out.println("Prescription status updated successfully for Appointment ID: " + apptId);
-                System.out.println("New Status: " + status);
+    
+        // Load all medical records from the CSV file
+        ArrayList<MedicalRecord> medicalRecords = dbHelper.initMedicalRecords();
+    
+        // Search for the medical record that matches the appointment ID
+        for (MedicalRecord record : medicalRecords) {
+            if (record.getAppointmentId() == appointmentId) {
+                // Update the prescription status
+                record.setPrescriptionStatus(newStatus);
+                System.out.println("Prescription status updated successfully for Appointment ID: " + appointmentId);
+    
+                // Save the updated medical records back to CSV using dbHelper instance
+                dbHelper.saveToCsv(medicalRecords, "data/MedicalRecord_List.csv", DatabaseHelper.medRecFields, 1);
                 return;
             }
         }
-        System.out.println("Appointment with ID " + apptId + " not found.");
+    
+        // If no medical record is found
+        System.out.println("Error: No medical record found for Appointment ID: " + appointmentId);
     }
-
+    
+    // Helper method to validate prescription status
     private boolean isValidPrescriptionStatus(String status) {
-        return status.equals("PENDING") || 
-                status.equals("DISPENSED") || 
-                status.equals("CANCELLED");
+        return status.equalsIgnoreCase("PENDING") ||
+               status.equalsIgnoreCase("DISPENSED") ||
+               status.equalsIgnoreCase("CANCELLED");
     }
+    
 }
