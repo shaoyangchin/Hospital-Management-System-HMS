@@ -1,7 +1,7 @@
-Diagnosis,Prescription,PatientId,AppointmentId,Notes,Service
-Fever,Paracetamol,P1001,008,I think he sick,X-Ray
-Flu,Ibuprofen,P1001,9,I think he sick,pee test
-IDK,Amoxicillin,P1001,10,I think he sick,blood test
-Fever,Paracetamol,P1002,5,I think he sick,temperature taken
-Flu,Ibuprofen,P1003,11,I think he sick, knee surgery
-Fever,Paracetamol,P1003,12,I think he sick, brain surgery
+Diagnosis,Prescription,PatientId,AppointmentId,Notes,Service,Quantity,PrescriptionStatus
+Fever,Paracetamol,P1001,008,I think he sick,X-Ray,10,PENDING
+Flu,Ibuprofen,P1001,9,I think he sick,pee test,10,PENDING
+IDK,Amoxicillin,P1001,10,I think he sick,blood test,10,PENDING
+Fever,Paracetamol,P1002,5,I think he sick,temperature taken,10,PENDING
+Flu,Ibuprofen,P1003,11,I think he sick, knee surgery,10,PENDING
+Fever,Paracetamol,P1003,12,I think he sick, brain surgery,10,PENDING
