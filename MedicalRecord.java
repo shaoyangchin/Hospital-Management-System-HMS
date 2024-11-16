@@ -6,10 +6,9 @@ public class MedicalRecord {
     private String notes;
     private String service;
     private int quantity;
-    private String prescriptionStatus;
 
-    // Constructor with all the necessary fields
-    public MedicalRecord(String diagnosis, String prescription, String patientId, int appointmentId, String notes, String service, int quantity, String prescriptionStatus) {
+    // Updated constructor without prescriptionStatus
+    public MedicalRecord(String diagnosis, String prescription, String patientId, int appointmentId, String notes, String service, int quantity) {
         this.diagnosis = diagnosis;
         this.prescription = prescription;
         this.patientId = patientId;
@@ -17,10 +16,9 @@ public class MedicalRecord {
         this.notes = notes;
         this.service = service;
         this.quantity = quantity;
-        this.prescriptionStatus = prescriptionStatus;
     }
 
-    // Getters and Setters
+    // Getters remain the same (except removed prescriptionStatus getter)
     public String getDiagnosis() {
         return diagnosis;
     }
@@ -49,14 +47,7 @@ public class MedicalRecord {
         return quantity;
     }
 
-    public String getPrescriptionStatus() {
-        return prescriptionStatus;
-    }
-
-    public void setPrescriptionStatus(String prescriptionStatus) {
-        this.prescriptionStatus = prescriptionStatus;
-    }
-
+    // Updated toString() without prescriptionStatus
     @Override
     public String toString() {
         return "Appointment ID: " + appointmentId + "\n"
@@ -65,7 +56,6 @@ public class MedicalRecord {
              + "Prescription: " + prescription + "\n"
              + "Service: " + service + "\n"
              + "Notes: " + notes + "\n"
-             + "Quantity: " + quantity + "\n"
-             + "Prescription Status: " + prescriptionStatus + "\n";
+             + "Quantity: " + quantity + "\n";
     }
 }
