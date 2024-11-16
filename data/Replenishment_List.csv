@@ -1,3 +1,2 @@
-medicineName,requestedQuantity,pharmacistId,
-Paracetamol,100,P001
-Amoxicillin,50,P001
+MedicineName,RequestedQuantity,PharmacistId,IsApproved,
+Amoxicillin,100,P001false
