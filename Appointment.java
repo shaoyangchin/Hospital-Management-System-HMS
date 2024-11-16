@@ -15,10 +15,11 @@ public class Appointment {
     }
 
     // Constructor with Patient and Doctor
-    public Appointment(int appointmentID/*, String outcome*/, String date, String time, Status status, Patient patient,
+    public Appointment(int appointmentID/* , String outcome */, String date, String time, Status status,
+            Patient patient,
             Doctor doctor) {
         this.appointmentID = appointmentID;
-        //this.outcome = outcome;
+        // this.outcome = outcome;
         this.status = status;
         this.date = date;
         this.time = time;
@@ -36,7 +37,7 @@ public class Appointment {
     }
 
     public void setOutcome(String outcome) {
-        //this.outcome = outcome;
+        // this.outcome = outcome;
     }
 
     public Patient getPatient() {
@@ -79,9 +80,9 @@ public class Appointment {
     @Override
     public String toString() {
         return "Appointment ID: " + appointmentID
-                // + ", Patient: "
-                // + (patient != null ? (patient.getName())
-                //         : "No patient assigned")
+                + ", Patient: "
+                + (patient != null ? (patient.getName() + ", Patient ID: " + patient.getUserId())
+                        : "No patient assigned")
                 + ", Doctor: "
                 + (doctor != null ? (doctor.getName() + ", Doctor ID: " + doctor.getUserId()) : "No doctor assigned")
                 + ", Status: " + status
