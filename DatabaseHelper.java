@@ -201,8 +201,6 @@ public class DatabaseHelper {
         List<List<String>> records = readFile("data/Appointment_List.csv");
     
         for (List<String> record : records) {
-            // Debug: Print each record
-            System.out.println("Loaded Appointment Record: " + record);
     
             Patient patient = findPatientById(record.get(2), patients);
             Doctor doctor = findDoctorById(record.get(3), doctors);
@@ -479,15 +477,15 @@ public class DatabaseHelper {
                     }
 
                     break;
-                //Medicine
-                case 5:
-                    for (T item : list) {
-                        writer.append(item != null ? String.valueOf(((Medicine) item).getName()) : "").append(",");
-                        writer.append(item != null ? String.valueOf(((Medicine) item).getQuantity()) : "").append(",");
-                        writer.append(item != null ? String.valueOf(((Medicine) item).getThreshold()) : "");
-                    }
-                    break;
-                   
+                case 5:  // Medicine list
+                for (T item : list) {
+                    writer.append(item != null ? String.valueOf(((Medicine) item).getName()) : "").append(",");
+                    writer.append(item != null ? String.valueOf(((Medicine) item).getQuantity()) : "").append(",");
+                    writer.append(item != null ? String.valueOf(((Medicine) item).getThreshold()) : "");
+                    writer.append("\n");
+                }
+                break;
+
                 // Availabilities
                 case 6:
                     for (T item : list) {
