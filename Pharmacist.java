@@ -28,116 +28,25 @@ public class Pharmacist extends User {
         this.appointmentManager = apptManager;
     }
 
-    // View Medical Records with PENDING Prescription Status
-    public void viewPendingPrescriptions() {
-        if (dbHelper == null) {
-            System.out.println("Error: Database helper is not set");
+      // View Medical Records with PENDING Prescription Status
+      public void viewPendingPrescriptions(HMSDatabase database) {
+        if (appointmentManager == null) {
+            System.out.println("Error: Appointment manager is not set");
             return;
         }
-
-        ArrayList<MedicalRecord> medicalRecords = dbHelper.initMedicalRecords();
-        System.out.println("\nViewing all PENDING prescriptions:");
-        System.out.println("----------------------------------------");
-
-        boolean found = false;
-        for (MedicalRecord record : medicalRecords) {
-            if ("PENDING".equalsIgnoreCase(record.getPrescriptionStatus())) {
-                System.out.println("Appointment ID: " + record.getAppointmentId());
-                System.out.println("Patient ID: " + record.getPatientId());
-                System.out.println("Prescription: " + record.getPrescription());
-                System.out.println("Service: " + record.getService());
-                System.out.println("Notes: " + record.getNotes());
-                System.out.println("----------------------------------------");
-                found = true;
-            }
-        }
-
-        if (!found) {
-            System.out.println("No PENDING prescriptions found.");
-        }
+        appointmentManager.viewPendingPharmacyAppointments(database);
     }
 
     // Update Prescription Status via ApptManager
-    public void updatePrescriptionStatus(int appointmentId) {
-        if (appointmentManager == null || dbHelper == null) {
-            System.out.println("Error: Appointment manager or Database helper is not set");
+    public void updatePrescriptionStatus(int appointmentId, HMSDatabase database) {
+        if (appointmentManager == null) {
+            System.out.println("Error: Appointment manager is not set");
             return;
         }
-    
-        // Load Medical Records and Medicines
-        ArrayList<MedicalRecord> medicalRecords = dbHelper.initMedicalRecords();
-        ArrayList<Medicine> medicines = dbHelper.initMedicines();
-    
-        // Find the medical record corresponding to the appointment ID
-        MedicalRecord targetRecord = null;
-        for (MedicalRecord record : medicalRecords) {
-            if (record.getAppointmentId() == appointmentId) {
-                targetRecord = record;
-                break;
-            }
-        }
-    
-        // If no record found, print error and return
-        if (targetRecord == null) {
-            System.out.println("Error: No medical record found for Appointment ID: " + appointmentId);
-            return;
-        }
-    
-        // Get the prescription details
-        String medicineName = targetRecord.getPrescription();
-        int quantityToDispense = targetRecord.getQuantity();
-    
-        // Display prescription details
-        System.out.println("\nPrescription Details:");
-        System.out.println("----------------------");
-        System.out.println("Medicine Prescribed: " + medicineName);
-        System.out.println("Quantity Required: " + quantityToDispense);
-        System.out.println("----------------------");
-    
-        // Find the corresponding medicine in the inventory
-        Medicine targetMedicine = null;
-        for (Medicine medicine : medicines) {
-            if (medicine.getName().equalsIgnoreCase(medicineName)) {
-                targetMedicine = medicine;
-                break;
-            }
-        }
-    
-        // If no medicine found, print error and return
-        if (targetMedicine == null) {
-            System.out.println("Error: Medicine " + medicineName + " not found in inventory.");
-            return;
-        }
-    
-        // Display available stock
-        System.out.println("\nAvailable Stock:");
-        System.out.println("----------------------");
-        System.out.println("Medicine Name: " + targetMedicine.getName());
-        System.out.println("Current Stock: " + targetMedicine.getQuantity());
-        System.out.println("----------------------");
-    
-        // Check if there is enough stock to dispense
-        if (targetMedicine.getQuantity() >= quantityToDispense) {
-            // Dispense the medicine
-            System.out.println("\nDispensing " + quantityToDispense + " units of " + medicineName + "...");
-            
-            // Update the prescription status to DISPENSED using ApptManager
-            appointmentManager.updatePrescriptionStatus(appointmentId, "DISPENSED");
-    
-            // Deduct the quantity from the medicine inventory
-            targetMedicine.setQuantity(targetMedicine.getQuantity() - quantityToDispense);
-            System.out.println("Successfully dispensed " + quantityToDispense + " of " + medicineName + ". Updated inventory.");
-    
-            // Save the updated medicine list to CSV
-            dbHelper.saveToCsv(medicines, "data/Medicine_List.csv", DatabaseHelper.medicineFields, 5);
-        } else {
-            // If not enough stock, print a warning message
-            System.out.println("Error: Not enough stock to dispense " + medicineName + ". Required: " + quantityToDispense + ", Available: " + targetMedicine.getQuantity());
-        }
+        appointmentManager.dispenseMedicinePharmacist(appointmentId, database);
     }
-    
 
-    
+
     public void viewMedicationInventory(ArrayList<Medicine> medicines) {
         if (medicines.isEmpty()) {
             System.out.println("No medicines in inventory");
