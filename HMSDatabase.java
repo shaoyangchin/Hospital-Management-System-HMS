@@ -13,6 +13,7 @@ public class HMSDatabase {
     private ArrayList<ReplenishmentRequest> replenishmentRequests;
     private ArrayList<Staff> stafflist;
     private ArrayList<MedicalRecord> medicalRecords;
+    private ArrayList<Availability> availabilities;
 
     // Constructor to initialize the database
     public HMSDatabase() {
@@ -27,6 +28,8 @@ public class HMSDatabase {
         replenishmentRequests = DatabaseHelper.initReplenishmentRequests();
         stafflist = DatabaseHelper.initStafflist();
         medicalRecords = DatabaseHelper.initMedicalRecords();
+        availabilities = DatabaseHelper.initAvailabilities();
+
     }
 
     // Method to get Appt manager
@@ -166,6 +169,10 @@ public class HMSDatabase {
 
     public ArrayList<MedicalRecord> getRecords() {
         return medicalRecords;
+    }
+
+    public ArrayList<Availability> getAvailabilities() {
+        return availabilities;
     }
 
     public void resetDatabase() {

@@ -12,41 +12,19 @@ public class Doctor extends User {
         this.name = name;
         this.gender = gender;
         this.age = age;
+        this.availability = new ArrayList<>();
     }
 
     public String getName() {
         return name;
     }
 
-    public List<Appointment> getAppointments(HMSDatabase database) {
-        return database.getAppointments();
-    }
-
     public List<TimeSlot> getAvailability() {
         return availability;
     }
 
-    public void setAvailability(List<TimeSlot> availability) {
-        this.availability = availability;
-    }
 
-    public void viewSchedule(HMSDatabase database) {
-        System.out.println("Doctor's Schedule:");
-        for (Appointment appointment : database.getAppointments()) {
-            System.out.println(appointment);
-        }
-    }
 
-    public void acceptAppointment(int appointmentID, HMSDatabase database) {
-        for (Appointment appointment : database.getAppointments()) {
-            if (appointment.getAppointmentID() == appointmentID) {
-                appointment.setStatus(Status.CONFIRMED);
-                System.out.println("Appointment accepted.");
-                return;
-            }
-        }
-        System.out.println("Appointment not found.");
-    }
 
     // Medical Record Management
     public void getRecordForPatient(List<Patient> patients, String patientId, ApptManager apptManager, HMSDatabase hmsDatabase) {
@@ -66,7 +44,8 @@ public class Doctor extends User {
                     MedicalRecord recordToUpdate = patient.getRecord().get(0);
                     recordToUpdate.addDiagnosisAndPrescription(diagnosis, prescription);
                     recordToUpdate.setService(treatmentPlan);
-                    hmsDatabase.saveDatabase();
+                    hmsDatabase.setPatients(new ArrayList<>(patients)); // Update the database
+                    DatabaseHelper.saveDatabase(hmsDatabase); // Save changes to the files
                     System.out.println("Updated medical record for patient ID: " + patientId);
                     return;
                 } else {
@@ -78,58 +57,58 @@ public class Doctor extends User {
         System.out.println("Patient with ID " + patientId + " not found.");
     }
 
-    // Appointment Management
-    public void viewSchedule() {
-        System.out.println("Doctor's Schedule:");
-        for (Appointment appointment : appointments) {
-            System.out.println(appointment);
-        }
-    }
+    // // Appointment Management
+    // public void viewSchedule() {
+    //     System.out.println("Doctor's Schedule:");
+    //     for (Appointment appointment : appointments) {
+    //         System.out.println(appointment);
+    //     }
+    // }
 
-    public void setAvailability(List<TimeSlot> availability) {
-        // Implementation for setting availability
-    }
+    // public void setAvailability(List<TimeSlot> availability) {
+    //     // Implementation for setting availability
+    // }
 
-    public void acceptAppointment(int appointmentID) {
-        for (Appointment appointment : appointments) {
-            if (appointment.getAppointmentID() == appointmentID) {
-                appointment.setStatus(Status.CONFIRMED);
-                System.out.println("Appointment accepted.");
-                return;
-            }
-        }
-        System.out.println("Appointment not found.");
-    }
+    // public void acceptAppointment(int appointmentID) {
+    //     for (Appointment appointment : appointments) {
+    //         if (appointment.getAppointmentID() == appointmentID) {
+    //             appointment.setStatus(Status.CONFIRMED);
+    //             System.out.println("Appointment accepted.");
+    //             return;
+    //         }
+    //     }
+    //     System.out.println("Appointment not found.");
+    // }
 
-    public void declineAppointment(int appointmentID) {
-        for (Appointment appointment : appointments) {
-            if (appointment.getAppointmentID() == appointmentID) {
-                appointment.setStatus(Status.DECLINED);
-                System.out.println("Appointment declined.");
-                return;
-            }
-        }
-        System.out.println("Appointment not found.");
-    }
+    // public void declineAppointment(int appointmentID) {
+    //     for (Appointment appointment : appointments) {
+    //         if (appointment.getAppointmentID() == appointmentID) {
+    //             appointment.setStatus(Status.DECLINED);
+    //             System.out.println("Appointment declined.");
+    //             return;
+    //         }
+    //     }
+    //     System.out.println("Appointment not found.");
+    // }
 
-    public void viewUpcomingAppointments() {
-        System.out.println("Upcoming Appointments:");
-        for (Appointment appointment : appointments) {
-            if (appointment.getStatus() == Status.CONFIRMED) {
-                System.out.println(appointment);
-            }
-        }
-    }
+    // public void viewUpcomingAppointments() {
+    //     System.out.println("Upcoming Appointments:");
+    //     for (Appointment appointment : appointments) {
+    //         if (appointment.getStatus() == Status.CONFIRMED) {
+    //             System.out.println(appointment);
+    //         }
+    //     }
+    // }
 
-    // Appointment Outcome Record
-    public void recordAppointmentOutcome(int appointmentID, String date, String serviceType, List<Medicine> medications, String notes) {
-        for (Appointment appointment : appointments) {
-            if (appointment.getAppointmentID() == appointmentID) {
-                appointment.setOutcome("Date: " + date + "\nService: " + serviceType + "\nMedications: " + medications + "\nNotes: " + notes);
-                System.out.println("Appointment outcome recorded.");
-                return;
-            }
-        }
-        System.out.println("Appointment not found.");
-    }
+    // // Appointment Outcome Record
+    // public void recordAppointmentOutcome(int appointmentID, String date, String serviceType, List<Medicine> medications, String notes) {
+    //     for (Appointment appointment : appointments) {
+    //         if (appointment.getAppointmentID() == appointmentID) {
+    //             appointment.setOutcome("Date: " + date + "\nService: " + serviceType + "\nMedications: " + medications + "\nNotes: " + notes);
+    //             System.out.println("Appointment outcome recorded.");
+    //             return;
+    //         }
+    //     }
+    //     System.out.println("Appointment not found.");
+    // }
 }

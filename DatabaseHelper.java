@@ -11,6 +11,8 @@ public class DatabaseHelper {
     public static List<String> patientFields = getHeader("data/Patient_List.csv");
     public static List<String> replenishmentFields = getHeader("data/Replenishment_List.csv");
     public static List<String> staffFields = getHeader("data/Staff_List.csv");
+    public static List<String> availabilityFields = getHeader("data/Availability_List.csv");
+
 
     // Method to initialize users (dummy data for testing)
     public static ArrayList<User> initUsers() {
@@ -161,44 +163,53 @@ public class DatabaseHelper {
         return medicines;
     }
 
+    public static Doctor findDoctorById(String doctorId, ArrayList<Doctor> doctors) {
+        for (Doctor doctor : doctors) {
+            if (doctor.getUserId().equals(doctorId)) {
+                return doctor;
+            }
+        }
+        return null; // Return null if no matching doctor is found
+    }
+
+    public static Patient findPatientById(String patientId, ArrayList<Patient> patients) {
+        for (Patient patient : patients) {
+            if (patient.getUserId().equals(patientId)) {
+                return patient;
+            }
+        }
+        return null; // Return null if no matching patient is found
+    }
+    
+    
+
     public static ArrayList<Appointment> initAppointments(ArrayList<Patient> patients, ArrayList<Doctor> doctors) {
         ArrayList<Appointment> appointments = new ArrayList<>();
-
         List<List<String>> records = readFile("data/Appointment_List.csv");
-        String name;
-        String patientId;
-        String doctorId;
-        Patient patient = null;
-        Doctor doctor = null;
+    
         for (List<String> record : records) {
-            // System.out.println("Record size: " + record.size() + ", Record contents: " +
-            // record); //debugging
-            patientId = record.get(2);
-
-
-            for (Patient p : patients) {
-                if (Objects.equals(p.getUserId(), patientId)) {
-                    patient = p;
-                    break;
-                } else if (Objects.equals("null", patientId)) {
-                    patient = null;
-                    break;
-                }
+            // Debug: Print each record
+            System.out.println("Loaded Appointment Record: " + record);
+    
+            Patient patient = findPatientById(record.get(2), patients);
+            Doctor doctor = findDoctorById(record.get(3), doctors);
+    
+            if (doctor != null) {
+                appointments.add(new Appointment(
+                    Integer.parseInt(record.get(0)), // Appointment ID
+                    Status.valueOf(record.get(1).toUpperCase()), // Status
+                    patient, // Patient object
+                    doctor, // Doctor object
+                    record.get(4), // Date
+                    record.get(5)  // Time
+                ));
             }
-            doctorId = record.get(3);
-            for (Doctor d : doctors) {
-                if (Objects.equals(d.getUserId(), doctorId)) {
-                    doctor = d;
-                    break;
-                }
-            }
-            appointments.add(new Appointment(Integer.parseInt(record.get(0)), record.get(4), record.get(5),
-                    Status.valueOf(record.get(1)), patient, doctor));
         }
-
+    
         return appointments;
-
     }
+    
+    
 
     public static ArrayList<ReplenishmentRequest> initReplenishmentRequests() {
         ArrayList<ReplenishmentRequest> requests = new ArrayList<>();
@@ -237,6 +248,25 @@ public class DatabaseHelper {
         }
         return stafflist;
     }
+
+    public static ArrayList<Availability> initAvailabilities() {
+        ArrayList<Availability> availabilities = new ArrayList<>();
+        List<List<String>> records = readFile("data/Availability_List.csv");
+    
+        for (List<String> record : records) {
+            if (!record.isEmpty() && record.size() >= 4) { // Ensure valid record
+                availabilities.add(new Availability(
+                    record.get(0), // Doctor ID
+                    record.get(1), // Date
+                    record.get(2), // Start Time
+                    record.get(3)  // End Time
+                ));
+            }
+        }
+        return availabilities;
+    }
+    
+    
 
     public static List<List<String>> readFile(String fileName) {
         List<List<String>> records = new ArrayList<>();
@@ -433,6 +463,17 @@ public class DatabaseHelper {
                 //
                 case 5:
                     break;
+                   
+                // Availabilities
+                case 6:
+                    for (T item : list) {
+                        writer.append(item != null ? String.valueOf(((Availability) item).getDoctorId()) : "").append(",");
+                        writer.append(item != null ? String.valueOf(((Availability) item).getDate()) : "").append(",");
+                        writer.append(item != null ? String.valueOf(((Availability) item).getStartTime()) : "").append(",");
+                        writer.append(item != null ? String.valueOf(((Availability) item).getEndTime()) : "");
+                        writer.append("\n");
+                    }
+                    break;    
 
             }
 
@@ -443,14 +484,34 @@ public class DatabaseHelper {
     }
 
     public static void saveDatabase(HMSDatabase database) {
-        saveToCsv(database.getStaff(), "data/Staff_List.csv", staffFields, 4);
         saveToCsv(database.getAppointments(), "data/Appointment_List.csv", appListFields, 0);
         saveToCsv(database.getRecords(), "data/MedicalRecord_List.csv", medRecFields, 1);
         saveToCsv(database.getPatients(), "data/Patient_List.csv", patientFields, 2);
         saveToCsv(database.getReplenishmentRequests(), "data/Replenishment_List.csv", replenishmentFields, 3);
-
-        saveToCsv(database.getMedicines(), "data/Replenishment_List.csv", replenishmentFields, 3);
+        saveToCsv(database.getStaff(), "data/Staff_List.csv", staffFields, 4);
+        saveToCsv(database.getMedicines(), "data/Medicine_List.csv", medicineFields, 5);
+        saveToCsv(database.getAvailabilities(), "data/Availability_List.csv", availabilityFields, 6);
     }
+
+    public static void saveAvailabilityList(ArrayList<Availability> availabilities) {
+        try (FileWriter writer = new FileWriter("data/Availability_List.csv")) {
+            // Write CSV header
+            writer.write("Doctor ID,Date,Start Time,End Time\n");
+    
+            // Write CSV rows
+            for (Availability availability : availabilities) {
+                writer.write(availability.getDoctorId() + "," +
+                             availability.getDate() + "," +
+                             availability.getStartTime() + "," +
+                             availability.getEndTime() + "\n");
+            }
+    
+            System.out.println("Availability_List.csv updated successfully.");
+        } catch (IOException e) {
+            System.out.println("Error saving availability list: " + e.getMessage());
+        }
+    }
+    
 
     public static void saveReplenishmentRequest(ReplenishmentRequest request) {
         try (FileWriter writer = new FileWriter("data/Replenishment_List.csv", true)) { // Append mode

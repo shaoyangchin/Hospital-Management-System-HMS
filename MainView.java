@@ -15,7 +15,7 @@ public class MainView {
                 "Health Management System   ");
 
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter your hospital ID: ");
+        System.out.print("\nEnter your hospital ID: ");
         String userId = scanner.nextLine();
         System.out.print("Enter your password: ");
         String password = scanner.nextLine();
