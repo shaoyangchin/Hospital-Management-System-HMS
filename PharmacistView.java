@@ -1,12 +1,9 @@
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class PharmacistView {
     public static void pharmacistView(Pharmacist pharmacist, HMSDatabase database) {
         Scanner scanner = new Scanner(System.in);
-        String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         
         while (true) {
             System.out.println("\n--- Pharmacist Menu ---");
@@ -14,8 +11,7 @@ public class PharmacistView {
             System.out.println("2. Update Prescription Status");
             System.out.println("3. View Medication Inventory");
             System.out.println("4. Submit Replenishment Request");
-            System.out.println("5. View Replenishment Requests");
-            System.out.println("6. Exit");
+            System.out.println("5. Exit");
             System.out.print("Choose an option: ");
             
             try {
@@ -24,21 +20,18 @@ public class PharmacistView {
 
                 switch (choice) {
                     case 1:
-                        handleViewAppointments(pharmacist, scanner, database);
+                        pharmacist.viewPendingPrescriptions(database.getAppointments());
                         break;
                     case 2:
-                        handlePrescriptionUpdate(pharmacist, scanner, database, currentDate);
+                        handlePrescriptionUpdate(pharmacist, scanner, database);
                         break;
                     case 3:
-                        pharmacist.viewMedicationInventory(database.getMedicines(), currentDate);
+                        pharmacist.viewMedicationInventory(database.getMedicines());
                         break;
                     case 4:
-                        handleReplenishmentRequest(pharmacist, scanner, database, currentDate);
+                        handleReplenishmentRequest(pharmacist, scanner, database);
                         break;
                     case 5:
-                        pharmacist.viewReplenishmentRequests();
-                        break;
-                    case 6:
                         System.out.println("Exiting Pharmacist Menu...");
                         return;
                     default:
@@ -51,31 +44,11 @@ public class PharmacistView {
         }
     }
 
-    private static void handleViewAppointments(Pharmacist pharmacist, Scanner scanner, HMSDatabase database) {
-        System.out.print("Enter patient ID (or press Enter to view all appointments): ");
-        String patientId = scanner.nextLine();
-        
-        if (patientId.trim().isEmpty()) {
-            pharmacist.viewAllCompletedAppointments(database.getAppointments());
-        } else {
-            Patient patient = database.getPatientById(patientId);
-            if (patient != null) {
-                pharmacist.viewAppointmentOutcomes(patient, database.getAppointments());
-            } else {
-                System.out.println("Patient not found.");
-            }
-        }
-    }
-
-    private static void handlePrescriptionUpdate(Pharmacist pharmacist, Scanner scanner, HMSDatabase database, String currentDate) {
+    private static void handlePrescriptionUpdate(Pharmacist pharmacist, Scanner scanner, HMSDatabase database) {
         try {
-            pharmacist.viewAllCompletedAppointments(database.getAppointments());
-
-            System.out.print("\nEnter appointment ID: ");
+            System.out.print("\nEnter appointment ID to update: ");
             int appointmentID = scanner.nextInt();
             scanner.nextLine();
-
-            pharmacist.viewMedicationInventory(database.getMedicines(), currentDate);
 
             System.out.print("Enter medicine name: ");
             String medicineName = scanner.nextLine();
@@ -86,7 +59,7 @@ public class PharmacistView {
                 return;
             }
             
-            pharmacist.updatePrescriptionStatus(appointmentID, medicine, currentDate, database.getAppointments());
+            pharmacist.updatePrescriptionStatus(appointmentID, medicine, database.getAppointments(), database);
 
         } catch (InputMismatchException e) {
             System.out.println("Invalid input. Please enter valid values.");
@@ -94,10 +67,8 @@ public class PharmacistView {
         }
     }
 
-    private static void handleReplenishmentRequest(Pharmacist pharmacist, Scanner scanner, HMSDatabase database, String currentDate) {
-        pharmacist.viewMedicationInventory(database.getMedicines(), currentDate);
-
-        System.out.print("\nEnter medicine name to submit replenishment request: ");
+    private static void handleReplenishmentRequest(Pharmacist pharmacist, Scanner scanner, HMSDatabase database) {
+        System.out.print("\nEnter medicine name for replenishment: ");
         String medicineName = scanner.nextLine();
 
         Medicine medicine = database.getMedicineByName(medicineName);
@@ -107,7 +78,7 @@ public class PharmacistView {
         }
 
         try {
-            System.out.print("Enter quantity: ");
+            System.out.print("Enter quantity to request: ");
             int requestedQuantity = scanner.nextInt();
             scanner.nextLine();
 
@@ -118,7 +89,8 @@ public class PharmacistView {
 
             ReplenishmentRequest request = pharmacist.submitReplenishmentRequest(medicineName, requestedQuantity);
             if (request != null) {
-                System.out.println("Replenishment request submitted successfully.");
+                database.saveDatabase();
+                System.out.println("Replenishment request submitted successfully and saved.");
             }
         } catch (InputMismatchException e) {
             System.out.println("Invalid quantity. Please enter a number.");
