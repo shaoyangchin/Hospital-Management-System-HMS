@@ -1,4 +1,4 @@
 Patient ID,Name,Date of Birth,Gender,Blood Type,Contact Information,Password,History
 P1001,Alice Brown,5/14/1980,Female,A+,alice.brown@example.com,password1!,"Bronchitis, Cancer"
 P1002,Bob Stone,11/22/1975,Male,B+,bob.stone@example.com,password1!,"Diabetes, Hypertension"
-P1003,Charlie White,7/8/1990,Male,O-,charlie.white@example.com,password1!,"Asthma, Heart Disease"
+P1003,Charlie White,7/8/1990,Male,O-,charlie.white@example.com,Password,"Asthma, Heart Disease"

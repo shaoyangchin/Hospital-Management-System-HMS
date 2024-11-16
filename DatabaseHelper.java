@@ -42,7 +42,7 @@ public class DatabaseHelper {
         List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
         ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
         for (List<String> medrecord : medRecords) {
-  //          medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2), Integer.parseInt(medrecord.get(3)),medrecord.get(4),medrecord.get(5)));
+            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2), Integer.parseInt(medrecord.get(3)),medrecord.get(4),medrecord.get(5),Integer.parseInt(medrecord.get(6))));
 
         }
 
@@ -73,7 +73,7 @@ public class DatabaseHelper {
         List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
         ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
         for (List<String> medrecord : medRecords) {
-    //        medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2), Integer.parseInt(medrecord.get(3)),medrecord.get(4),medrecord.get(5)));
+            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2), Integer.parseInt(medrecord.get(3)),medrecord.get(4),medrecord.get(5),Integer.parseInt(medrecord.get(6))));
 
         }
 
@@ -477,7 +477,6 @@ public class DatabaseHelper {
                     }
 
                     break;
-
                 case 5:  // Medicine list
                 for (T item : list) {
                     writer.append(item != null ? String.valueOf(((Medicine) item).getName()) : "").append(",");
@@ -486,7 +485,7 @@ public class DatabaseHelper {
                     writer.append("\n");
                 }
                 break;
-                   
+
                 // Availabilities
                 case 6:
                     for (T item : list) {
