@@ -40,4 +40,8 @@ public class Appointment {
     public String getTime() {
         return time;
     }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
 }
