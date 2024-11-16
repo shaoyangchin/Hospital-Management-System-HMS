@@ -8,19 +8,30 @@ public class DoctorView {
         ApptManager apptManager = database.getApptManager();
         
         while (true) {
-            System.out.println("\n--- Doctor Menu ---");
-            System.out.println("1. View Patient Medical Record");
-            System.out.println("2. Update Patient Medical Record");
-            System.out.println("3. View Personal Schedule");
-            System.out.println("4. Set Availability");
-            System.out.println("5. Accept Appointment");
-            System.out.println("6. Decline Appointment");
-            System.out.println("7. View Upcoming Appointments");
-            System.out.println("8. Record Appointment Outcome");
-            System.out.println("9. Exit");
+            System.out.println("\n======================================");
+            System.out.println("         --- Doctor Menu ---          ");
+            System.out.println("======================================");
+            System.out.printf("| %-2s | %-30s |\n", "1", "View Patient Medical Record");
+            System.out.printf("| %-2s | %-30s |\n", "2", "Update Patient Medical Record");
+            System.out.printf("| %-2s | %-30s |\n", "3", "View Personal Schedule");
+            System.out.printf("| %-2s | %-30s |\n", "4", "Set Availability");
+            System.out.printf("| %-2s | %-30s |\n", "5", "Accept Appointment");
+            System.out.printf("| %-2s | %-30s |\n", "6", "Decline Appointment");
+            System.out.printf("| %-2s | %-30s |\n", "7", "View Upcoming Appointments");
+            System.out.printf("| %-2s | %-30s |\n", "8", "Record Appointment Outcome");
+            System.out.printf("| %-2s | %-30s |\n", "9", "Exit");
+            System.out.printf("| %-2s | %-30s |\n", "10", "Logout");
+            System.out.println("======================================");
             System.out.print("Choose an option: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();  // Consume newline
+            
+            int choice;
+            try {
+                choice = Integer.parseInt(scanner.nextLine().trim());
+            } catch (NumberFormatException e) {
+                System.out.println("\nInvalid input. Please enter a number between 1 and 10.");
+                continue; // Restart the menu loop
+            }
+
             switch (choice) {
 
                 // ------------------------ View Patient Medical Record ------------------------
@@ -55,80 +66,112 @@ public class DoctorView {
                 // ------------------------ Set Availability ------------------------
     
                 case 4:
-                    System.out.print("Enter date (dd-MMM, e.g., 17-Nov): ");
-                    String date = scanner.nextLine();
-                    System.out.print("Enter start time (hh:mm AM/PM, e.g., 09:00 AM): ");
-                    String startTime = scanner.nextLine();
-                    System.out.print("Enter end time (hh:mm AM/PM, e.g., 12:00 PM): ");
-                    String endTime = scanner.nextLine();
-                
-                    // Add availability for the logged-in doctor
-                    apptManager.setAvailability(doctor, date, startTime, endTime, database);
+                    apptManager.setAvailability(doctor, database);
                     break;
-
-
                 
                 // ------------------------ Accept Appointment ------------------------
-                case 5:  
+                case 5:
                     System.out.println("--- PENDING Appointments for Dr. " + doctor.getName() + " ---");
                     ArrayList<Appointment> pendingAppointments = new ArrayList<>();
-                
+
                     // Fetch all PENDING appointments for the doctor
                     for (Appointment appt : database.getAppointments()) {
                         if (appt.getDoctor().getUserId().equals(doctor.getUserId()) && appt.getStatus() == Status.PENDING) {
                             pendingAppointments.add(appt);
-                            System.out.println("Appointment ID: " + appt.getAppointmentID());
-                            System.out.println("Patient ID: " + (appt.getPatient() != null ? appt.getPatient().getUserId() : "N/A"));
-                            System.out.println("Patient Name: " + (appt.getPatient() != null ? appt.getPatient().getName() : "N/A"));
-                            System.out.println("Date: " + appt.getDate());
-                            System.out.println("Time: " + appt.getTime());
-                            System.out.println("-------------------------------");
                         }
                     }
-                
-                    // Check if there are no PENDING appointments
+
                     if (pendingAppointments.isEmpty()) {
                         System.out.println("No PENDING appointments available.");
                         break; // Exit this case if no appointments are found
                     }
-                
+
+                    // Display the pending appointments in a formatted table
+                    String header = String.format("| %-15s | %-15s | %-15s | %-10s | %-10s |",
+                                                "Appointment ID", "Patient ID", "Patient Name", "Date", "Time");
+                    String separator = "=".repeat(header.length());
+                    System.out.println(separator);
+                    System.out.println(header);
+                    System.out.println(separator);
+
+                    for (Appointment appt : pendingAppointments) {
+                        System.out.printf("| %-15d | %-15s | %-15s | %-10s | %-10s |\n",
+                                        appt.getAppointmentID(),
+                                        appt.getPatient() != null ? appt.getPatient().getUserId() : "N/A",
+                                        appt.getPatient() != null ? appt.getPatient().getName() : "N/A",
+                                        appt.getDate(),
+                                        appt.getTime());
+                    }
+                    System.out.println(separator);
+
                     // Prompt the doctor to enter an appointment ID to accept
-                    System.out.print("Enter appointment ID to accept: ");
-                    int acceptID = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
+                    int acceptID;
+                    while (true) {
+                        System.out.print("Enter appointment ID to accept: ");
+                        try {
+                            acceptID = Integer.parseInt(scanner.nextLine().trim());
+                            break; // Valid input, exit the loop
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter a valid numeric Appointment ID.");
+                        }
+                    }
+
+                    // Call the method to accept the appointment
                     apptManager.acceptAppointment(acceptID, doctor, database);
                     break;
+
                 
                 // ------------------------ Decline Appointment ------------------------
                 case 6:
                     System.out.println("--- PENDING Appointments for Dr. " + doctor.getName() + " ---");
                     ArrayList<Appointment> pendingAppointmentsToDecline = new ArrayList<>();
-                
+
                     // Fetch all PENDING appointments for the doctor
                     for (Appointment appt : database.getAppointments()) {
                         if (appt.getDoctor().getUserId().equals(doctor.getUserId()) && appt.getStatus() == Status.PENDING) {
                             pendingAppointmentsToDecline.add(appt);
-                            System.out.println("Appointment ID: " + appt.getAppointmentID());
-                            System.out.println("Patient ID: " + (appt.getPatient() != null ? appt.getPatient().getUserId() : "N/A"));
-                            System.out.println("Patient Name: " + (appt.getPatient() != null ? appt.getPatient().getName() : "N/A"));
-                            System.out.println("Date: " + appt.getDate());
-                            System.out.println("Time: " + appt.getTime());
-                            System.out.println("-------------------------------");
                         }
                     }
-                
-                    // Check if there are no PENDING appointments
+
                     if (pendingAppointmentsToDecline.isEmpty()) {
                         System.out.println("No PENDING appointments available.");
                         break; // Exit this case if no appointments are found
                     }
-                
+
+                    // Display the pending appointments in a formatted table
+                    String header1 = String.format("| %-15s | %-15s | %-15s | %-10s | %-10s |", 
+                                                "Appointment ID", "Patient ID", "Patient Name", "Date", "Time");
+                    String separator1 = "=".repeat(header1.length());
+                    System.out.println(separator1);
+                    System.out.println(header1);
+                    System.out.println(separator1);
+
+                    for (Appointment appt : pendingAppointmentsToDecline) {
+                        System.out.printf("| %-15d | %-15s | %-15s | %-10s | %-10s |\n",
+                                        appt.getAppointmentID(),
+                                        appt.getPatient() != null ? appt.getPatient().getUserId() : "N/A",
+                                        appt.getPatient() != null ? appt.getPatient().getName() : "N/A",
+                                        appt.getDate(),
+                                        appt.getTime());
+                    }
+                    System.out.println(separator1);
+
                     // Prompt the doctor to enter an appointment ID to decline
-                    System.out.print("Enter appointment ID to decline: ");
-                    int declineID = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
+                    int declineID;
+                    while (true) {
+                        System.out.print("Enter appointment ID to decline: ");
+                        try {
+                            declineID = Integer.parseInt(scanner.nextLine().trim());
+                            break; // Valid input, exit the loop
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter a valid numeric Appointment ID.");
+                        }
+                    }
+
+                    // Call the method to decline the appointment
                     apptManager.declineAppointment(declineID, doctor, database);
                     break;
+
 
                     
                 // ------------------------ View Upcoming Appointments ------------------------         
@@ -138,20 +181,14 @@ public class DoctorView {
 
 
                 // ------------------------ Record Appointment Outcome ------------------------
-                case 8:  // Record Appointment Outcome
-                    System.out.println("--- CONFIRMED Appointments for Dr. " + doctor.getName() + " ---");
-                    ArrayList<Appointment> confirmedAppointments = new ArrayList<>();
+                case 8: // Record Appointment Outcome
+                    System.out.println("\n--- CONFIRMED Appointments for Dr. " + doctor.getName() + " ---");
 
                     // Fetch all CONFIRMED appointments for the doctor
+                    ArrayList<Appointment> confirmedAppointments = new ArrayList<>();
                     for (Appointment appt : database.getAppointments()) {
                         if (appt.getDoctor().getUserId().equals(doctor.getUserId()) && appt.getStatus().toString().equalsIgnoreCase("CONFIRMED")) {
                             confirmedAppointments.add(appt);
-                            System.out.println("Appointment ID: " + appt.getAppointmentID());
-                            System.out.println("Patient ID: " + (appt.getPatient() != null ? appt.getPatient().getUserId() : "N/A"));
-                            System.out.println("Patient Name: " + (appt.getPatient() != null ? appt.getPatient().getName() : "N/A"));
-                            System.out.println("Date: " + appt.getDate());
-                            System.out.println("Time: " + appt.getTime());
-                            System.out.println("-------------------------------");
                         }
                     }
 
@@ -161,62 +198,54 @@ public class DoctorView {
                         break; // Exit this case if no appointments are found
                     }
 
-                    // Prompt the doctor to select an appointment to record the outcome
-                    System.out.print("Enter appointment ID to record outcome: ");
-                    int outcomeID = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
+                    // Display the table of CONFIRMED appointments
+                    String header2 = String.format("| %-15s | %-15s | %-20s | %-10s | %-10s |", "Appointment ID", "Patient ID", "Patient Name", "Date", "Time");
+                    String separator2 = "=".repeat(header2.length());
+                    System.out.println(separator2);
+                    System.out.println(header2);
+                    System.out.println(separator2);
 
-                    // Verify the selected appointment
-                    Appointment selectedAppointment = null;
                     for (Appointment appt : confirmedAppointments) {
-                        if (appt.getAppointmentID() == outcomeID) {
-                            selectedAppointment = appt;
-                            break;
+                        System.out.printf("| %-15d | %-15s | %-20s | %-10s | %-10s |\n",
+                            appt.getAppointmentID(),
+                            appt.getPatient() != null ? appt.getPatient().getUserId() : "N/A",
+                            appt.getPatient() != null ? appt.getPatient().getName() : "N/A",
+                            appt.getDate(),
+                            appt.getTime());
+                    }
+                    System.out.println(separator2);
+
+                    // Prompt the doctor to select an appointment to record the outcome
+                    int outcomeID = -1;
+                    while (outcomeID <= 0) {
+                        System.out.print("Enter appointment ID to record outcome: ");
+                        try {
+                            outcomeID = Integer.parseInt(scanner.nextLine().trim());
+                            if (outcomeID <= 0) {
+                                System.out.println("Appointment ID must be a positive integer. Please try again.");
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid input. Please enter a valid Appointment ID.");
                         }
                     }
 
-                    if (selectedAppointment == null) {
-                        System.out.println("Invalid Appointment ID.");
-                        break;
-                    }
-
-                    // Record outcome details
-                    System.out.print("Enter Diagnosis: ");
-                    String diagnosis2 = scanner.nextLine();
-                    System.out.print("Enter Prescription: ");
-                    String prescription2 = scanner.nextLine();
-                    System.out.print("Enter Notes: ");
-                    String notes = scanner.nextLine();
-                    System.out.print("Enter Service Provided: ");
-                    String service = scanner.nextLine();
-                    System.out.print("Enter Quantity Provided: ");
-                    int quantity = Integer.parseInt(scanner.nextLine());
-
-                    // Call ApptManager to update the appointment and medical record
-                    apptManager.recordAppointmentOutcome(outcomeID, diagnosis2, prescription2, notes, service, quantity, doctor, database);
+                    // Call ApptManager to handle the rest of the outcome recording
+                    apptManager.recordAppointmentOutcome(outcomeID, null, null, null, null, 0, doctor, database);
                     break;
-
-
 
 
                 case 9:  // Exit
                     System.out.println("Exiting...");
                     scanner.close();
                     return;
+                
+                case 10:
+                    System.out.println("Logging out...");
+                    return; // Logout ends this view
+
                 default:
-                    System.out.println("Invalid option. Please try again.");
+                    System.out.println("\nInvalid option. Please select a valid choice from the menu.");
+            }
             }
         }
-    }
-
-
-
-    private static List<Medicine> parseMedications(String medicationsInput) {
-        List<Medicine> medications = new ArrayList<>();
-        String[] meds = medicationsInput.split(",");
-        for (String med : meds) {
-            medications.add(new Medicine(med.trim(), med, 0, 0));
-        }
-        return medications;
-    }
 }

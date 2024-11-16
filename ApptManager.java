@@ -234,17 +234,66 @@ public class ApptManager {
         System.out.println(separator); // Closing line of the table
     }
     
-    
-    
-    
-    
-    
-    
 
 
     // 4. Set Availability
-    public void setAvailability(Doctor doctor, String date, String startTime, String endTime, HMSDatabase database) {
+    public void setAvailability(Doctor doctor, HMSDatabase database) {
+        Scanner scanner = new Scanner(System.in);
         ArrayList<Availability> availabilities = database.getAvailabilities(); // Load from CSV
+        String date, startTime, endTime;
+    
+        // Prompt for date with validation
+        while (true) {
+            System.out.print("Enter date (dd-MMM, e.g., 17-Nov): ");
+            date = scanner.nextLine().trim();
+            if (date.matches("\\d{2}-[a-zA-Z]{3}")) { // Example: 17-Nov
+                break;
+            }
+            System.out.println("Invalid date format. Please enter a valid date (dd-MMM, e.g., 17-Nov).");
+        }
+    
+        // Prompt for start time with validation
+        while (true) {
+            System.out.print("Enter start time (hh:mm AM/PM, e.g., 09:00 AM): ");
+            startTime = scanner.nextLine().trim();
+            if (startTime.matches("^(0[9]|1[0-8]):[0-5][0-9] [APap][Mm]$")) { // Example: 09:00 AM
+                break;
+            }
+            System.out.println("Invalid start time format. Please enter a valid start time (hh:mm AM/PM, e.g., 09:00 AM).");
+        }
+    
+        // Prompt for end time with validation
+        while (true) {
+            System.out.print("Enter end time (hh:mm AM/PM, e.g., 05:00 PM): ");
+            endTime = scanner.nextLine().trim();
+            if (endTime.matches("^(0[9]|1[0-8]):[0-5][0-9] [APap][Mm]$")) { // Example: 05:00 PM
+                break;
+            }
+            System.out.println("Invalid end time format. Please enter a valid end time (hh:mm AM/PM, e.g., 05:00 PM).");
+        }
+    
+        // Ensure end time is after start time
+        while (startTime.compareTo(endTime) >= 0) {
+            System.out.println("End time must be after start time. Please enter the times again.");
+            // Re-prompt for start time
+            while (true) {
+                System.out.print("Enter start time (hh:mm AM/PM, e.g., 09:00 AM): ");
+                startTime = scanner.nextLine().trim();
+                if (startTime.matches("^(0[9]|1[0-8]):[0-5][0-9] [APap][Mm]$")) {
+                    break;
+                }
+                System.out.println("Invalid start time format. Please enter a valid start time (hh:mm AM/PM, e.g., 09:00 AM).");
+            }
+            // Re-prompt for end time
+            while (true) {
+                System.out.print("Enter end time (hh:mm AM/PM, e.g., 05:00 PM): ");
+                endTime = scanner.nextLine().trim();
+                if (endTime.matches("^(0[9]|1[0-8]):[0-5][0-9] [APap][Mm]$")) {
+                    break;
+                }
+                System.out.println("Invalid end time format. Please enter a valid end time (hh:mm AM/PM, e.g., 05:00 PM).");
+            }
+        }
     
         // Add new availability
         Availability newAvailability = new Availability(doctor.getUserId(), date, startTime, endTime);
@@ -252,8 +301,18 @@ public class ApptManager {
     
         // Save updated availability list back to CSV
         DatabaseHelper.saveAvailabilityList(availabilities);
-        System.out.println("Availability added: " + date + " from " + startTime + " to " + endTime);
+    
+        // Display success message in a formatted table
+        System.out.println("\n--- Availability Added ---");
+        String header = String.format("| %-15s | %-10s | %-10s | %-10s |", "Doctor ID", "Date", "Start Time", "End Time");
+        String separator = "=".repeat(header.length());
+        System.out.println(separator);
+        System.out.println(header);
+        System.out.println(separator);
+        System.out.printf("| %-15s | %-10s | %-10s | %-10s |\n", doctor.getUserId(), date, startTime, endTime);
+        System.out.println(separator);
     }
+
 
 
     // 5. Accept Appointment
@@ -262,14 +321,28 @@ public class ApptManager {
         boolean appointmentFound = false;
     
         for (Appointment appt : appts) {
-            // Check if appointment matches the ID, doctor, and is PENDING
             if (appt.getAppointmentID() == appointmentID &&
                 appt.getDoctor().getUserId().equals(doctor.getUserId()) &&
                 appt.getStatus() == Status.PENDING) {
-                
+    
                 appt.setStatus(Status.CONFIRMED); // Update status to CONFIRMED
                 appointmentFound = true;
-                System.out.println("Appointment ID " + appointmentID + " has been accepted.");
+    
+                // Display success message in table format
+                String header = String.format("| %-15s | %-15s | %-10s | %-10s | %-10s |",
+                                               "Appointment ID", "Patient ID", "Date", "Time", "Status");
+                String separator = "=".repeat(header.length());
+                System.out.println("\n--- Appointment Accepted ---");
+                System.out.println(separator);
+                System.out.println(header);
+                System.out.println(separator);
+                System.out.printf("| %-15d | %-15s | %-10s | %-10s | %-10s |\n",
+                                  appt.getAppointmentID(),
+                                  appt.getPatient() != null ? appt.getPatient().getUserId() : "N/A",
+                                  appt.getDate(),
+                                  appt.getTime(),
+                                  "CONFIRMED");
+                System.out.println(separator);
                 break;
             }
         }
@@ -281,23 +354,40 @@ public class ApptManager {
         // Save updated appointments back to CSV
         if (appointmentFound) {
             DatabaseHelper.saveDatabase(database);
+            System.out.println("Changes saved to Appointment_List.csv.");
         }
     }
+    
 
+    
     // 6. Decline Appointment
     public void declineAppointment(int appointmentID, Doctor doctor, HMSDatabase database) {
         ArrayList<Appointment> appts = database.getAppointments(); // Read from CSV
         boolean appointmentFound = false;
     
         for (Appointment appt : appts) {
-            // Check if the appointment matches the ID, doctor, and is PENDING
             if (appt.getAppointmentID() == appointmentID &&
                 appt.getDoctor().getUserId().equals(doctor.getUserId()) &&
                 appt.getStatus() == Status.PENDING) {
-                
+    
                 appt.setStatus(Status.DECLINED); // Update status to DECLINED
                 appointmentFound = true;
-                System.out.println("Appointment ID " + appointmentID + " has been declined.");
+    
+                // Display success message in table format
+                String header = String.format("| %-15s | %-15s | %-10s | %-10s | %-10s |",
+                                               "Appointment ID", "Patient ID", "Date", "Time", "Status");
+                String separator = "=".repeat(header.length());
+                System.out.println("\n--- Appointment Declined ---");
+                System.out.println(separator);
+                System.out.println(header);
+                System.out.println(separator);
+                System.out.printf("| %-15d | %-15s | %-10s | %-10s | %-10s |\n",
+                                  appt.getAppointmentID(),
+                                  appt.getPatient() != null ? appt.getPatient().getUserId() : "N/A",
+                                  appt.getDate(),
+                                  appt.getTime(),
+                                  "DECLINED");
+                System.out.println(separator);
                 break;
             }
         }
@@ -309,73 +399,126 @@ public class ApptManager {
         // Save updated appointments back to CSV
         if (appointmentFound) {
             DatabaseHelper.saveDatabase(database);
+            System.out.println("Changes saved to Appointment_List.csv.");
         }
     }
+    
+
 
     // 7. View Upcoming Appointments
     public void viewUpcomingAppointments(Doctor doctor, HMSDatabase database) {
         ArrayList<Appointment> appts = database.getAppointments(); // Read from CSV using DatabaseHelper
         String doctorId = doctor.getUserId(); // Get the logged-in doctor's ID
         int haveAppt = 0;
-    
-        System.out.println("--- Upcoming Appointments for Dr. " + doctor.getName() + " ---");
+
+        // Print the header for the table
+        System.out.println("\n--- Upcoming Appointments for Dr. " + doctor.getName() + " ---");
+        String header = String.format("| %-15s | %-20s | %-15s | %-10s |", "Appointment ID", "Patient Name", "Date", "Time");
+        String separator = "=".repeat(header.length());
+        System.out.println(separator);
+        System.out.println(header);
+        System.out.println(separator);
+
+        // Iterate through appointments and filter confirmed ones for the logged-in doctor
         for (Appointment appt : appts) {
-            // Filter by doctor ID and confirmed status
             if (appt.getDoctor().getUserId().equals(doctorId) && appt.getStatus() == Status.CONFIRMED) {
-                System.out.println("Appointment ID: " + appt.getAppointmentID());
-                System.out.println("Patient Name: " + (appt.getPatient() != null ? appt.getPatient().getName() : "N/A"));
-                System.out.println("Date: " + appt.getDate());
-                System.out.println("Time: " + appt.getTime());
-                System.out.println("-------------------------------");
+                // Print each appointment in a row
+                System.out.printf("| %-15d | %-20s | %-15s | %-10s |\n",
+                                appt.getAppointmentID(),
+                                appt.getPatient() != null ? appt.getPatient().getName() : "N/A",
+                                appt.getDate(),
+                                appt.getTime());
                 haveAppt++;
             }
         }
+        System.out.println(separator); // End of the table
+
+        // If no appointments are found, display a message
         if (haveAppt == 0) {
             System.out.println("No upcoming appointments found.");
         }
     }
 
+
     // 8. Record Appointment Outcome
     public void recordAppointmentOutcome(int appointmentID, String diagnosis, String prescription, String notes, String service, int quantity, Doctor doctor, HMSDatabase database) {
         ArrayList<Appointment> appts = database.getAppointments();
         ArrayList<MedicalRecord> medicalRecords = database.getRecords();
-        boolean appointmentUpdated = false;
     
+        // Verify the selected appointment
+        Appointment selectedAppointment = null;
         for (Appointment appt : appts) {
-            // Match appointment by ID, doctor, and CONFIRMED status
             if (appt.getAppointmentID() == appointmentID &&
                 appt.getDoctor().getUserId().equals(doctor.getUserId()) &&
                 appt.getStatus().toString().equalsIgnoreCase("CONFIRMED")) {
-    
-                appt.setStatus(Status.PENDING_PHARMACIST); // Update status to COMPLETED
-                appointmentUpdated = true;
-    
-                // Add a new medical record
-                MedicalRecord newRecord = new MedicalRecord(
-                    diagnosis,
-                    prescription,
-                    appt.getPatient().getUserId(),
-                    appointmentID,
-                    notes,
-                    service,
-                    quantity
-                );
-                medicalRecords.add(newRecord);
-    
-                System.out.println("Appointment ID " + appointmentID + " marked as PENDING_PHARMACIST.");
-                System.out.println("Medical record updated for Patient ID: " + appt.getPatient().getUserId());
+                selectedAppointment = appt;
                 break;
             }
         }
     
-        if (!appointmentUpdated) {
+        if (selectedAppointment == null) {
             System.out.println("No matching CONFIRMED appointment found for ID: " + appointmentID);
             return;
         }
     
+        // Prompt for outcome details with validations
+        System.out.println("\n--- Record Outcome Details ---");
+        Scanner scanner = new Scanner(System.in);
+    
+        while (true) {
+            try {
+                System.out.print("Enter Diagnosis: ");
+                diagnosis = scanner.nextLine().trim();
+                if (diagnosis.isEmpty()) throw new IllegalArgumentException("Diagnosis cannot be empty.");
+    
+                System.out.print("Enter Prescription: ");
+                prescription = scanner.nextLine().trim();
+                if (prescription.isEmpty()) throw new IllegalArgumentException("Prescription cannot be empty.");
+    
+                System.out.print("Enter Notes: ");
+                notes = scanner.nextLine().trim();
+                if (notes.isEmpty()) throw new IllegalArgumentException("Notes cannot be empty.");
+    
+                System.out.print("Enter Service Provided: ");
+                service = scanner.nextLine().trim();
+                if (service.isEmpty()) throw new IllegalArgumentException("Service cannot be empty.");
+    
+                System.out.print("Enter Quantity Provided: ");
+                String quantityInput = scanner.nextLine().trim();
+                if (quantityInput.isEmpty()) throw new IllegalArgumentException("Quantity cannot be empty.");
+                quantity = Integer.parseInt(quantityInput);
+                if (quantity <= 0) throw new IllegalArgumentException("Quantity must be greater than 0.");
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input for quantity. Please enter a valid integer.");
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    
+        // Update the appointment and add the medical record
+        selectedAppointment.setStatus(Status.PENDING_PHARMACIST);
+        MedicalRecord newRecord = new MedicalRecord(
+            diagnosis,
+            prescription,
+            selectedAppointment.getPatient().getUserId(),
+            appointmentID,
+            notes,
+            service,
+            quantity
+        );
+        medicalRecords.add(newRecord);
+    
+        System.out.println("\nAppointment ID " + appointmentID + " marked as PENDING_PHARMACIST.");
+        System.out.println("Medical record updated for Patient ID: " + selectedAppointment.getPatient().getUserId());
+    
         // Save updated appointments and medical records back to CSV
         DatabaseHelper.saveDatabase(database);
+        System.out.println("Changes saved to the database.");
     }
+    
+    
+    
     // END OF DONE
 
     
