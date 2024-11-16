@@ -253,9 +253,13 @@ public class Administrator extends User {
     }
 
     public void viewAppts(ArrayList<Appointment> appts) {
-        System.out.println("All current appointments:");
+        System.out.println("All appointments:");
         for (Appointment appointment : appts) {
             System.out.println(appointment);
+            if (appointment.getStatus() == Status.COMPLETED) {
+                System.out.println("Outcome:");
+                // get outcome from apptOutcomes
+            }
         }
     }
 
@@ -279,7 +283,7 @@ public class Administrator extends User {
     }
 
     public void removeMedicine(ArrayList<Medicine> inventory) {
-
+        scanner.nextLine();
         System.out.println("Enter name of medicine to be removed: ");
         String medicineName = scanner.nextLine();
         Medicine med = null;
@@ -297,7 +301,8 @@ public class Administrator extends User {
     }
 
     public void setMedStock(ArrayList<Medicine> inventory) {
-        System.out.println("Enter name of medicine to be restocked: ");
+        scanner.nextLine();
+        System.out.println("Enter name of medicine to update stock: ");
         String medicineName = scanner.nextLine();
         System.out.println("Enter new stock level: ");
         int stock = scanner.nextInt();

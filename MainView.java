@@ -10,9 +10,9 @@ public class MainView {
                 " | |__| | \\  / | (___  \n" +
                 " |  __  | |\\/| |\\___ \\ \n" +
                 " | |  | | |  | |____) |\n" +
-                " |_|  |_|_|  |_|_____/ \n" +
+                " |_|  |_|_|  |_|_____/ \n\n" +
                 "        Welcome       \n" +
-                "Health Management System   ");
+                "Hospital Management System   \n\n");
 
         Scanner scanner = new Scanner(System.in);
         System.out.print("\nEnter your hospital ID: ");
