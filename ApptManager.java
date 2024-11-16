@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Objects;
@@ -447,10 +448,10 @@ public class ApptManager {
             return;
         }
     
-        // Load Medical Records, Medicines, and Appointments
-        ArrayList<MedicalRecord> medicalRecords = dbHelper.initMedicalRecords();
-        ArrayList<Medicine> medicines = dbHelper.initMedicines();
-        ArrayList<Appointment> appointments = dbHelper.initAppointments(dbHelper.initPatients(), dbHelper.initDoctors());
+        // Fetch the lists from the database instead of initializing new lists
+        ArrayList<MedicalRecord> medicalRecords = database.getRecords();
+        ArrayList<Medicine> medicines = database.getMedicines();
+        ArrayList<Appointment> appointments = database.getAppointments();
     
         // Find the medical record corresponding to the appointment ID
         MedicalRecord targetRecord = null;
@@ -471,13 +472,6 @@ public class ApptManager {
         String medicineName = targetRecord.getPrescription();
         int quantityToDispense = targetRecord.getQuantity();
     
-        // Display prescription details
-        System.out.println("\nPrescription Details:");
-        System.out.println("----------------------");
-        System.out.println("Medicine Prescribed: " + medicineName);
-        System.out.println("Quantity Required: " + quantityToDispense);
-        System.out.println("----------------------");
-    
         // Find the corresponding medicine in the inventory
         Medicine targetMedicine = null;
         for (Medicine medicine : medicines) {
@@ -493,37 +487,30 @@ public class ApptManager {
             return;
         }
     
-        // Display available stock
-        System.out.println("\nAvailable Stock:");
-        System.out.println("----------------------");
-        System.out.println("Medicine Name: " + targetMedicine.getName());
-        System.out.println("Current Stock: " + targetMedicine.getQuantity());
-        System.out.println("----------------------");
-    
         // Check if there is enough stock to dispense
         if (targetMedicine.getQuantity() >= quantityToDispense) {
-            // Dispense the medicine
-            System.out.println("\nDispensing " + quantityToDispense + " units of " + medicineName + "...");
-            
-            // Find and update the appointment status to COMPLETED
+            // Dispense the medicine and update the inventory
+            targetMedicine.setQuantity(targetMedicine.getQuantity() - quantityToDispense);
+            System.out.println("Successfully dispensed " + quantityToDispense + " of " + medicineName + ". Updated inventory.");
+    
+            // Update the appointment status to COMPLETED
             for (Appointment appt : appointments) {
-                if (appt.getAppointmentID() == appointmentId && 
-                    appt.getStatus() == Status.PENDING_PHARMACIST) {
+                if (appt.getAppointmentID() == appointmentId && appt.getStatus() == Status.PENDING_PHARMACIST) {
                     appt.setStatus(Status.COMPLETED);
                     break;
                 }
             }
     
-            // Deduct the quantity from the medicine inventory
-            targetMedicine.setQuantity(targetMedicine.getQuantity() - quantityToDispense);
-            System.out.println("Successfully dispensed " + quantityToDispense + " of " + medicineName + ". Updated inventory.");
-    
-            // Save changes to database
-            database.saveDatabase();  // This will handle all the CSV saving
-            
+            // Save changes using database
+        dbHelper.saveToCsv(appointments, "data/Appointment_List.csv", Arrays.asList("AppointmentID", "Status", "PatientID", "DoctorID", "Date", "Time"), 0);
+        dbHelper.saveToCsv(medicines, "data/Medicine_List.csv", Arrays.asList("MedicineName", "Quantity", "Threshold"), 5);
+        System.out.println("Appointment and Medicine CSV files updated successfully");
+
         } else {
             // If not enough stock, print a warning message
             System.out.println("Error: Not enough stock to dispense " + medicineName + ". Required: " + quantityToDispense + ", Available: " + targetMedicine.getQuantity());
         }
     }
+    
+    
 }
