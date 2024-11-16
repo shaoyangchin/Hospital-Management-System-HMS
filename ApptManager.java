@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Objects;
@@ -146,27 +145,27 @@ public class ApptManager {
     
     
 
-    // // Cancels a confirmed appointment for a specific patient
-    // public void cancelPatient(int apptId, Patient patient, ArrayList<Appointment> appts) {
-    //     for (Appointment appt : appts) {
-    //         if (appt.getAppointmentID() == apptId && 
-    //             patient.getUserId().equals(appt.getPatient().getUserId()) &&
-    //             appt.getStatus() == Status.CONFIRMED) {
-    //             //appt.setPatient(null);
-    //             appt.setStatus(Status.PENDING);
-    //             System.out.println("Appointment canceled successfully for patient ID " + patient.getPatientId());
-    //             return;
-    //         } else if (appt.getAppointmentID() == apptId 
-    //         && appt.getPatient() != null
-    //         && appt.getPatient().getPatientId() != patient.getPatientId()) {
-    //             doesApptIdExist = true;
-    //             System.out.println("Error, this appointment slot is not available");
-    //         }
-    //     }
-    //     if (!doesApptIdExist) {
-    //         System.out.println("AppointmentId does not exist");
-    //     }
-    // }
+    // Cancels a confirmed appointment for a specific patient
+    public void cancelPatient(int apptId, Patient patient, ArrayList<Appointment> appts) {
+        for (Appointment appt : appts) {
+            if (appt.getAppointmentID() == apptId && 
+                patient.getUserId().equals(appt.getPatient().getUserId()) &&
+                appt.getStatus() == Status.CONFIRMED) {
+                //appt.setPatient(null);
+                appt.setStatus(Status.PENDING);
+                System.out.println("Appointment canceled successfully for patient ID " + patient.getPatientId());
+                return;
+            } else if (appt.getAppointmentID() == apptId 
+            && appt.getPatient() != null
+            && appt.getPatient().getPatientId() != patient.getPatientId()) {
+                doesApptIdExist = true;
+                System.out.println("Error, this appointment slot is not available");
+            }
+        }
+        if (!doesApptIdExist) {
+            System.out.println("AppointmentId does not exist");
+        }
+    }
 
 
 
@@ -207,49 +206,65 @@ public class ApptManager {
 
     // 3. View Personal Schedule
     public void viewPersonalScheduleForDate(Doctor doctor, String date, HMSDatabase database) {
-    ArrayList<Appointment> appointments = database.getAppointments();
-    HashMap<String, String> scheduleMap = new HashMap<>();
-
-    // Define the 30-minute time slots
-    String[] timeSlots = {
-        "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
-        "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM",
-        "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM", "05:00 PM", "05:30 PM",
-        "06:00 PM"
-    };
-
-    // Initialize all slots as "Free"
-    for (String slot : timeSlots) {
-        scheduleMap.put(slot, "Free");
-    }
+        ArrayList<Appointment> appointments = database.getAppointments();
+        ArrayList<String> schedule = new ArrayList<>();
     
-
-    // Populate scheduleMap with CONFIRMED appointments for the given doctor and date
-    for (Appointment appt : appointments) {
-        if (appt.getDoctor().getUserId().equals(doctor.getUserId()) &&
-            appt.getDate().equalsIgnoreCase(date) &&
-            appt.getStatus() == Status.CONFIRMED) {
-
-            // Ensure time matches correctly and populate
-            String appointmentTime = appt.getTime().trim(); // Trim spaces to avoid mismatches
-            if (scheduleMap.containsKey(appointmentTime)) {
-                scheduleMap.put(appointmentTime, appt.getPatient().getName() + " (" + appt.getPatient().getUserId() + ")");
-            } else {
-                System.out.println("Warning: Appointment time " + appointmentTime + " does not match any time slots.");
+        // Define the 30-minute time slots
+        String[] timeSlots = {
+            "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
+            "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM",
+            "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM", "05:00 PM", "05:30 PM",
+            "06:00 PM"
+        };
+    
+        // Initialize all slots as "Free"
+        for (String slot : timeSlots) {
+            schedule.add("Free");
+        }
+    
+        // DEBUG: Display all appointments
+        System.out.println("--- Debug: All Appointments ---");
+        for (Appointment appt : appointments) {
+            System.out.println("Appointment ID: " + appt.getAppointmentID() +
+                               ", Status: " + appt.getStatus() +
+                               ", Doctor ID: " + appt.getDoctor().getUserId() +
+                               ", Date: " + appt.getDate() +
+                               ", Time: " + appt.getTime());
+        }
+    
+        // DEBUG: Confirmed appointments for the doctor
+        System.out.println("--- Debug: CONFIRMED Appointments for Dr. " + doctor.getUserId() + " on " + date + " ---");
+    
+        for (Appointment appt : appointments) {
+            if (appt.getDoctor().getUserId().equals(doctor.getUserId()) &&
+                appt.getDate().equalsIgnoreCase(date) &&
+                appt.getStatus() == Status.CONFIRMED) {
+                
+                System.out.println("Appointment ID: " + appt.getAppointmentID() +
+                                   ", Patient: " + (appt.getPatient() != null ? appt.getPatient().getName() : "N/A") +
+                                   ", Time: " + appt.getTime());
+    
+                String appointmentTime = appt.getTime();
+    
+                // Find the matching time slot and populate it
+                for (int i = 0; i < timeSlots.length; i++) {
+                    if (timeSlots[i].equalsIgnoreCase(appointmentTime)) {
+                        schedule.set(i, appt.getPatient().getName() + " (" + appt.getPatient().getUserId() + ")");
+                        break;
+                    }
+                }
             }
         }
+    
+        // Print the schedule in a table format
+        System.out.println("--- Personal Schedule for Dr. " + doctor.getName() + " on " + date + " ---");
+        System.out.printf("%1$-10s | %2$-20s%n", "Time", "Appointment");
+        System.out.println("-------------------------------------");
+    
+        for (int i = 0; i < timeSlots.length; i++) {
+            System.out.printf("%1$-10s | %2$-20s%n", timeSlots[i], schedule.get(i));
+        }
     }
-
-    // Print the schedule in a table format
-    System.out.println("--- Personal Schedule for Dr. " + doctor.getName() + " on " + date + " ---");
-    System.out.printf("%1$-10s | %2$-30s%n", "Time", "Appointment");
-    System.out.println("-----------------------------------------------");
-
-    for (String slot : timeSlots) {
-        System.out.printf("%1$-10s | %2$-30s%n", slot, scheduleMap.get(slot));
-    }
-}
-
     
     
     
@@ -397,73 +412,57 @@ public class ApptManager {
     
 
     // Cancels a confirmed appointment for a specific patient
-    // public void cancelPatient(int apptId, Patient patient, ArrayList<Appointment> appts) {
-    //     for (Appointment appt : appts) {
-    //         if (appt.getAppointmentID() == apptId && 
-    //             patient.getUserId().equals(appt.getPatient().getUserId()) &&
-    //             appt.getStatus() == Status.CONFIRMED) {
-    //             appt.setPatient(null);
-    //             appt.setStatus(Status.PENDING);
-    //             System.out.println("Appointment canceled successfully for patient ID " + patient.getPatientId());
-    //             return;
-    //         }
-    //     }
-    //     System.out.println("Error canceling: Appointment with ID " + apptId + " not found or unauthorized access.");
-    // }
+    public void cancelPatient(int apptId, Patient patient, ArrayList<Appointment> appts) {
+        for (Appointment appt : appts) {
+            if (appt.getAppointmentID() == apptId && 
+                patient.getUserId().equals(appt.getPatient().getUserId()) &&
+                appt.getStatus() == Status.CONFIRMED) {
+                appt.setPatient(null);
+                appt.setStatus(Status.PENDING);
+                System.out.println("Appointment canceled successfully for patient ID " + patient.getPatientId());
+                return;
+            }
+        }
+        System.out.println("Error canceling: Appointment with ID " + apptId + " not found or unauthorized access.");
+    }
 
     
 
     // Views all completed appointments and their outcomes for a specific patient
     
 
-        // Add this new method for updating prescription status
-        public void updatePrescriptionStatus(int apptId, String prescriptionStatus, ArrayList<Appointment> appts) {
-            // Input validation
-            if (prescriptionStatus == null || prescriptionStatus.trim().isEmpty()) {
-                System.out.println("Error: Prescription status cannot be empty");
+    // Add this new method for updating prescription status
+    public void updatePrescriptionStatus(int apptId, String prescriptionStatus, ArrayList<Appointment> appts) {
+        if (prescriptionStatus == null || prescriptionStatus.trim().isEmpty()) {
+            System.out.println("Error: Prescription status cannot be empty");
+            return;
+        }
+
+        String status = prescriptionStatus.trim().toUpperCase();
+        if (!isValidPrescriptionStatus(status)) {
+            System.out.println("Error: Invalid prescription status. Must be PENDING, DISPENSED, or CANCELLED");
+            return;
+        }
+
+        for (Appointment appt : appts) {
+            if (appt.getAppointmentID() == apptId) {
+                if (appt.getPrescribedMedicine() == null) {
+                    System.out.println("Error: No prescription found for this appointment.");
+                    return;
+                }
+
+                appt.setPrescriptionStatus(status);
+                System.out.println("Prescription status updated successfully for Appointment ID: " + apptId);
+                System.out.println("New Status: " + status);
                 return;
             }
-        
-            // Standardize status format
-            String status = prescriptionStatus.trim().toUpperCase();
-            if (!isValidPrescriptionStatus(status)) {
-                System.out.println("Error: Invalid prescription status. Must be PENDING, DISPENSED, or CANCELLED");
-                return;
-            }
-        
-            for (Appointment appt : appts) {
-                // if (appt.getAppointmentID() == apptId) {
-                //     if (appt.getStatus() != Status.COMPLETED) {
-                //         System.out.println("Error: Can only update prescription status for completed appointments.");
-                //         return;
-                //     }
-        
-                //     String currentOutcome = appt.getOutcome();
-                //     String newOutcome;
-                    
-                //     if (currentOutcome == null || currentOutcome.trim().isEmpty()) {
-                //         newOutcome = "Prescription Status: " + status;
-                //     } else if (currentOutcome.contains("Prescription Status:")) {
-                //         newOutcome = currentOutcome.replaceAll(
-                //             "Prescription Status: .*",
-                //             "Prescription Status: " + status
-                //         );
-                //     } else {
-                //         newOutcome = currentOutcome + "\nPrescription Status: " + status;
-                //     }
-        
-                //     appt.setOutcome(newOutcome);
-                //     System.out.println("Prescription status updated successfully for Appointment ID: " + apptId);
-                //     return;
-                // }
-            }
-            System.out.println("Appointment with ID " + apptId + " not found.");
         }
-        
-        // Helper method to validate prescription status
-        private boolean isValidPrescriptionStatus(String status) {
-            return status.equals("PENDING") || 
-                   status.equals("DISPENSED") || 
-                   status.equals("CANCELLED");
-        }
+        System.out.println("Appointment with ID " + apptId + " not found.");
     }
+
+    private boolean isValidPrescriptionStatus(String status) {
+        return status.equals("PENDING") || 
+                status.equals("DISPENSED") || 
+                status.equals("CANCELLED");
+    }
+}
