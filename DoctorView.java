@@ -27,18 +27,14 @@ public class DoctorView {
                     String patientIdForView = scanner.nextLine();
                     doctor.getRecordForPatient(database.getAllPatients(), patientIdForView, apptManager, database);
                     break;
-                case 2:  // Update a specific Patient Medical Record
-                    System.out.print("Enter Patient ID to update their record: ");
-                    String patientIdForUpdate = scanner.nextLine();
-                    System.out.print("Enter diagnosis: ");
-                    String diagnosis = scanner.nextLine();
-                    System.out.print("Enter prescription: ");
-                    String prescription = scanner.nextLine();
-                    System.out.print("Enter treatment plan: ");
-                    String treatmentPlan = scanner.nextLine();
-                    doctor.updatePatientRecord(database.getAllPatients(), patientIdForUpdate, diagnosis, prescription, treatmentPlan, database);
-                    break;
 
+
+                case 2: // Update Patient Record
+                    System.out.print("Enter Patient ID: ");
+                    String patientIdForUpdate = scanner.nextLine();
+                    doctor.updatePatientRecord(patientIdForUpdate, database);
+                    break;
+                
 
                 // ------------------------ View Personal Schedule ------------------------
                 case 3:
@@ -188,9 +184,11 @@ public class DoctorView {
                     String notes = scanner.nextLine();
                     System.out.print("Enter Service Provided: ");
                     String service = scanner.nextLine();
+                    System.out.print("Enter Quantity Provided: ");
+                    int quantity = Integer.parseInt(scanner.nextLine());
 
                     // Call ApptManager to update the appointment and medical record
-                    apptManager.recordAppointmentOutcome(outcomeID, diagnosis2, prescription2, notes, service, doctor, database);
+                    apptManager.recordAppointmentOutcome(outcomeID, diagnosis2, prescription2, notes, service, quantity, doctor, database);
                     break;
 
 

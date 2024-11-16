@@ -152,26 +152,26 @@ public class ApptManager {
     
 
     // Cancels a confirmed appointment for a specific patient
-    public void cancelPatient(int apptId, Patient patient, ArrayList<Appointment> appts) {
-        for (Appointment appt : appts) {
-            if (appt.getAppointmentID() == apptId && 
-                patient.getUserId().equals(appt.getPatient().getUserId()) &&
-                appt.getStatus() == Status.CONFIRMED) {
-                //appt.setPatient(null);
-                appt.setStatus(Status.PENDING);
-                System.out.println("Appointment canceled successfully for patient ID " + patient.getPatientId());
-                return;
-            } else if (appt.getAppointmentID() == apptId 
-            && appt.getPatient() != null
-            && appt.getPatient().getPatientId() != patient.getPatientId()) {
-                doesApptIdExist = true;
-                System.out.println("Error, this appointment slot is not available");
-            }
-        }
-        if (!doesApptIdExist) {
-            System.out.println("AppointmentId does not exist");
-        }
-    }
+    // public void cancelPatient(int apptId, Patient patient, ArrayList<Appointment> appts) {
+    //     for (Appointment appt : appts) {
+    //         if (appt.getAppointmentID() == apptId && 
+    //             patient.getUserId().equals(appt.getPatient().getUserId()) &&
+    //             appt.getStatus() == Status.CONFIRMED) {
+    //             //appt.setPatient(null);
+    //             appt.setStatus(Status.PENDING);
+    //             System.out.println("Appointment canceled successfully for patient ID " + patient.getPatientId());
+    //             return;
+    //         } else if (appt.getAppointmentID() == apptId 
+    //         && appt.getPatient() != null
+    //         && appt.getPatient().getPatientId() != patient.getPatientId()) {
+    //             doesApptIdExist = true;
+    //             System.out.println("Error, this appointment slot is not available");
+    //         }
+    //     }
+    //     if (!doesApptIdExist) {
+    //         System.out.println("AppointmentId does not exist");
+    //     }
+    // }
 
 
 
@@ -370,7 +370,7 @@ public class ApptManager {
     }
 
     // 8. Record Appointment Outcome
-    public void recordAppointmentOutcome(int appointmentID, String diagnosis, String prescription, String notes, String service, Doctor doctor, HMSDatabase database) {
+    public void recordAppointmentOutcome(int appointmentID, String diagnosis, String prescription, String notes, String service, int quantity, Doctor doctor, HMSDatabase database) {
         ArrayList<Appointment> appts = database.getAppointments();
         ArrayList<MedicalRecord> medicalRecords = database.getRecords();
         boolean appointmentUpdated = false;
@@ -381,7 +381,7 @@ public class ApptManager {
                 appt.getDoctor().getUserId().equals(doctor.getUserId()) &&
                 appt.getStatus().toString().equalsIgnoreCase("CONFIRMED")) {
     
-                appt.setStatus(Status.COMPLETED); // Update status to COMPLETED
+                appt.setStatus(Status.PENDING_PHARMACIST); // Update status to COMPLETED
                 appointmentUpdated = true;
     
                 // Add a new medical record
@@ -391,11 +391,12 @@ public class ApptManager {
                     appt.getPatient().getUserId(),
                     appointmentID,
                     notes,
-                    service
+                    service,
+                    quantity
                 );
                 medicalRecords.add(newRecord);
     
-                System.out.println("Appointment ID " + appointmentID + " marked as COMPLETED.");
+                System.out.println("Appointment ID " + appointmentID + " marked as PENDING_PHARMACIST.");
                 System.out.println("Medical record updated for Patient ID: " + appt.getPatient().getUserId());
                 break;
             }
@@ -418,19 +419,19 @@ public class ApptManager {
     
 
     // Cancels a confirmed appointment for a specific patient
-    public void cancelPatient(int apptId, Patient patient, ArrayList<Appointment> appts) {
-        for (Appointment appt : appts) {
-            if (appt.getAppointmentID() == apptId && 
-                patient.getUserId().equals(appt.getPatient().getUserId()) &&
-                appt.getStatus() == Status.CONFIRMED) {
-                appt.setPatient(null);
-                appt.setStatus(Status.PENDING);
-                System.out.println("Appointment canceled successfully for patient ID " + patient.getPatientId());
-                return;
-            }
-        }
-        System.out.println("Error canceling: Appointment with ID " + apptId + " not found or unauthorized access.");
-    }
+    // public void cancelPatient(int apptId, Patient patient, ArrayList<Appointment> appts) {
+    //     for (Appointment appt : appts) {
+    //         if (appt.getAppointmentID() == apptId && 
+    //             patient.getUserId().equals(appt.getPatient().getUserId()) &&
+    //             appt.getStatus() == Status.CONFIRMED) {
+    //             appt.setPatient(null);
+    //             appt.setStatus(Status.PENDING);
+    //             System.out.println("Appointment canceled successfully for patient ID " + patient.getPatientId());
+    //             return;
+    //         }
+    //     }
+    //     System.out.println("Error canceling: Appointment with ID " + apptId + " not found or unauthorized access.");
+    // }
 
     
 

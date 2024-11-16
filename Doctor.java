@@ -1,4 +1,5 @@
 import java.util.List;
+import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Doctor extends User {
@@ -37,78 +38,91 @@ public class Doctor extends User {
         System.out.println("No records found for Patient ID: " + patientId);
     }
 
-    public void updatePatientRecord(List<Patient> patients, String patientId, String diagnosis, String prescription, String treatmentPlan, HMSDatabase hmsDatabase) {
-        for (Patient patient : patients) {
-            if (patient.getUserId().equals(patientId)) {
-                if (!patient.getRecord().isEmpty()) {
-                    MedicalRecord recordToUpdate = patient.getRecord().get(0);
-                    recordToUpdate.addDiagnosisAndPrescription(diagnosis, prescription);
-                    recordToUpdate.setService(treatmentPlan);
-                    hmsDatabase.setPatients(new ArrayList<>(patients)); // Update the database
-                    DatabaseHelper.saveDatabase(hmsDatabase); // Save changes to the files
-                    System.out.println("Updated medical record for patient ID: " + patientId);
-                    return;
-                } else {
-                    System.out.println("No existing medical records for patient ID: " + patientId);
-                    return;
-                }
+
+    public void updatePatientRecord(String patientId, HMSDatabase database) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Step 1: Choose what to update
+        System.out.println("What do you want to update?");
+        System.out.println("1. Diagnosis");
+        System.out.println("2. Prescription");
+        System.out.println("3. Service");
+        System.out.print("Enter choice (1/2/3): ");
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        String updateField;
+        switch (choice) {
+            case 1 -> updateField = "Diagnosis";
+            case 2 -> updateField = "Prescription";
+            case 3 -> updateField = "Service";
+            default -> {
+                System.out.println("Invalid choice. Exiting...");
+                return;
             }
         }
-        System.out.println("Patient with ID " + patientId + " not found.");
+
+        // Step 2: Fetch relevant records
+        ArrayList<MedicalRecord> medicalRecords = database.getRecords();
+        ArrayList<MedicalRecord> filteredRecords = new ArrayList<>();
+
+        for (MedicalRecord record : medicalRecords) {
+            if (record.getPatientId().equalsIgnoreCase(patientId)) {
+                filteredRecords.add(record);
+            }
+        }
+
+        if (filteredRecords.isEmpty()) {
+            System.out.println("No records found for Patient ID: " + patientId);
+            return;
+        }
+
+        // Step 3: Display matching records
+        System.out.println("Matching records for Patient ID: " + patientId + " and field: " + updateField);
+        int index = 1;
+        for (MedicalRecord record : filteredRecords) {
+            String fieldValue = switch (updateField) {
+                case "Diagnosis" -> record.getDiagnosis();
+                case "Prescription" -> record.getPrescription();
+                case "Service" -> record.getService();
+                default -> "";
+            };
+            System.out.println(index + ". Appointment ID: " + record.getAppointmentId() + " | " + updateField + ": " + fieldValue);
+            index++;
+        }
+
+        // Step 4: Ask which record to update
+        System.out.print("Enter the number of the record you want to update: ");
+        int recordChoice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        if (recordChoice < 1 || recordChoice > filteredRecords.size()) {
+            System.out.println("Invalid choice. Exiting...");
+            return;
+        }
+
+        MedicalRecord selectedRecord = filteredRecords.get(recordChoice - 1);
+
+        // Step 5: Enter new value
+        System.out.print("Enter new value for " + updateField + ": ");
+        String newValue = scanner.nextLine().trim();
+
+        // Step 6: Update the record
+        switch (updateField) {
+            case "Diagnosis" -> selectedRecord.setDiagnosis(newValue);
+            case "Prescription" -> selectedRecord.setPrescription(newValue);
+            case "Service" -> selectedRecord.setService(newValue);
+        }
+
+        System.out.println(updateField + " updated successfully for Appointment ID: " + selectedRecord.getAppointmentId());
+
+        // Step 7: Save changes back to the CSV
+        database.saveDatabase();
+        System.out.println("Changes saved to MedicalRecord_List.csv.");
     }
 
-    // // Appointment Management
-    // public void viewSchedule() {
-    //     System.out.println("Doctor's Schedule:");
-    //     for (Appointment appointment : appointments) {
-    //         System.out.println(appointment);
-    //     }
-    // }
 
-    // public void setAvailability(List<TimeSlot> availability) {
-    //     // Implementation for setting availability
-    // }
+    
 
-    // public void acceptAppointment(int appointmentID) {
-    //     for (Appointment appointment : appointments) {
-    //         if (appointment.getAppointmentID() == appointmentID) {
-    //             appointment.setStatus(Status.CONFIRMED);
-    //             System.out.println("Appointment accepted.");
-    //             return;
-    //         }
-    //     }
-    //     System.out.println("Appointment not found.");
-    // }
-
-    // public void declineAppointment(int appointmentID) {
-    //     for (Appointment appointment : appointments) {
-    //         if (appointment.getAppointmentID() == appointmentID) {
-    //             appointment.setStatus(Status.DECLINED);
-    //             System.out.println("Appointment declined.");
-    //             return;
-    //         }
-    //     }
-    //     System.out.println("Appointment not found.");
-    // }
-
-    // public void viewUpcomingAppointments() {
-    //     System.out.println("Upcoming Appointments:");
-    //     for (Appointment appointment : appointments) {
-    //         if (appointment.getStatus() == Status.CONFIRMED) {
-    //             System.out.println(appointment);
-    //         }
-    //     }
-    // }
-
-    // // Appointment Outcome Record
-    // public void recordAppointmentOutcome(int appointmentID, String date, String serviceType, List<Medicine> medications, String notes) {
-    //     for (Appointment appointment : appointments) {
-    //         if (appointment.getAppointmentID() == appointmentID) {
-    //             appointment.setOutcome("Date: " + date + "\nService: " + serviceType + "\nMedications: " + medications + "\nNotes: " + notes);
-    //             System.out.println("Appointment outcome recorded.");
-    //             return;
-    //         }
-    //     }
-    //     System.out.println("Appointment not found.");
-    // }
+   
 }

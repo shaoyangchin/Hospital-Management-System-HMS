@@ -47,6 +47,21 @@ public class MedicalRecord {
         return quantity;
     }
 
+     // Setter for Diagnosis
+     public void setDiagnosis(String diagnosis) {
+        this.diagnosis = diagnosis;
+    }
+
+    // Setter for Prescription
+    public void setPrescription(String prescription) {
+        this.prescription = prescription;
+    }
+
+    // Setter for Service
+    public void setService(String service) {
+        this.service = service;
+    }
+
     // Updated toString() without prescriptionStatus
     @Override
     public String toString() {
