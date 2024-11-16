@@ -17,13 +17,15 @@ public class PharmacistView {
         apptManager.setDatabaseHelper(dbHelper);
 
         while (true) {
-            System.out.println("\n--- Pharmacist Menu ---");
-            System.out.println("1. View Appointment Outcome Records");
-            System.out.println("2. Update Prescription Status");
-            System.out.println("3. View Medication Inventory");
-            System.out.println("4. Submit Replenishment Request");
-            System.out.println("5. Exit");
-            System.out.print("Choose an option: ");
+            System.out.println("\n======================================");
+            System.out.println("         --- Pharmacist Menu ---         ");
+            System.out.println("======================================");
+            System.out.printf("| %-2s | %-30s |\n", "1", "View Appointments");
+            System.out.printf("| %-2s | %-30s |\n", "2", "Update Prescription Status");
+            System.out.printf("| %-2s | %-30s |\n", "3", "Replenish Medicine Stock");
+            System.out.printf("| %-2s | %-30s |\n", "4", "Exit");
+            System.out.println("======================================");
+            System.out.print("Select an option: ");
             
             try {
                 int choice = scanner.nextInt();
