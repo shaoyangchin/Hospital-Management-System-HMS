@@ -4,7 +4,18 @@ import java.util.Scanner;
 public class PharmacistView {
     public static void pharmacistView(Pharmacist pharmacist, HMSDatabase database) {
         Scanner scanner = new Scanner(System.in);
+
+        // Set both the appointment manager and database helper
+        DatabaseHelper dbHelper = new DatabaseHelper();
+        ApptManager apptManager = database.getApptManager();
         
+        // Set them in pharmacist
+        pharmacist.setDatabaseHelper(dbHelper);
+        pharmacist.setAppointmentManager(apptManager);
+        
+        // Also set dbHelper in ApptManager
+        apptManager.setDatabaseHelper(dbHelper);
+
         while (true) {
             System.out.println("\n--- Pharmacist Menu ---");
             System.out.println("1. View Appointment Outcome Records");
@@ -21,11 +32,12 @@ public class PharmacistView {
                 switch (choice) {
                     case 1:
                         // View pending prescriptions
-                        pharmacist.viewPendingPrescriptions();
+                        pharmacist.viewPendingPrescriptions(database);
                         break;
                     case 2:
-                        // Handle updating the prescription status
-                        handlePrescriptionUpdate(pharmacist, scanner);
+                        System.out.println("Enter Appointment ID: ");
+                        int appointmentId = scanner.nextInt();
+                        pharmacist.updatePrescriptionStatus(appointmentId, database);  // Pass database
                         break;
                     case 3:
                         // View all medications in the inventory
@@ -45,22 +57,6 @@ public class PharmacistView {
                 System.out.println("Invalid input. Please enter a number.");
                 scanner.nextLine(); // Consume invalid input
             }
-        }
-    }
-
-    private static void handlePrescriptionUpdate(Pharmacist pharmacist, Scanner scanner) {
-        try {
-            // Get appointment ID from the user
-            System.out.print("\nEnter appointment ID to update: ");
-            int appointmentID = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
-    
-            // Call the updatePrescriptionStatus method in Pharmacist class
-            pharmacist.updatePrescriptionStatus(appointmentID);
-    
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid input. Please enter a valid appointment ID.");
-            scanner.nextLine(); // Consume invalid input
         }
     }
 
