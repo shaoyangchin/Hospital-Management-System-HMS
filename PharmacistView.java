@@ -9,7 +9,6 @@ public class PharmacistView {
         DatabaseHelper dbHelper = new DatabaseHelper();
         ApptManager apptManager = database.getApptManager();
         
-        
         // Set them in pharmacist
         pharmacist.setDatabaseHelper(dbHelper);
         pharmacist.setAppointmentManager(apptManager);
@@ -47,8 +46,29 @@ public class PharmacistView {
                         pharmacist.viewMedicationInventory(database.getMedicines());
                         break;
                     case 4:
-                        // Handle submission of a replenishment request
-                        handleReplenishmentRequest(pharmacist, scanner);
+                        // Submit replenishment request
+                        System.out.print("\nEnter medicine name for replenishment: ");
+                        String medicineName = scanner.nextLine();
+
+                        try {
+                            System.out.print("Enter quantity to request: ");
+                            int requestedQuantity = scanner.nextInt();
+                            scanner.nextLine(); // Consume newline
+
+                            if (requestedQuantity <= 0) {
+                                System.out.println("Quantity must be positive.");
+                                break;
+                            }
+
+                            // Submit replenishment request through Pharmacist
+                            ReplenishmentRequest request = pharmacist.submitReplenishmentRequest(medicineName, requestedQuantity);
+                            if (request != null) {
+                                System.out.println("Replenishment request submitted successfully and saved.");
+                            }
+                        } catch (InputMismatchException e) {
+                            System.out.println("Invalid quantity. Please enter a number.");
+                            scanner.nextLine(); // Consume invalid input
+                        }
                         break;
                     case 5:
                         System.out.println("Exiting Pharmacist Menu...");
@@ -60,31 +80,6 @@ public class PharmacistView {
                 System.out.println("Invalid input. Please enter a number.");
                 scanner.nextLine(); // Consume invalid input
             }
-        }
-    }
-
-    private static void handleReplenishmentRequest(Pharmacist pharmacist, Scanner scanner) {
-        System.out.print("\nEnter medicine name for replenishment: ");
-        String medicineName = scanner.nextLine();
-
-        try {
-            System.out.print("Enter quantity to request: ");
-            int requestedQuantity = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
-
-            if (requestedQuantity <= 0) {
-                System.out.println("Quantity must be positive.");
-                return;
-            }
-
-            // Submit replenishment request through Pharmacist
-            ReplenishmentRequest request = pharmacist.submitReplenishmentRequest(medicineName, requestedQuantity);
-            if (request != null) {
-                System.out.println("Replenishment request submitted successfully and saved.");
-            }
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid quantity. Please enter a number.");
-            scanner.nextLine(); // Consume invalid input
         }
     }
 }
