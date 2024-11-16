@@ -9,10 +9,11 @@ public class PharmacistView {
         DatabaseHelper dbHelper = new DatabaseHelper();
         ApptManager apptManager = database.getApptManager();
         
+        
         // Set them in pharmacist
         pharmacist.setDatabaseHelper(dbHelper);
         pharmacist.setAppointmentManager(apptManager);
-        
+
         // Also set dbHelper in ApptManager
         apptManager.setDatabaseHelper(dbHelper);
 
@@ -38,6 +39,8 @@ public class PharmacistView {
                         System.out.println("Enter Appointment ID: ");
                         int appointmentId = scanner.nextInt();
                         pharmacist.updatePrescriptionStatus(appointmentId, database);  // Pass database
+                        // Add this to refresh the database after update
+                        database = new HMSDatabase();  // Reload database to reflect changes
                         break;
                     case 3:
                         // View all medications in the inventory
