@@ -31,7 +31,7 @@ public class DatabaseHelper {
                 // this? should it not be
                 // static
                 users.add(new Pharmacist(record.get(1), record.get(3), Integer.parseInt(record.get(4)),
-                        record.get(0), record.get(5), UserType.PHARMACIST));
+                        record.get(0), record.get(5), pharmacist));
             } else if (Objects.equals(record.get(2), "Administrator")) {
                 users.add(new Administrator(record.get(1), record.get(3), Integer.parseInt(record.get(4)),
                         record.get(0), record.get(5),
