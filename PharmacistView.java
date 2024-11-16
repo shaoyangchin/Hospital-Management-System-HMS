@@ -20,15 +20,19 @@ public class PharmacistView {
 
                 switch (choice) {
                     case 1:
-                        pharmacist.viewPendingPrescriptions(database.getAppointments());
+                        // View pending prescriptions
+                        pharmacist.viewPendingPrescriptions();
                         break;
                     case 2:
-                        handlePrescriptionUpdate(pharmacist, scanner, database);
+                        // Handle updating the prescription status
+                        handlePrescriptionUpdate(pharmacist, scanner);
                         break;
                     case 3:
+                        // View all medications in the inventory
                         pharmacist.viewMedicationInventory(database.getMedicines());
                         break;
                     case 4:
+                        // Handle submission of a replenishment request
                         handleReplenishmentRequest(pharmacist, scanner, database);
                         break;
                     case 5:
@@ -39,31 +43,24 @@ public class PharmacistView {
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Invalid input. Please enter a number.");
-                scanner.nextLine();
+                scanner.nextLine(); // Consume invalid input
             }
         }
     }
 
-    private static void handlePrescriptionUpdate(Pharmacist pharmacist, Scanner scanner, HMSDatabase database) {
+    private static void handlePrescriptionUpdate(Pharmacist pharmacist, Scanner scanner) {
         try {
+            // Get appointment ID from the user
             System.out.print("\nEnter appointment ID to update: ");
             int appointmentID = scanner.nextInt();
-            scanner.nextLine();
-
-            System.out.print("Enter medicine name: ");
-            String medicineName = scanner.nextLine();
-
-            Medicine medicine = database.getMedicineByName(medicineName);
-            if (medicine == null) {
-                System.out.println("Medicine not found in inventory.");
-                return;
-            }
-            
-            pharmacist.updatePrescriptionStatus(appointmentID, medicine, database.getAppointments(), database);
-
+            scanner.nextLine(); // Consume newline
+    
+            // Call the updatePrescriptionStatus method in Pharmacist class
+            pharmacist.updatePrescriptionStatus(appointmentID);
+    
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input. Please enter valid values.");
-            scanner.nextLine();
+            System.out.println("Invalid input. Please enter a valid appointment ID.");
+            scanner.nextLine(); // Consume invalid input
         }
     }
 
@@ -80,13 +77,14 @@ public class PharmacistView {
         try {
             System.out.print("Enter quantity to request: ");
             int requestedQuantity = scanner.nextInt();
-            scanner.nextLine();
+            scanner.nextLine(); // Consume newline
 
             if (requestedQuantity <= 0) {
                 System.out.println("Quantity must be positive.");
                 return;
             }
 
+            // Submit replenishment request through Pharmacist
             ReplenishmentRequest request = pharmacist.submitReplenishmentRequest(medicineName, requestedQuantity);
             if (request != null) {
                 database.saveDatabase();
@@ -94,7 +92,7 @@ public class PharmacistView {
             }
         } catch (InputMismatchException e) {
             System.out.println("Invalid quantity. Please enter a number.");
-            scanner.nextLine();
+            scanner.nextLine(); // Consume invalid input
         }
     }
 }
