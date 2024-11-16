@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Patient extends User implements GetRecord<List<MedicalRecord>>{
     private String patientId;
@@ -84,7 +85,8 @@ public class Patient extends User implements GetRecord<List<MedicalRecord>>{
                 + patient.getName() + ", DOB: " + patient.getDateOfBirth() + ", gender: " + patient.getGender()
                 + ", Blood Type: " + patient.getBloodType() + ", Email: " + patient.getContact() + ", Phone number: "
                 + patient.getPhoneNum());
-        System.out.println(getRecordForPatient(patient));
+        //System.out.println(getRecordForPatient(patient));
+        System.out.println("Use View Past Appointment Outcome Record option to view past diagnoses and treatments.");
     }
 
     public void updateRecord(Patient patient, String contact, String phone) {
@@ -103,7 +105,7 @@ public class Patient extends User implements GetRecord<List<MedicalRecord>>{
         // }
         // Displays all available (PENDING) appointments for patient logged in
         for (Appointment appointment : appts) {
-            if (appointment.getStatus() == Status.PENDING && appointment.getPatient() == null) {
+            if (appointment.getStatus() == Status.PENDING && appointment.getPatient().getPatientId().equals(patientId)) {
                 System.out.println(appointment);
             }
         }
@@ -114,9 +116,8 @@ public class Patient extends User implements GetRecord<List<MedicalRecord>>{
         apptM.schedulePatient(patient, apptId, appts);
     }
 
-    public void rescheduleAppt(int oldApptId, int newApptId, Patient patient, ApptManager apptM,
-            ArrayList<Appointment> appts) {
-        apptM.reschedulePatient(oldApptId, newApptId, patient, appts);
+    public void rescheduleAppt(Patient patient, ApptManager apptM, ArrayList<Appointment> appts) {
+            apptM.reschedulePatient(patient, appts);
     }
 
     public void cancelAppt(int apptId, Patient patient, ApptManager apptM, ArrayList<Appointment> appts) {

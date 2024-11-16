@@ -1,6 +1,8 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class ApptManager {
     //private List<Appointment> appts = new ArrayList<>();
@@ -26,13 +28,13 @@ public class ApptManager {
         public void schedulePatient(Patient patient, int apptId, ArrayList<Appointment> appts) {
             Boolean doesApptIdExist = false;
             for (Appointment appt : appts) {
-                if (appt.getAppointmentID() == apptId && appt.getPatient() == null
+                if (appt.getAppointmentID() == apptId && appt.getPatient().getPatientId().equals(patient.getPatientId())
                 && appt.getStatus() == Status.PENDING) {
                     patient.setAppointment(appt);
                     appt.setPatient(patient);
                     appt.setStatus(Status.CONFIRMED);
                     doesApptIdExist = true;
-                    System.out.println("Appointment scheduled successfully for patient ID " + patient.getPatientId() + " with Doctor " + appt.getDoctor().getName() + " at " + appt.getTimeSlot());
+                    System.out.println("Appointment scheduled successfully for patient ID " + patient.getPatientId() + " with Doctor " + appt.getDoctor().getName() + " on "+appt.getDate()+" at " + appt.getTime());
                     return;
                 } else if (appt.getAppointmentID() == apptId 
                 && appt.getPatient() != null
@@ -47,20 +49,75 @@ public class ApptManager {
         }
     
         // Reschedules a confirmed appointment to a new date and time for a specific patient
-        public void reschedulePatient(int oldApptId, int newApptId, Patient patient, ArrayList<Appointment> appts) {
+        public void reschedulePatient(Patient patient, ArrayList<Appointment> appts) {
+            Scanner scanner = new Scanner(System.in);
+            Boolean isApptIdEnteredValid = false;
+            int oldApptId = 0;
+            while (!isApptIdEnteredValid) {
+                try {
+                    System.out.println("\nEnter Appointment ID to reschedule: ");
+                    oldApptId = scanner.nextInt();
+                    scanner.nextLine();
+                } catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter a valid integer.");
+                    scanner.nextLine();  // Clear the buffer
+                }
+
+                for (Appointment appt : appts) {
+                    if (appt.getPatient() != null &&
+                        patient.getUserId().equals(appt.getPatient().getUserId()) &&
+                        appt.getStatus().equals(Status.CONFIRMED) &&
+                        appt.getAppointmentID() == oldApptId) {
+                            isApptIdEnteredValid = true;
+                    }
+                }
+                if (!isApptIdEnteredValid) {
+                    System.out.println("Error, please choose one of your scheduled appointments.");
+                }
+            }
+
+            isApptIdEnteredValid = false;
+            int newApptId = 0;
+            while (!isApptIdEnteredValid) {
+                try {
+                    System.out.println("\nAvailable appointments: ");
+                    patient.viewAvailAppts(appts);
+                    System.out.println("\nEnter new Appointment ID: ");
+                    newApptId = scanner.nextInt();
+                    scanner.nextLine();
+                }
+                catch (InputMismatchException e) {
+                    System.out.println("Invalid input. Please enter a valid integer.");
+                    scanner.nextLine();  // Clear the buffer
+                }
+
+                for (Appointment appt : appts) {
+                    if (appt.getPatient() != null &&
+                        patient.getUserId().equals(appt.getPatient().getUserId()) &&
+                        appt.getStatus().equals(Status.PENDING) &&
+                        appt.getAppointmentID() != oldApptId &&
+                        appt.getAppointmentID() == newApptId) {
+                            isApptIdEnteredValid = true;
+                    }
+                }
+                if (!isApptIdEnteredValid) {
+                    System.out.println("Error, please choose an available appointment.");
+                }
+            }
+            
             for (Appointment appt : appts) {
                 if (appt.getAppointmentID() == oldApptId) {
                     if ((appt.getStatus() == Status.PENDING || appt.getStatus() == Status.CONFIRMED) &&
                     patient.getUserId() == appt.getPatient().getUserId()) {
-                        appt.setPatient(null);
+                        //appt.setPatient(null);
                         appt.setStatus(Status.PENDING);
                         for (Appointment appt2 : appts) {
                             if (appt2.getAppointmentID() == newApptId) {
-                                if ((appt2.getStatus() == Status.PENDING || appt2.getStatus() == Status.CONFIRMED) &&
-                                appt2.getPatient() == null) {
-                                    appt2.setPatient(patient);
+                                if ((appt2.getStatus() == Status.PENDING || appt2.getStatus() == Status.CONFIRMED)) {
+                                    //appt2.setPatient(patient);
                                     appt2.setStatus(Status.CONFIRMED);
-                                    System.out.println("Appointment rescheduled successfully to " + appt2.getTimeSlot());
+                                    System.out.println("Appointment rescheduled successfully to ");
+                                    System.out.println(appt2);
                                     return;
                                 } else {
                                     System.out.println("Error, this appointment slot is not available");
@@ -83,7 +140,7 @@ public class ApptManager {
             if (appt.getAppointmentID() == apptId && 
                 patient.getUserId().equals(appt.getPatient().getUserId()) &&
                 appt.getStatus() == Status.CONFIRMED) {
-                appt.setPatient(null);
+                //appt.setPatient(null);
                 appt.setStatus(Status.PENDING);
                 System.out.println("Appointment canceled successfully for patient ID " + patient.getPatientId());
                 return;
@@ -117,12 +174,18 @@ public class ApptManager {
 
         for (MedicalRecord medicalRecord : medicalRecords) {
             if(Objects.equals(patient.getUserId(), medicalRecord.getPatientId())){
-                System.out.println("Diagnosis:" + (medicalRecord.getDiagnosis()) );
-                System.out.println("Prescription:" + (medicalRecord.getPrescription()) );
-                System.out.println("Appointment ID:" + (medicalRecord.getAppointmentId()) );
-                System.out.println("Notes:" + (medicalRecord.getNotes()) );
-                System.out.println("Service Provided:" + (medicalRecord.getService()) );
-                haveAppt++;
+                for (Appointment appt : appts) {
+                    if (Objects.equals(appt.getAppointmentID(), medicalRecord.getAppointmentId())) {
+                        System.out.println("Appointment ID: "+medicalRecord.getAppointmentId()+", Doctor: "+appt.getDoctor().getName()+", Date: "+appt.getDate()+", Time: "+appt.getTime());
+                        System.out.println("Diagnosis:" + (medicalRecord.getDiagnosis()) );
+                        System.out.println("Prescription:" + (medicalRecord.getPrescription()) );
+                        System.out.println("Notes:" + (medicalRecord.getNotes()) );
+                        System.out.println("Service Provided:" + (medicalRecord.getService()) );
+                        System.out.println(); //spacing between each entry
+                        haveAppt++;
+                    }
+                }
+                
             }
 
         }

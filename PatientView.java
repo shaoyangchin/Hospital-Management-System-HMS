@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class PatientView {
@@ -21,100 +22,99 @@ public class PatientView {
             System.out.println("9. Exit");
             System.out.print("Choose an option: ");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();  // Consume newline
+            try {
+                int choice = scanner.nextInt();
+                scanner.nextLine();  // Consume newline
 
-            switch (choice) {
-                case 1:
-                    patient.viewMedicalRecord(patient);
-                    break;
-                case 2:
-                    System.out.print("Enter email: ");
-                    String contact = scanner.nextLine();
-                    System.out.print("Enter phone number: ");
-                    String phone = scanner.nextLine();
-
-                    patient.updateRecord(patient, contact, phone);
-
-                    System.out.println("Updated medical record for patient ID: ");
-                    patient.viewMedicalRecord(patient);
-                    break;
-                case 3:
-                    patient.viewAvailAppts(database.getAppointments());
-                    break;
-                case 4:
-                    System.out.println("Enter an available appointment ID: ");
-                    int apptId = scanner.nextInt();
-                    scanner.nextLine();
-
-                    //MIGRATE TO PATIENT CLASS
-                    /*public void displayDoctorList() {
-                        for (Doctor doc : doctors) {
-                            System.out.println("Doctor ID: "+doc.getDoctorID()+", Name: "+doc.getName());
+                switch (choice) {
+                    case 1:
+                        patient.viewMedicalRecord(patient);
+                        break;
+                    case 2:
+                        System.out.print("Enter email: ");
+                        String contact = scanner.nextLine();
+                        System.out.print("Enter phone number: ");
+                        String phone = scanner.nextLine();
+    
+                        patient.updateRecord(patient, contact, phone);
+    
+                        System.out.println("Updated medical record for patient ID: ");
+                        patient.viewMedicalRecord(patient);
+                        break;
+                    case 3:
+                        patient.viewAvailAppts(database.getAppointments());
+                        break;
+                    case 4:
+                        System.out.println("Enter an available appointment ID: ");
+                        int apptId = scanner.nextInt();
+                        scanner.nextLine();
+    
+                        //MIGRATE TO PATIENT CLASS
+                        /*public void displayDoctorList() {
+                            for (Doctor doc : doctors) {
+                                System.out.println("Doctor ID: "+doc.getDoctorID()+", Name: "+doc.getName());
+                            }
                         }
-                    }
-
-                    main.displayDoctorList();*/
-
-                    //TEMP
-                    // ArrayList<Doctor> doctors= database.getAllDoctors();
-                    // for (Doctor doc : doctors) {
-                    //     System.out.println("Doctor ID: "+doc.getUserId()+", Name: "+doc.getName());
-                    // }
-
-
-                    // System.out.println("Enter Doctor ID: ");
-                    // String doctorId = scanner.nextLine();
-
-                    // Doctor doc1 = database.getDoctorById(doctorId);
-                    patient.scheduleAppt(patient, apptId, apptM, database.getAppointments());
-                    break;
-                case 5:
-                     System.out.println("Your scheduled appointments: ");
-                    patient.viewScheduledAppts(patient, apptM, database.getAppointments());
-                    if (apptM.getNumOfAppts() == 0) {
+    
+                        main.displayDoctorList();*/
+    
+                        //TEMP
+                        // ArrayList<Doctor> doctors= database.getAllDoctors();
+                        // for (Doctor doc : doctors) {
+                        //     System.out.println("Doctor ID: "+doc.getUserId()+", Name: "+doc.getName());
+                        // }
+    
+    
+                        // System.out.println("Enter Doctor ID: ");
+                        // String doctorId = scanner.nextLine();
+    
+                        // Doctor doc1 = database.getDoctorById(doctorId);
+                        patient.scheduleAppt(patient, apptId, apptM, database.getAppointments());
                         break;
-                    }
-                    
-                    System.out.println("Enter Appointment ID to reschedule: ");
-                    int oldApptId = scanner.nextInt();
-                    scanner.nextLine();
-
-                    System.out.println("Available appointments: ");
-                    patient.viewAvailAppts(database.getAppointments());
-                    System.out.println("Enter new Appointment ID: ");
-                    int newApptId = scanner.nextInt();
-                    scanner.nextLine();
-
-                    patient.rescheduleAppt(oldApptId, newApptId, patient, apptM, database.getAppointments());
-                    break;
-                case 6:
-                    System.out.println("Your scheduled appointments: ");
-                    patient.viewScheduledAppts(patient, apptM, database.getAppointments());
-                    if (apptM.getNumOfAppts() == 0) {
+                    case 5:
+                         System.out.println("Your scheduled appointments: ");
+                        patient.viewScheduledAppts(patient, apptM, database.getAppointments());
+                        if (apptM.getNumOfAppts() == 0) {
+                            break;
+                        }
+                        
+                        
+    
+                        patient.rescheduleAppt(patient, apptM, database.getAppointments());
                         break;
-                    }
-
-                    System.out.println("Enter Appointment ID to cancel: ");
-                    apptId = scanner.nextInt();
-                    scanner.nextLine();
-
-                    patient.cancelAppt(apptId, patient, apptM, database.getAppointments());
-                    break;
-                case 7:
-                    patient.viewScheduledAppts(patient, apptM, database.getAppointments());
-                    break;
-                case 8:
-                    patient.viewPastApptOutcomes(patient, apptM, database);
-                    break;
-                case 9:
-                    System.out.println("Exiting...");
-                    return;
-
-                default:
-                    System.out.println("Invalid option. Please try again.");
-
+                    case 6:
+                        System.out.println("Your scheduled appointments: ");
+                        patient.viewScheduledAppts(patient, apptM, database.getAppointments());
+                        if (apptM.getNumOfAppts() == 0) {
+                            break;
+                        }
+    
+                        System.out.println("Enter Appointment ID to cancel: ");
+                        apptId = scanner.nextInt();
+                        scanner.nextLine();
+    
+                        patient.cancelAppt(apptId, patient, apptM, database.getAppointments());
+                        break;
+                    case 7:
+                        patient.viewScheduledAppts(patient, apptM, database.getAppointments());
+                        break;
+                    case 8:
+                        patient.viewPastApptOutcomes(patient, apptM, database);
+                        break;
+                    case 9:
+                        System.out.println("Exiting...");
+                        return;
+    
+                    default:
+                        System.out.println("Invalid option. Please try again.");
+    
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid integer.");
+                scanner.nextLine();  // Clear the buffer
             }
+
+            
         }
     }
 }
