@@ -33,100 +33,101 @@ public class Pharmacist extends User {
         return age;
     }
 
-    public void viewAppointmentOutcomes(Patient patient, ArrayList<Appointment> appts) {
-        if (patient == null) {
-            System.out.println("Error: Invalid patient");
-            return;
+    public void viewPendingPrescriptions(ArrayList<Appointment> appts) {
+        System.out.println("\nPending Prescriptions:");
+        System.out.println("---------------------");
+        boolean found = false;
+        
+        for (Appointment appt : appts) {
+            if (appt.getPrescribedMedicine() != null && 
+                appt.getPrescriptionStatus().equals("PENDING")) {
+                System.out.println("Appointment ID: " + appt.getAppointmentID());
+                System.out.println("Patient: " + appt.getPatient().getName());
+                System.out.println("Prescribed Medicine: " + appt.getPrescribedMedicine());
+                System.out.println("Quantity Required: " + appt.getPrescribedQuantity());
+                System.out.println("---------------------");
+                found = true;
+            }
         }
-        System.out.println("\nViewing prescription orders for patient: " + patient.getName());
-        System.out.println("Patient ID: " + patient.getUserId());
-        System.out.println("----------------------------------------");
-        appointmentManager.viewPastOutcomes(patient, appts);
+        
+        if (!found) {
+            System.out.println("No pending prescriptions found.");
+        }
     }
 
-    public void viewAllCompletedAppointments(ArrayList<Appointment> appts) {
-        if (appointmentManager == null) {
-            System.out.println("Error: Appointment system not available");
-            return;
-        }
-        System.out.println("\nViewing all completed appointments for prescription management:");
-        System.out.println("--------------------------------------------------------");
-        appointmentManager.displayAllAppointments(appts);
-    }
-
-    public void updatePrescriptionStatus(int appointmentId, Medicine medicine, String currentDate, ArrayList<Appointment> appts) {
+    public void updatePrescriptionStatus(int appointmentId, Medicine medicine, ArrayList<Appointment> appts, HMSDatabase database) {
         if (appointmentManager == null || medicine == null) {
             System.out.println("Error: Invalid appointment system or medicine");
             return;
         }
 
-        System.out.println("\nPerforming pre-dispensing checks...");
-        
-        if (medicine.isExpired(currentDate)) {
-            System.out.println("\n❌ CANNOT DISPENSE - Medicine has expired");
-            System.out.println("Medicine: " + medicine.getName());
-            System.out.println("Expiry Date: " + medicine.getExpirationDate());
-            
-            submitReplenishmentRequest(medicine.getName(), medicine.getThreshold());
-            
-            appointmentManager.updatePrescriptionStatus(appointmentId, "PENDING", appts);
-            System.out.println("Prescription status set to PENDING - Awaiting fresh stock");
+        // Find appointment and check prescribed quantity
+        Appointment targetAppt = null;
+        for (Appointment appt : appts) {
+            if (appt.getAppointmentID() == appointmentId) {
+                targetAppt = appt;
+                break;
+            }
+        }
+
+        if (targetAppt == null) {
+            System.out.println("Appointment not found.");
             return;
         }
 
-        if (medicine.isLowStock()) {
-            System.out.println("\n⚠️ CANNOT DISPENSE - Stock below threshold");
+        int prescribedQuantity = targetAppt.getPrescribedQuantity();
+        System.out.println("\nPerforming pre-dispensing checks...");
+
+        if (medicine.getQuantity() < prescribedQuantity) {
+            System.out.println("\n⚠️ CANNOT DISPENSE - Insufficient stock");
             System.out.println("Current stock: " + medicine.getQuantity());
-            System.out.println("Threshold: " + medicine.getThreshold());
+            System.out.println("Required quantity: " + prescribedQuantity);
             
-            int requestQuantity = (int)(medicine.getThreshold() * 1.2) - medicine.getQuantity();
+            int requestQuantity = prescribedQuantity + medicine.getThreshold() - medicine.getQuantity();
             submitReplenishmentRequest(medicine.getName(), requestQuantity);
             
             appointmentManager.updatePrescriptionStatus(appointmentId, "PENDING", appts);
-            System.out.println("Prescription status set to PENDING until stock is replenished");
+            System.out.println("Prescription status remains PENDING until stock is replenished");
             return;
         }
 
+        // Update medicine quantity
+        medicine.setQuantity(medicine.getQuantity() - prescribedQuantity);
+        
         System.out.println("\n✓ Pre-dispensing checks passed:");
-        System.out.println("- Medicine is not expired");
         System.out.println("- Sufficient stock available");
         appointmentManager.updatePrescriptionStatus(appointmentId, "DISPENSED", appts);
+        
+        // Save changes
+        database.saveDatabase();
+        
         System.out.println("Prescription successfully dispensed");
+        System.out.println("Updated stock level: " + medicine.getQuantity());
     }
 
-    public void viewMedicationInventory(ArrayList<Medicine> medicines, String currentDate) {
+    
+    public void viewMedicationInventory(ArrayList<Medicine> medicines) {
         if (medicines.isEmpty()) {
             System.out.println("No medicines in inventory");
             return;
         }
         
-        System.out.println("\nCurrent Medication Inventory Status:");
-        System.out.println("==================================");
+        System.out.println("\nCurrent Medication Inventory:");
+        System.out.println("============================");
+        System.out.printf("%-20s %-15s %-15s%n", "Medicine Name", "Quantity", "Threshold");
+        System.out.println("----------------------------------------------------");
         
         for (Medicine medicine : medicines) {
-            checkMedicineStock(medicine, currentDate);
-            System.out.println("==================================");
+            System.out.printf("%-20s %-15d %-15d%n", 
+                medicine.getName(), 
+                medicine.getQuantity(), 
+                medicine.getThreshold());
+
+            if (medicine.isLowStock()) {
+                System.out.println("⚠️ Low stock warning!");
+            }
         }
-    }
-    
-    public void checkMedicineStock(Medicine medicine, String currentDate) {
-        if (medicine == null) {
-            System.out.println("Error: Invalid medicine");
-            return;
-        }
-        
-        System.out.println("\nMedicine Details:");
-        System.out.println("Name: " + medicine.getName());
-        System.out.println("Current Quantity: " + medicine.getQuantity());
-        System.out.println("Stock Threshold: " + medicine.getThreshold());
-        System.out.println("Expiry Date: " + medicine.getExpirationDate());
-        
-        if (medicine.isExpired(currentDate)) {
-            System.out.println("❌ WARNING: Medicine has expired!");
-        }
-        if (medicine.isLowStock()) {
-            System.out.println("⚠️ WARNING: Stock is below threshold");
-        }
+        System.out.println("============================");
     }
 
     public ReplenishmentRequest submitReplenishmentRequest(String medicineName, int requestedQuantity) {
