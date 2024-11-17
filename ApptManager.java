@@ -298,6 +298,7 @@ public class ApptManager {
     // 3. View Personal Schedule
     public void viewPersonalScheduleForDate(Doctor doctor, String date, HMSDatabase database) {
         ArrayList<Appointment> appointments = database.getAppointments();
+        ArrayList<Availability> availabilities = database.getAvailabilities();
         ArrayList<String> schedule = new ArrayList<>();
     
         // Define the 30-minute time slots
@@ -308,20 +309,41 @@ public class ApptManager {
             "06:00 PM"
         };
     
-        // Initialize all slots as "Free"
+        // Initialize all slots as "Not Available"
         for (String slot : timeSlots) {
-            schedule.add("Free");
+            schedule.add("Not Available");
         }
     
-        // Populate schedule with confirmed appointments for the specified doctor and date
+        // Check availability for the doctor on the given date
+        for (Availability availability : availabilities) {
+            if (availability.getDoctorId().equals(doctor.getUserId()) && availability.getDate().equalsIgnoreCase(date)) {
+                String startTime = availability.getStartTime();
+                String endTime = availability.getEndTime();
+                boolean withinAvailability = false;
+    
+                for (int i = 0; i < timeSlots.length; i++) {
+                    if (timeSlots[i].equalsIgnoreCase(startTime)) {
+                        withinAvailability = true; // Mark the start of availability
+                    }
+                    if (withinAvailability) {
+                        schedule.set(i, "Free"); // Mark available slots as "Free"
+                    }
+                    if (timeSlots[i].equalsIgnoreCase(endTime)) {
+                        withinAvailability = false; // Mark the end of availability
+                    }
+                }
+            }
+        }
+    
+        // Populate confirmed appointments into the schedule
         for (Appointment appt : appointments) {
             if (appt.getDoctor().getUserId().equals(doctor.getUserId()) &&
                 appt.getDate().equalsIgnoreCase(date) &&
                 appt.getStatus() == Status.CONFIRMED) {
-    
+                
                 String appointmentTime = appt.getTime();
     
-                // Find the matching time slot and populate it
+                // Find the matching time slot and override it with the patient's details
                 for (int i = 0; i < timeSlots.length; i++) {
                     if (timeSlots[i].equalsIgnoreCase(appointmentTime)) {
                         schedule.set(i, appt.getPatient().getName() + " (" + appt.getPatient().getUserId() + ")");
@@ -331,20 +353,20 @@ public class ApptManager {
             }
         }
     
-        // Print the schedule in a formatted table
+        // Print the schedule in a table format
+        System.out.println("\n--- Personal Schedule for Dr. " + doctor.getName() + " on " + date + " ---");
         String header = String.format("| %-10s | %-20s |", "Time", "Appointment");
         String separator = "=".repeat(header.length());
-        System.out.println("\n--- Personal Schedule for Dr. " + doctor.getName() + " on " + date + " ---");
         System.out.println(separator);
         System.out.println(header);
         System.out.println(separator);
     
         for (int i = 0; i < timeSlots.length; i++) {
-            System.out.printf("| %-10s | %-20s |%n", timeSlots[i], schedule.get(i));
+            System.out.printf("| %-10s | %-20s |\n", timeSlots[i], schedule.get(i));
         }
-    
-        System.out.println(separator); // Closing line of the table
+        System.out.println(separator);
     }
+    
     
 
 
