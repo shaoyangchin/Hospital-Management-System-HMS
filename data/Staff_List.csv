@@ -3,3 +3,4 @@ D001,John Smith,Doctor,Male,45,test
 D002,Emily Clarke,Doctor,Female,38,password1!
 P001,Mark Lee,Pharmacist,Male,29,password1!
 A001,Sarah Lee,Administrator,Female,40,password1!
+D003,Mary Jane,Doctor,Female,,password1!
