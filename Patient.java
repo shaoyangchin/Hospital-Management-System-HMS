@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Patient extends User implements GetRecord<List<MedicalRecord>>{
     private String patientId;
@@ -80,15 +81,40 @@ public class Patient extends User implements GetRecord<List<MedicalRecord>>{
     }
 
     public void viewMedicalRecord(Patient patient, HMSDatabase database) {
-        System.out.println("Viewing medical records for patient ID: " + patient.getPatientId() + ", Name: "
-                + patient.getName() + ", DOB: " + patient.getDateOfBirth() + ", gender: " + patient.getGender()
-                + ", Blood Type: " + patient.getBloodType() + ", Email: " + patient.getContact() + ", Phone number: "
-                + patient.getPhoneNum());
-        //System.out.println(getRecordForPatient(patient));
-        ArrayList<Availability> availabilities = database.getAvailabilities(); // Load from CSV
+        System.out.println("\n--- Medical Record: " + patientId + " ---");
+    
+        // Print table header
+        String header = String.format("| %-10s | %-15s | %-10s | %-5s | %-10s | %-25s | %-10s |",
+                "Patient ID", "Name", "DOB", "Gender", "Blood Type", "Email", "Phone Number");
+        String separator = "=".repeat(header.length());
+        System.out.println(separator);
+        System.out.println(header);
+        System.out.println(separator);
+    
+    
+        // Print the medical record in table format
+        System.out.printf("| %-10s | %-15s | %-10s | %-5s | %-10s | %-25s | %-10s |\n",
+        patient.getPatientId(),
+        patient.getName(),
+        patient.getDateOfBirth(),
+        patient.getGender(),
+        patient.getBloodType(),
+        patient.getContact(),
+        patient.getPhoneNum()
+        );
+        System.out.println(separator); // Closing line of the table
+
+
+
+        // System.out.println("Viewing medical records for patient ID: " + patient.getPatientId() + ", Name: "
+        //         + patient.getName() + ", DOB: " + patient.getDateOfBirth() + ", gender: " + patient.getGender()
+        //         + ", Blood Type: " + patient.getBloodType() + ", Email: " + patient.getContact() + ", Phone number: "
+        //         + patient.getPhoneNum());
+        // //System.out.println(getRecordForPatient(patient));
 
         System.out.println("Use View Past Appointment Outcome Records option to view past diagnoses and treatments.");
 
+        
     }
 
     public void updateRecord(Patient patient, String contact, String phone) {
@@ -214,15 +240,39 @@ public class Patient extends User implements GetRecord<List<MedicalRecord>>{
         }
         
         
+    
+        // Print table header
+        String header = String.format("| %-10s | %-20s | %-10s | %-15s | %-10s | %-10s | %-10s | %-10s |",
+                "Appt ID", "Patient", "Patient Id", "Doctor", "Doctor Id", "Status", "Date", "Time");
+        String separator = "=".repeat(header.length());
+        System.out.println(separator);
+        System.out.println(header);
+        System.out.println(separator);
+
         for (Appointment appt : appts) {
             if ((appt.getStatus() == Status.PENDING && appt.getPatient() != null && appt.getPatient().getPatientId().equals(patientId))
             || appt.getPatient() == null) {
-                System.out.println(appt);
+                //System.out.println(appt);
+
+                // Print the medical record in table format
+                    System.out.printf("| %-10s | %-20s | %-10s | %-15s | %-10s | %-10s | %-10s | %-10s |\n",
+                    appt.getAppointmentID(),
+                    (appt.getPatient() != null ? ( patient.getName())
+                        : "No patient assigned"),
+                    (appt.getPatient() != null ? ( patient.getPatientId())
+                        : "NA"),
+                    (appt.getDoctor() != null ? (appt.getDoctor().getName()) : "No doctor assigned"),
+                    (appt.getDoctor() != null ? (appt.getDoctor().getUserId()) : "NA"),
+                    appt.getStatus(),
+                    appt.getDate(),
+                    appt.getTime()
+                );
             }
         }
+        System.out.println(separator); // Closing line of the table
     }
 
-    public void scheduleAppt(Patient patient, int apptId, ApptManager apptM, ArrayList<Appointment> appts) {
+    public void scheduleAppt(Patient patient, ApptManager apptM, ArrayList<Appointment> appts) {
         apptM.schedulePatient(patient, appts);
     }
 

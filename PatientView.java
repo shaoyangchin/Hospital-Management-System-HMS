@@ -10,16 +10,19 @@ public class PatientView {
         ApptManager apptM = new ApptManager();
 
         while (true) {
-            System.out.println("\n--- Patient Menu ---");
-            System.out.println("1. View Medical Record");
-            System.out.println("2. Update Personal Information");
-            System.out.println("3. View Available Appointment Slots");
-            System.out.println("4. Schedule an Appointment");
-            System.out.println("5. Reschedule an Appointment");
-            System.out.println("6. Cancel an Appointment");
-            System.out.println("7. View scheduled Appointments");
-            System.out.println("8. View Past Appointment Outcome Records");
-            System.out.println("9. Exit");
+            System.out.println("\n==================================================");
+            System.out.println("                --- Patient Menu ---              ");
+            System.out.println("==================================================");
+            System.out.printf("| %-2s | %-40s |\n", "1", "View Medical Record");
+            System.out.printf("| %-2s | %-40s |\n", "2", "Update Personal Information");
+            System.out.printf("| %-2s | %-40s |\n", "3", "View Available Appointment Slots");
+            System.out.printf("| %-2s | %-40s |\n", "4", "Schedule an Appointment");
+            System.out.printf("| %-2s | %-40s |\n", "5", "Reschedule an Appointment");
+            System.out.printf("| %-2s | %-40s |\n", "6", "Cancel an Appointment");
+            System.out.printf("| %-2s | %-40s |\n", "7", "View scheduled Appointments");
+            System.out.printf("| %-2s | %-40s |\n", "8", "View Past Appointment Outcome Records");
+            System.out.printf("| %-2s | %-40s |\n", "9", "Exit");
+            System.out.println("==================================================");
             System.out.print("Choose an option: ");
 
             try {
@@ -45,10 +48,6 @@ public class PatientView {
                         patient.viewAvailAppts(database.getAppointments(), apptM, database, patient);
                         break;
                     case 4:
-                        System.out.println("Enter an available appointment ID: ");
-                        int apptId = scanner.nextInt();
-                        scanner.nextLine();
-
                         //MIGRATE TO PATIENT CLASS
                         /*public void displayDoctorList() {
                             for (Doctor doc : doctors) {
@@ -69,7 +68,7 @@ public class PatientView {
                         // String doctorId = scanner.nextLine();
 
                         // Doctor doc1 = database.getDoctorById(doctorId);
-                        patient.scheduleAppt(patient, apptId, apptM, database.getAppointments());
+                        patient.scheduleAppt(patient, apptM, database.getAppointments());
                         break;
                     case 5:
                         System.out.println("Your scheduled appointments: ");
@@ -88,7 +87,7 @@ public class PatientView {
                         }
 
                         System.out.println("Enter Appointment ID to cancel: ");
-                        apptId = scanner.nextInt();
+                        int apptId = scanner.nextInt();
                         scanner.nextLine();
 
                         patient.cancelAppt(apptId, patient, apptM, database.getAppointments());
