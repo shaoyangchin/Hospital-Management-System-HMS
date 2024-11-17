@@ -782,50 +782,42 @@
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
     ><text x="2" xml:space="preserve" y="153" clip-path="url(#clipPath11)" stroke="none"
-      >+viewAllAppointments()</text
-    ></g
-    ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="168" clip-path="url(#clipPath11)" stroke="none"
       >+updatePrescriptionStatus(apptId : int, newStatus : String)</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="183" clip-path="url(#clipPath11)" stroke="none"
-      >+viewMedicationInventory()</text
+    ><text x="2" xml:space="preserve" y="168" clip-path="url(#clipPath11)" stroke="none"
+      >+viewMedicationInventory(medicines : ArrayList&lt;Medicine&gt;)</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="198" clip-path="url(#clipPath11)" stroke="none"
+    ><text x="2" xml:space="preserve" y="183" clip-path="url(#clipPath11)" stroke="none"
       >+submitReplenishmentRequest(medicineName : String, requestedQuantity : int)</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="213" clip-path="url(#clipPath11)" stroke="none"
-      >+viewRequests()</text
-    ></g
-    ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="228" clip-path="url(#clipPath11)" stroke="none"
+    ><text x="2" xml:space="preserve" y="198" clip-path="url(#clipPath11)" stroke="none"
       >+Pharmacist(name : String, gender : String, age : int, userId : String, password : String, userType : UserType)</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="243" clip-path="url(#clipPath11)" stroke="none"
+    ><text x="2" xml:space="preserve" y="213" clip-path="url(#clipPath11)" stroke="none"
       >+setDatabaseHelper(dbHelper : DatabaseHelper) : void</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="258" clip-path="url(#clipPath11)" stroke="none"
+    ><text x="2" xml:space="preserve" y="228" clip-path="url(#clipPath11)" stroke="none"
       >+viewPendingPrescriptions(database : HMSDatabase) : void</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="273" clip-path="url(#clipPath11)" stroke="none"
+    ><text x="2" xml:space="preserve" y="243" clip-path="url(#clipPath11)" stroke="none"
       >+updatePrescriptionStatus(appointmentId : int, database : HMSDatabase) : void</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="288" clip-path="url(#clipPath11)" stroke="none"
+    ><text x="2" xml:space="preserve" y="258" clip-path="url(#clipPath11)" stroke="none"
       >+viewMedicationInventory(medicines) : void</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="303" clip-path="url(#clipPath11)" stroke="none"
+    ><text x="2" xml:space="preserve" y="273" clip-path="url(#clipPath11)" stroke="none"
       >+getName() : String</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="318" clip-path="url(#clipPath11)" stroke="none"
+    ><text x="2" xml:space="preserve" y="288" clip-path="url(#clipPath11)" stroke="none"
       >+setName(name : String) : void</text
     ></g
     ><g font-size="11px" transform="translate(2168,1197)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" font-weight="bold" stroke-opacity="1"
