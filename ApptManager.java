@@ -389,22 +389,22 @@ public class ApptManager {
         while (true) {
             System.out.print("Enter start time (hh:mm AM/PM, e.g., 09:00 AM): ");
             startTime = scanner.nextLine().trim();
-            if (startTime.matches("^(0[9]|1[0-8]):[0-5][0-9] [APap][Mm]$")) { // Example: 09:00 AM
+            if (startTime.matches("^(0[1-9]|1[0-2]):[0-5][0-9] [APap][Mm]$")) { // Example: 09:00 AM
                 break;
             }
             System.out.println("Invalid start time format. Please enter a valid start time (hh:mm AM/PM, e.g., 09:00 AM).");
         }
-    
+
         // Prompt for end time with validation
         while (true) {
-            System.out.print("Enter end time (hh:mm AM/PM, e.g., 05:00 PM): ");
+            System.out.print("Enter end time (hh:mm AM/PM, e.g., 12:00 PM): ");
             endTime = scanner.nextLine().trim();
-            if (endTime.matches("^(0[9]|1[0-8]):[0-5][0-9] [APap][Mm]$")) { // Example: 05:00 PM
+            if (endTime.matches("^(0[1-9]|1[0-2]):[0-5][0-9] [APap][Mm]$")) { // Example: 12:00 PM
                 break;
             }
-            System.out.println("Invalid end time format. Please enter a valid end time (hh:mm AM/PM, e.g., 05:00 PM).");
+            System.out.println("Invalid end time format. Please enter a valid end time (hh:mm AM/PM, e.g., 12:00 PM).");
         }
-    
+
         // Ensure end time is after start time
         while (startTime.compareTo(endTime) >= 0) {
             System.out.println("End time must be after start time. Please enter the times again.");
@@ -412,7 +412,7 @@ public class ApptManager {
             while (true) {
                 System.out.print("Enter start time (hh:mm AM/PM, e.g., 09:00 AM): ");
                 startTime = scanner.nextLine().trim();
-                if (startTime.matches("^(0[9]|1[0-8]):[0-5][0-9] [APap][Mm]$")) {
+                if (startTime.matches("^(0[1-9]|1[0-2]):[0-5][0-9] [APap][Mm]$")) { // Example: 09:00 AM
                     break;
                 }
                 System.out.println("Invalid start time format. Please enter a valid start time (hh:mm AM/PM, e.g., 09:00 AM).");
@@ -421,7 +421,7 @@ public class ApptManager {
             while (true) {
                 System.out.print("Enter end time (hh:mm AM/PM, e.g., 05:00 PM): ");
                 endTime = scanner.nextLine().trim();
-                if (endTime.matches("^(0[9]|1[0-8]):[0-5][0-9] [APap][Mm]$")) {
+                if (endTime.matches("^(0[1-9]|1[0-2]):[0-5][0-9] [APap][Mm]$")) { // Example: 12:00 PM
                     break;
                 }
                 System.out.println("Invalid end time format. Please enter a valid end time (hh:mm AM/PM, e.g., 05:00 PM).");
