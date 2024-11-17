@@ -92,7 +92,7 @@ public class Pharmacist extends User {
 
         // Save the request to the CSV immediately to ensure persistence
         if (dbHelper != null) {
-            List<String> fieldNames = Arrays.asList("MedicineName", "RequestedQuantity", "PharmacistId", "IsApproved");
+            List<String> fieldNames = Arrays.asList("MedicineName", "RequestedQuantity", "PharmacistId", "Status");
             dbHelper.saveToCsv(requests, "data/Replenishment_List.csv", fieldNames, 3);
         } else {
             System.out.println("Error: Database helper is not set");
