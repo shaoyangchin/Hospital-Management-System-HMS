@@ -100,6 +100,7 @@ public class PatientView {
                         patient.viewPastApptOutcomes(patient, apptM, database);
                         break;
                     case 9:
+                        database.saveDatabase();
                         System.out.println("Exiting...");
                         return;
 

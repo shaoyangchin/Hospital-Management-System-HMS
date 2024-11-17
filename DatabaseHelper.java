@@ -255,7 +255,7 @@ public class DatabaseHelper {
 
             }
             stafflist.add(new Staff(record.get(1), record.get(2), record.get(3), Integer.parseInt(record.get(4)),
-                    record.get(0), "password", type));
+                    record.get(0), record.get(5), type));
         }
         return stafflist;
     }
@@ -370,6 +370,8 @@ public class DatabaseHelper {
         resetFile("data/Medicine_List_Reference.csv", "data/Medicine_List.csv");
         resetFile("data/Replenishment_List_Reference.csv", "data/Replenishment_List.csv");
         resetFile("data/Staff_List_Reference.csv", "data/Staff_List.csv");
+        resetFile("data/Availability_List_Reference.csv", "data/Availability_List.csv");
+        resetFile("data/MedicalRecord_List_Reference.csv", "data/MedicalRecord_List.csv");
         System.out.println("All Files Reset.");
     }
 
@@ -386,9 +388,15 @@ public class DatabaseHelper {
 
         try (FileWriter writer = new FileWriter(filePath)) {
             // Write CSV header
-            for (String fieldName : fieldNames) {
+           /* for (String fieldName : fieldNames) {
                 writer.append(fieldName).append(",");
+            }*/
+            String header = "";
+            for (String fieldName : fieldNames) {
+                header += fieldName + ",";
             }
+            header = header.substring(0, header.length() - 1);
+            writer.append(header);
             writer.append("\n");
 
             // Write CSV rows
@@ -440,7 +448,8 @@ public class DatabaseHelper {
                                 .append(",");
                         writer.append(item != null ? String.valueOf(((Patient) item).getGender()) : "").append(",");
                         writer.append(item != null ? String.valueOf(((Patient) item).getBloodType()) : "").append(",");
-                        writer.append(item != null ? String.valueOf(((Patient) item).getContact()) : "");
+                        writer.append(item != null ? String.valueOf(((Patient) item).getContact()) : "").append(",");
+                        writer.append(item != null ? String.valueOf(((Patient) item).getPassword()) : "");;
                         writer.append("\n");
                     }
                     break;
@@ -472,7 +481,8 @@ public class DatabaseHelper {
                         writer.append(item != null ? String.valueOf(((Staff) item).getName()) : "").append(",");
                         writer.append(item != null ? String.valueOf(((Staff) item).getRole()) : "").append(",");
                         writer.append(item != null ? String.valueOf(((Staff) item).getGender()) : "").append(",");
-                        writer.append(item != null ? String.valueOf(((Staff) item).getAge()) : "");
+                        writer.append(item != null ? String.valueOf(((Staff) item).getAge()) : "").append(",");
+                        writer.append(item != null ? String.valueOf(((Staff) item).getPassword()) : "");
                         writer.append("\n");
                     }
 

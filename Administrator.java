@@ -328,8 +328,9 @@ public class Administrator extends User {
                 type = UserType.PHARMACIST;
 
         }
-        Staff newStaff = new Staff(name, role, gender, age, ID, "password", type);
+        Staff newStaff = new Staff(name, role, gender, age, ID, "Password", type);
         stafflist.add(newStaff);
+
         System.out.println("Staff member " + newStaff.getUserId() + " has been added.");
     }
 

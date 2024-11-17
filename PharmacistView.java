@@ -73,6 +73,7 @@ public class PharmacistView {
                         }
                         break;
                     case 5:
+                        database.saveDatabase();
                         System.out.println("Exiting Pharmacist Menu...");
                         return;
                     default:

@@ -235,11 +235,13 @@ public class DoctorView {
 
 
                 case 9:  // Exit
+                    database.saveDatabase();
                     System.out.println("Exiting...");
                     scanner.close();
                     return;
                 
                 case 10:
+                    database.saveDatabase();
                     System.out.println("Logging out...");
                     return; // Logout ends this view
 

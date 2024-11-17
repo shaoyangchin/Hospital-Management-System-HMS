@@ -189,8 +189,8 @@ public class Doctor extends User {
         System.out.println("\n" + updateField + " updated successfully for Appointment ID: " + selectedRecord.getAppointmentId());
     
         // Step 7: Save changes back to the CSV
-        database.saveDatabase();
-        System.out.println("Changes saved to MedicalRecord_List.csv.");
+        //database.saveDatabase();
+        //System.out.println("Changes saved to MedicalRecord_List.csv.");
     }
     
     

@@ -242,6 +242,5 @@ public class Patient extends User implements GetRecord<List<MedicalRecord>>{
         apptM.viewPastOutcomes(patient, database);
     }
 
-    
 
 }

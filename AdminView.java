@@ -77,12 +77,13 @@ public class AdminView {
                     break;
                 case 5:
                     database.saveDatabase();
-                    return;
+                    break;
                 case 6:
                     database.resetDatabase();
-                    return;
+                    break;
                 case 7:
                     System.out.println("Exiting Administrator Menu...");
+                    database.saveDatabase();
                     return;
                 default:
                     System.out.println("Invalid option. Please try again.");
