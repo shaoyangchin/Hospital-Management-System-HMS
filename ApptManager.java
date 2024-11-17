@@ -1,3 +1,5 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.InputMismatchException;
@@ -296,7 +298,6 @@ public class ApptManager {
     // 3. View Personal Schedule
     public void viewPersonalScheduleForDate(Doctor doctor, String date, HMSDatabase database) {
         ArrayList<Appointment> appointments = database.getAppointments();
-        ArrayList<Availability> availabilities = database.getAvailabilities();
         ArrayList<String> schedule = new ArrayList<>();
     
         // Define the 30-minute time slots
@@ -307,38 +308,17 @@ public class ApptManager {
             "06:00 PM"
         };
     
-        // Initialize all slots as "Not Available"
+        // Initialize all slots as "Free"
         for (String slot : timeSlots) {
             schedule.add("Free");
         }
     
-        // Check availability for the doctor on the given date
-        for (Availability availability : availabilities) {
-            if (availability.getDoctorId().equals(doctor.getUserId()) && availability.getDate().equalsIgnoreCase(date)) {
-                String startTime = availability.getStartTime();
-                String endTime = availability.getEndTime();
-                boolean withinAvailability = false;
-    
-                for (int i = 0; i < timeSlots.length; i++) {
-                    if (timeSlots[i].equalsIgnoreCase(startTime)) {
-                        withinAvailability = true; // Mark the start of availability
-                    }
-                    if (withinAvailability) {
-                        schedule.set(i, "Not Available"); // Mark available slots as "Not Available"
-                    }
-                    if (timeSlots[i].equalsIgnoreCase(endTime)) {
-                        withinAvailability = false; // Mark the end of availability
-                    }
-                }
-            }
-        }
-    
-        // Populate appointments into the schedule
+        // Populate schedule with confirmed appointments for the specified doctor and date
         for (Appointment appt : appointments) {
             if (appt.getDoctor().getUserId().equals(doctor.getUserId()) &&
                 appt.getDate().equalsIgnoreCase(date) &&
                 appt.getStatus() == Status.CONFIRMED) {
-                
+    
                 String appointmentTime = appt.getTime();
     
                 // Find the matching time slot and populate it
@@ -351,21 +331,20 @@ public class ApptManager {
             }
         }
     
-        // Print the schedule in a table format
-        System.out.println("\n--- Personal Schedule for Dr. " + doctor.getName() + " on " + date + " ---");
+        // Print the schedule in a formatted table
         String header = String.format("| %-10s | %-20s |", "Time", "Appointment");
         String separator = "=".repeat(header.length());
+        System.out.println("\n--- Personal Schedule for Dr. " + doctor.getName() + " on " + date + " ---");
         System.out.println(separator);
         System.out.println(header);
         System.out.println(separator);
     
         for (int i = 0; i < timeSlots.length; i++) {
-            System.out.printf("| %-10s | %-20s |\n", timeSlots[i], schedule.get(i));
+            System.out.printf("| %-10s | %-20s |%n", timeSlots[i], schedule.get(i));
         }
-        System.out.println(separator);
+    
+        System.out.println(separator); // Closing line of the table
     }
-    
-    
     
 
 
@@ -680,16 +659,15 @@ public class ApptManager {
     // Views all completed appointments and their outcomes for a specific patient
     // Add this method to ApptManager class
     public void viewPendingPharmacyAppointments(HMSDatabase database) {
-        ArrayList<MedicalRecord> medicalRecords = database.getRecords();
-        ArrayList<Appointment> appointments = database.getAppointments();
+        List<Appointment> appointments = database.getAppointments();
+        List<MedicalRecord> medicalRecords = database.getRecords();
         
         System.out.println("\nViewing all Pending Pharmacy Appointments:");
         System.out.println("----------------------------------------");
-
+        
         boolean found = false;
         for (Appointment appt : appointments) {
             if (appt.getStatus() == Status.PENDING_PHARMACIST) {
-                // Find corresponding medical record
                 MedicalRecord matchingRecord = null;
                 for (MedicalRecord record : medicalRecords) {
                     if (record.getAppointmentId() == appt.getAppointmentID()) {
@@ -697,25 +675,45 @@ public class ApptManager {
                         break;
                     }
                 }
-
-                if (matchingRecord != null) {
+                
+                try {
                     System.out.println("Appointment ID: " + appt.getAppointmentID());
                     System.out.println("Date: " + appt.getDate());
-                    System.out.println("Patient: " + appt.getPatient().getName() + " (ID: " + appt.getPatient().getUserId() + ")");
-                    System.out.println("Doctor: " + appt.getDoctor().getName());
-                    System.out.println("Prescription: " + matchingRecord.getPrescription());
-                    System.out.println("Quantity: " + matchingRecord.getQuantity());
+                    System.out.println("Time: " + appt.getTime());
+                    System.out.println("Status: " + appt.getStatus());
+                    
+                    // Only try to get doctor name if doctor object exists
+                    if (appt.getDoctor() != null) {
+                        System.out.println("Doctor: " + appt.getDoctor().getName());
+                    }
+                    
+                    // Only try to get patient info if patient object exists
+                    if (appt.getPatient() != null) {
+                        System.out.println("Patient ID: " + appt.getPatient().getUserId());
+                    }
+                    
+                    if (matchingRecord != null) {
+                        if (matchingRecord.getPrescription() != null) {
+                            System.out.println("Prescription: " + matchingRecord.getPrescription());
+                            System.out.println("Quantity: " + matchingRecord.getQuantity());
+                        }
+                    }
+                    
                     System.out.println("----------------------------------------");
                     found = true;
+                    
+                } catch (Exception e) {
+                    System.out.println("Error processing appointment " + appt.getAppointmentID() + 
+                                     ". Continuing to next appointment...");
                 }
             }
         }
-
+        
         if (!found) {
             System.out.println("No pending pharmacy appointments found.");
         }
     }
-
+    
     // Add this new method for updating prescription status
     public void dispenseMedicinePharmacist(int appointmentId, HMSDatabase database) {
         if (dbHelper == null) {
@@ -723,69 +721,90 @@ public class ApptManager {
             return;
         }
     
-        // Fetch the lists from the database instead of initializing new lists
-        ArrayList<MedicalRecord> medicalRecords = database.getRecords();
-        ArrayList<Medicine> medicines = database.getMedicines();
-        ArrayList<Appointment> appointments = database.getAppointments();
-    
-        // Find the medical record corresponding to the appointment ID
-        MedicalRecord targetRecord = null;
-        for (MedicalRecord record : medicalRecords) {
-            if (record.getAppointmentId() == appointmentId) {
-                targetRecord = record;
-                break;
-            }
-        }
-    
-        // If no record found, print error and return
-        if (targetRecord == null) {
-            System.out.println("Error: No medical record found for Appointment ID: " + appointmentId);
-            return;
-        }
-    
-        // Get the prescription details
-        String medicineName = targetRecord.getPrescription();
-        int quantityToDispense = targetRecord.getQuantity();
-    
-        // Find the corresponding medicine in the inventory
-        Medicine targetMedicine = null;
-        for (Medicine medicine : medicines) {
-            if (medicine.getName().equalsIgnoreCase(medicineName)) {
-                targetMedicine = medicine;
-                break;
-            }
-        }
-    
-        // If no medicine found, print error and return
-        if (targetMedicine == null) {
-            System.out.println("Error: Medicine " + medicineName + " not found in inventory.");
-            return;
-        }
-    
-        // Check if there is enough stock to dispense
-        if (targetMedicine.getQuantity() >= quantityToDispense) {
-            // Dispense the medicine and update the inventory
-            targetMedicine.setQuantity(targetMedicine.getQuantity() - quantityToDispense);
-            System.out.println("Successfully dispensed " + quantityToDispense + " of " + medicineName + ". Updated inventory.");
-    
-            // Update the appointment status to COMPLETED
-            for (Appointment appt : appointments) {
-                if (appt.getAppointmentID() == appointmentId && appt.getStatus() == Status.PENDING_PHARMACIST) {
-                    appt.setStatus(Status.COMPLETED);
+        try {
+            ArrayList<MedicalRecord> medicalRecords = database.getRecords();
+            ArrayList<Medicine> medicines = database.getMedicines();
+            ArrayList<Appointment> appointments = database.getAppointments();
+            
+            // Find the medical record
+            MedicalRecord targetRecord = null;
+            for (MedicalRecord record : medicalRecords) {
+                if (record.getAppointmentId() == appointmentId) {
+                    targetRecord = record;
                     break;
                 }
             }
     
-            // Save changes using database
-        dbHelper.saveToCsv(appointments, "data/Appointment_List.csv", Arrays.asList("AppointmentID", "Status", "PatientID", "DoctorID", "Date", "Time"), 0);
-        dbHelper.saveToCsv(medicines, "data/Medicine_List.csv", Arrays.asList("MedicineName", "Quantity", "Threshold"), 5);
-        System.out.println("Appointment and Medicine CSV files updated successfully");
-
-        } else {
-            // If not enough stock, print a warning message
-            System.out.println("Error: Not enough stock to dispense " + medicineName + ". Required: " + quantityToDispense + ", Available: " + targetMedicine.getQuantity());
+            if (targetRecord == null) {
+                System.out.println("Error: No medical record found for Appointment ID: " + appointmentId);
+                return;
+            }
+    
+            String medicineName = targetRecord.getPrescription();
+            int quantityToDispense = targetRecord.getQuantity();
+    
+            // Find the medicine
+            Medicine targetMedicine = null;
+            for (Medicine medicine : medicines) {
+                if (medicine.getName().equalsIgnoreCase(medicineName)) {
+                    targetMedicine = medicine;
+                    break;
+                }
+            }
+    
+            if (targetMedicine == null) {
+                System.out.println("Error: Medicine " + medicineName + " not found in inventory.");
+                return;
+            }
+    
+            // Check if there is enough stock to dispense
+            if (targetMedicine.getQuantity() >= quantityToDispense) {
+                // Update medicine quantity
+                targetMedicine.setQuantity(targetMedicine.getQuantity() - quantityToDispense);
+    
+                // Find and update appointment status
+                boolean appointmentFound = false;
+                for (Appointment appt : appointments) {
+                    if (appt.getAppointmentID() == appointmentId && appt.getStatus() == Status.PENDING_PHARMACIST) {
+                        appt.setStatus(Status.COMPLETED);
+                        appointmentFound = true;
+                        break;
+                    }
+                }
+                
+                if (!appointmentFound) {
+                    System.out.println("Error: Could not find a pending pharmacy appointment with ID: " + appointmentId);
+                    return;
+                }
+    
+                try {
+                    // Save changes
+                    dbHelper.saveToCsv(medicines, "data/Medicine_List.csv", 
+                        Arrays.asList("MedicineName", "Quantity", "Threshold"), 5);
+                    dbHelper.saveToCsv(appointments, "data/Appointment_List.csv", 
+                        Arrays.asList("AppointmentID", "Status", "PatientID", "DoctorID", "Date", "Time"), 0);
+                    
+                    System.out.println("Successfully dispensed " + quantityToDispense + " of " + medicineName + ". Updated inventory.");
+    
+                    // Only show threshold warning if necessary
+                    if (targetMedicine.getQuantity() <= targetMedicine.getThreshold()) {
+                        System.out.println("WARNING: " + medicineName + " is now below threshold level (" + 
+                                         targetMedicine.getQuantity() + " remaining). Please restock.");
+                    }
+    
+                } catch (Exception e) {
+                    System.out.println("Error saving changes: " + e.getMessage());
+                    return;
+                }
+    
+            } else {
+                System.out.println("Error: Not enough stock to dispense " + medicineName + 
+                                 ". Required: " + quantityToDispense + 
+                                 ", Available: " + targetMedicine.getQuantity());
+            }
+    
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
         }
     }
-    
-    
 }

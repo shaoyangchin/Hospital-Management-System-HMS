@@ -22,15 +22,16 @@ public class PharmacistView {
             System.out.println("======================================");
             System.out.printf("| %-2s | %-30s |\n", "1", "View Appointments");
             System.out.printf("| %-2s | %-30s |\n", "2", "Update Prescription Status");
-            System.out.printf("| %-2s | %-30s |\n", "3", "Replenish Medicine Stock");
-            System.out.printf("| %-2s | %-30s |\n", "4", "Exit");
+            System.out.printf("| %-2s | %-30s |\n", "3", "View Medicine Inventory");
+            System.out.printf("| %-2s | %-30s |\n", "4", "Submit Replenishment Request");
+            System.out.printf("| %-2s | %-30s |\n", "5", "Exit");
             System.out.println("======================================");
             System.out.print("Select an option: ");
             
             try {
                 int choice = scanner.nextInt();
                 scanner.nextLine();
-
+        
                 switch (choice) {
                     case 1:
                         // View pending prescriptions
@@ -51,17 +52,17 @@ public class PharmacistView {
                         // Submit replenishment request
                         System.out.print("\nEnter medicine name for replenishment: ");
                         String medicineName = scanner.nextLine();
-
+        
                         try {
                             System.out.print("Enter quantity to request: ");
                             int requestedQuantity = scanner.nextInt();
                             scanner.nextLine(); // Consume newline
-
+        
                             if (requestedQuantity <= 0) {
                                 System.out.println("Quantity must be positive.");
                                 break;
                             }
-
+        
                             // Submit replenishment request through Pharmacist
                             ReplenishmentRequest request = pharmacist.submitReplenishmentRequest(medicineName, requestedQuantity);
                             if (request != null) {
