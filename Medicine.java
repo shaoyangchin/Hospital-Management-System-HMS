@@ -1,4 +1,4 @@
-public class Medicine {
+public class Medicine implements INameable{
     private int threshold;
     private String name;
     private int quantity;

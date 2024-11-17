@@ -105,4 +105,11 @@ public class Pharmacist extends User {
         return request;
     }
 
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name){ this.name = name; }
 }
