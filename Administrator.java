@@ -59,7 +59,8 @@ public class Administrator extends User {
                             "3. Role: Administrators\n" +
                             "4. Gender: Male\n" + "5. Gender: Female\n" + "6. Age: 21-30\n" +
                             "7. Age: 31-40\n"
-                            + "8. Age: 41-50\n" + "9. Exit View Staff\n");
+                            + "8. Age: 41-50\n" + "9. Exit View Staff");
+            System.out.print("Choose an Option: ");
             int filter = scanner.nextInt();
             switch (filter) {
                 case 0:
@@ -277,6 +278,7 @@ public class Administrator extends User {
                     System.out.println("=====================================================================");
                     break;
                 case 9:
+                    scanner.nextLine();
                     return;
                 default:
                     System.out.println("Invalid choice. Please try again.");
@@ -288,18 +290,33 @@ public class Administrator extends User {
     }
 
     public void addStaff(ArrayList<Staff> stafflist) {
-        scanner.nextLine();
         System.out.print("Enter name of staff to add: ");
         String name = scanner.nextLine();
+        for (Staff worker : stafflist) {
+            if (name.equalsIgnoreCase(worker.getName())) {
+                System.out.println("Staff " + name + " already exists.");
+                return;
+            }
+        }
         System.out.print("Enter ID of staff to add: ");
         String ID = scanner.nextLine();
+        for (Staff worker : stafflist) {
+            if (ID.equalsIgnoreCase(worker.getUserId())) {
+                System.out.println("ID already exists.");
+                return;
+            }
+        }
         System.out.print("Enter role of staff to add: ");
         String role = scanner.nextLine();
+        if (!role.equalsIgnoreCase("Doctor") || !role.equalsIgnoreCase("Administrator")
+                || !role.equalsIgnoreCase("Pharmacist")) {
+            System.out.println("Invalid role.");
+            return;
+        }
         System.out.print("Enter gender of staff to add: ");
         String gender = scanner.nextLine();
         System.out.print("Enter age of staff to add: ");
         int age = scanner.nextInt();
-        scanner.nextLine();
         UserType type = null;
         switch (role) {
             case "Administrator":
@@ -317,7 +334,6 @@ public class Administrator extends User {
     }
 
     public void removeStaff(ArrayList<Staff> stafflist) {
-        scanner.nextLine();
         System.out.print("Enter ID of staff to be removed: ");
         String removeID = scanner.nextLine();
         if (removeID.equalsIgnoreCase(this.getUserId())) {
@@ -342,7 +358,6 @@ public class Administrator extends User {
     }
 
     public void updateStaff(ArrayList<Staff> stafflist) {
-        scanner.nextLine();
         System.out.print("Enter ID of staff to be updated: ");
         String updateID = scanner.nextLine();
         boolean found = false;
@@ -360,7 +375,7 @@ public class Administrator extends User {
                     switch (option) {
                         case 1:
                             scanner.nextLine();
-                            System.out.print("Enter new ID:");
+                            System.out.print("Enter new ID: ");
                             String newID = scanner.nextLine();
                             for (Staff worker : stafflist) {
                                 if (newID.equalsIgnoreCase(worker.getUserId())) {
@@ -372,11 +387,11 @@ public class Administrator extends User {
                             break;
                         case 2:
                             scanner.nextLine();
-                            System.out.print("Enter new name:");
+                            System.out.print("Enter new name: ");
                             String newName = scanner.nextLine();
                             for (Staff worker : stafflist) {
                                 if (newName.equalsIgnoreCase(worker.getName())) {
-                                    System.out.println("Staff" + newName + "already exists.");
+                                    System.out.println("Staff " + newName + " already exists.");
                                     break;
                                 }
                             }
@@ -389,11 +404,11 @@ public class Administrator extends User {
                             break;
                         case 4:
                             scanner.nextLine();
-                            System.out.print("Enter new gender:");
+                            System.out.print("Enter new gender: ");
                             staff.setGender(scanner.nextLine());
                             break;
                         case 5:
-                            System.out.print("Enter new age:");
+                            System.out.print("Enter new age: ");
                             staff.setAge(scanner.nextInt());
                             break;
                         case 6:
@@ -461,11 +476,17 @@ public class Administrator extends User {
     }
 
     public void addMedicine(ArrayList<Medicine> inventory) {
-        System.out.println("Enter name of new medicine: ");
+        System.out.print("Enter name of new medicine: ");
         String medicineName = scanner.nextLine();
-        System.out.println("Enter stock of new medicine: ");
+        for (Medicine med : inventory) {
+            if (medicineName.equalsIgnoreCase(med.getName())) {
+                System.out.println("Medicine already in inventory.");
+                return;
+            }
+        }
+        System.out.print("Enter stock of new medicine: ");
         int stock = scanner.nextInt();
-        System.out.println("Enter low stock alert level of new medicine: ");
+        System.out.print("Enter low stock alert level of new medicine: ");
         int threshold = scanner.nextInt();
         Medicine medicine = new Medicine(medicineName, "null", stock, threshold);
         inventory.add(medicine);
@@ -491,7 +512,6 @@ public class Administrator extends User {
     }
 
     public void setMedStock(ArrayList<Medicine> inventory) {
-        scanner.nextLine();
         System.out.print("Enter name of medicine to update stock: ");
         String medicineName = scanner.nextLine();
         System.out.print("Enter new stock level: ");
@@ -569,7 +589,7 @@ public class Administrator extends User {
             return;
         }
         if (med.isLowStock()) {
-            med.setQuantity(request.getRequestedQuantity());
+            med.setQuantity(med.getQuantity() + request.getRequestedQuantity());
             request.approveRequest();
             System.out.println(
                     "Request for " + med.getName() + " has been approved. The medicine's stock is now "
