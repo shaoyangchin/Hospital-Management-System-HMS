@@ -74,28 +74,26 @@ public class Pharmacist extends User {
             return;
         }
         
-        System.out.println("\n=== Current Medication Inventory ===");
-        System.out.println("------------------------------------------------");
-        System.out.printf("%-20s %-15s %-15s%n", "Medicine Name", "Quantity", "Threshold");
-        System.out.println("------------------------------------------------");
+        System.out.println("           --- Medication Inventory ---           ");
+        System.out.println("==================================================");
+        System.out.printf("| %-20s | %-10s | %-10s |\n", "Medicine Name", "Quantity", "Threshold");
+        System.out.println("==================================================");
         
         for (Medicine medicine : medicines) {
-            if (medicine != null) {  // Add null check for individual medicines
-                System.out.printf("%-20s %-15d %-15d", 
+            if (medicine != null) {
+                System.out.printf("| %-20s | %-10d | %-10d |\n", 
                     medicine.getName(), 
                     medicine.getQuantity(), 
                     medicine.getThreshold());
-                    
+                
                 if (medicine.getQuantity() <= medicine.getThreshold()) {
-                    System.out.println("\n*** Low stock warning! ***");
-                } else {
-                    System.out.println();
+                    System.out.println("(Low Stock Warning)");
                 }
             }
         }
-        System.out.println("------------------------------------------------");
+        
+        System.out.println("==============================================");
     }
-
     // Submit replenishment request
 public ReplenishmentRequest submitReplenishmentRequest(String medicineName, int requestedQuantity) {
     if (medicineName == null || medicineName.trim().isEmpty()) {
