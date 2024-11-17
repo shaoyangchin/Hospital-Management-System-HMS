@@ -309,9 +309,9 @@ public class ApptManager {
             "06:00 PM"
         };
     
-        // Initialize all slots as "Not Available"
+        // Initialize all slots as "Free"
         for (String slot : timeSlots) {
-            schedule.add("Not Available");
+            schedule.add("Free");
         }
     
         // Check availability for the doctor on the given date
@@ -326,7 +326,7 @@ public class ApptManager {
                         withinAvailability = true; // Mark the start of availability
                     }
                     if (withinAvailability) {
-                        schedule.set(i, "Free"); // Mark available slots as "Free"
+                        schedule.set(i, "Not Available"); // Mark available slots as "Not Available"
                     }
                     if (timeSlots[i].equalsIgnoreCase(endTime)) {
                         withinAvailability = false; // Mark the end of availability
