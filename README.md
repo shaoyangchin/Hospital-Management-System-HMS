@@ -12,20 +12,42 @@ The system supports multiple user roles, including **Doctor**, **Patient**, **Ph
 - Java Development Kit (JDK) installed on your system
 - A terminal or command-line interface to run the application
 
-## Installation and Usage
+## Usage
 
-1. Clone this repository to your local machine:
-```
-git clone https://github.com/yourusername/HospitalManagementSystem.git
-```
+Navigate to the project directory and run the MainView.java file to start the program
 
-2. Navigate to the project directory:
-```
-cd HospitalManagementSystem
-```
+## Classes and Their Responsibilities
 
-3. Run the MainView.java file to start the program
+### Main Classes
+- **[`MainView`](MainView.java)**: Entry point of the application.
+- **[`DatabaseHelper`](DatabaseHelper.java)**: Contains methods for initializing and managing the database.
 
+### User Roles
+- **[`User`](User.java)**: Base class for all user types.
+- **[`Doctor`](Doctor.java)**: Extends `User` with doctor-specific functionalities.
+- **[`Patient`](Patient.java)**: Extends `User` with patient-specific functionalities.
+- **[`Pharmacist`](Pharmacist.java)**: Extends `User` with pharmacist-specific functionalities.
+- **[`Administrator`](Administrator.java)**: Extends `User` with administrator-specific functionalities.
+
+### Views
+- **[`DoctorView`](DoctorView.java)**: Interface for doctor interactions.
+- **[`PatientView`](PatientView.java)**: Interface for patient interactions.
+- **[`PharmacistView`](PharmacistView.java)**: Interface for pharmacist interactions.
+- **[`AdminView`](AdminView.java)**: Interface for administrator interactions.
+
+
+### Supporting Classes
+- **[`Appointment`](Appointment.java)**: Manages appointment details.
+- **[`ApptManager`](ApptManager.java)**: Manages appointment scheduling.
+- **[`Availability`](Availability.java)**: Manages availability slots.
+- **[`HMSDatabase`](HMSDatabase.java)**: Represents the hospital management system database.
+- **[`MedicalRecord`](MedicalRecord.java)**: Manages medical records.
+- **[`Medicine`](Medicine.java)**: Manages medicine details.
+- **[`ReplenishmentRequest`](ReplenishmentRequest.java)**: Manages medicine replenishment requests.
+- **[`Staff`](Staff.java)**: Represents staff members.
+- **[`Status`](Status.java)**: Enum for status types.
+- **[`TimeSlot`](TimeSlot.java)**: Manages time slots.
+- **[`UserType`](UserType.java)**: Enum for user types.
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
