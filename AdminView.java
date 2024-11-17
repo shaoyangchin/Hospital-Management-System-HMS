@@ -13,7 +13,7 @@ public class AdminView {
             System.out.printf("| %-2s | %-40s |\n", "4", "Approve Replenishment Requests");
             System.out.printf("| %-2s | %-40s |\n", "5", "Save Database");
             System.out.printf("| %-2s | %-40s |\n", "6", "Reset Database");
-            System.out.printf("| %-2s | %-40s |\n", "7", "Exit");
+            System.out.printf("| %-2s | %-40s |\n", "7", "Logout");
             System.out.println("=================================================");
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
