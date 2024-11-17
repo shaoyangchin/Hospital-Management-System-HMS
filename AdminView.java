@@ -4,14 +4,17 @@ public class AdminView {
     public static void AdminView(Administrator admin, HMSDatabase database) {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.println("\n--- Administrator Menu ---");
-            System.out.println("1. View and Manage Hospital Staff");
-            System.out.println("2. View Appointment Details");
-            System.out.println("3. View and Manage Medication Inventory");
-            System.out.println("4. Approve Replenishment Requests");
-            System.out.println("5. Save Database");
-            System.out.println("6. Reset Database");
-            System.out.println("7. Exit");
+            System.out.println("\n=================================================");
+            System.out.println("           --- Administrator Menu ---          ");
+            System.out.println("=================================================");
+            System.out.printf("| %-2s | %-40s |\n", "1", "View and Manage Hospital Staff");
+            System.out.printf("| %-2s | %-40s |\n", "2", "View Appointment Details");
+            System.out.printf("| %-2s | %-40s |\n", "3", "View and Manage Medication Inventory");
+            System.out.printf("| %-2s | %-40s |\n", "4", "Approve Replenishment Requests");
+            System.out.printf("| %-2s | %-40s |\n", "5", "Save Database");
+            System.out.printf("| %-2s | %-40s |\n", "6", "Reset Database");
+            System.out.printf("| %-2s | %-40s |\n", "7", "Exit");
+            System.out.println("=================================================");
             System.out.print("Choose an option: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -49,7 +52,7 @@ public class AdminView {
                     admin.viewInventory(database.getInventory());
                     int choose = 0;
                     do {
-                        System.out.println("Manage inventory: \n" + "1. Add Medicine\n" + "2. Remove Medicine\n"
+                        System.out.println("--- Manage inventory --- \n" + "1. Add Medicine\n" + "2. Remove Medicine\n"
                                 + "3. Update Medicine Stocks\n" + "4. Update Medicine Low Stock Level\n" + "5. Exit\n");
                         choose = scanner.nextInt();
                         switch (choose) {
