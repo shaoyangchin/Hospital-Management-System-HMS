@@ -1,3 +1,4 @@
+
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -12,7 +13,6 @@ public class DatabaseHelper {
     public static List<String> replenishmentFields = getHeader("data/Replenishment_List.csv");
     public static List<String> staffFields = getHeader("data/Staff_List.csv");
     public static List<String> availabilityFields = getHeader("data/Availability_List.csv");
-
 
     // Method to initialize users (dummy data for testing)
     public static ArrayList<User> initUsers() {
@@ -42,7 +42,9 @@ public class DatabaseHelper {
         List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
         ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
         for (List<String> medrecord : medRecords) {
-            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2), Integer.parseInt(medrecord.get(3)),medrecord.get(4),medrecord.get(5),Integer.parseInt(medrecord.get(6))));
+            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2),
+                    Integer.parseInt(medrecord.get(3)), medrecord.get(4), medrecord.get(5),
+                    Integer.parseInt(medrecord.get(6))));
 
         }
 
@@ -73,7 +75,9 @@ public class DatabaseHelper {
         List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
         ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
         for (List<String> medrecord : medRecords) {
-            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2), Integer.parseInt(medrecord.get(3)),medrecord.get(4),medrecord.get(5),Integer.parseInt(medrecord.get(6))));
+            medicalRecords.add(new MedicalRecord(medrecord.get(0), medrecord.get(1), medrecord.get(2),
+                    Integer.parseInt(medrecord.get(3)), medrecord.get(4), medrecord.get(5),
+                    Integer.parseInt(medrecord.get(6))));
 
         }
 
@@ -95,17 +99,17 @@ public class DatabaseHelper {
 
     public static ArrayList<MedicalRecord> initMedicalRecords() {
         List<List<String>> medRecords = readFile("data/MedicalRecord_List.csv");
-        ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();  
+        ArrayList<MedicalRecord> medicalRecords = new ArrayList<>();
         for (List<String> medrecord : medRecords) {
             try {
                 medicalRecords.add(new MedicalRecord(
-                    medrecord.get(0),  // Diagnosis
-                    medrecord.get(1),  // Prescription
-                    medrecord.get(2),  // Patient ID
-                    Integer.parseInt(medrecord.get(3)),  // Appointment ID
-                    medrecord.get(4),  // Notes
-                    medrecord.get(5),  // Service
-                    Integer.parseInt(medrecord.get(6))   // Quantity
+                        medrecord.get(0), // Diagnosis
+                        medrecord.get(1), // Prescription
+                        medrecord.get(2), // Patient ID
+                        Integer.parseInt(medrecord.get(3)), // Appointment ID
+                        medrecord.get(4), // Notes
+                        medrecord.get(5), // Service
+                        Integer.parseInt(medrecord.get(6)) // Quantity
                 ));
             } catch (IndexOutOfBoundsException e) {
                 System.out.println("Error reading MedicalRecord data from CSV. Please ensure all columns are correct.");
@@ -167,10 +171,10 @@ public class DatabaseHelper {
         List<List<String>> records = readFile("data/Medicine_List.csv");
         for (List<String> record : records) {
             medicines.add(new Medicine(
-                record.get(0),    // name
-                "Standard",       // default dosage
-                Integer.parseInt(record.get(1)),  // quantity
-                Integer.parseInt(record.get(2))   // threshold
+                    record.get(0), // name
+                    "Standard", // default dosage
+                    Integer.parseInt(record.get(1)), // quantity
+                    Integer.parseInt(record.get(2)) // threshold
             ));
         }
         return medicines;
@@ -193,44 +197,39 @@ public class DatabaseHelper {
         }
         return null; // Return null if no matching patient is found
     }
-    
-    
 
     public static ArrayList<Appointment> initAppointments(ArrayList<Patient> patients, ArrayList<Doctor> doctors) {
         ArrayList<Appointment> appointments = new ArrayList<>();
         List<List<String>> records = readFile("data/Appointment_List.csv");
-    
+
         for (List<String> record : records) {
-    
+
             Patient patient = findPatientById(record.get(2), patients);
             Doctor doctor = findDoctorById(record.get(3), doctors);
-    
+
             if (doctor != null) {
                 appointments.add(new Appointment(
-                    Integer.parseInt(record.get(0)), // Appointment ID
-                    Status.valueOf(record.get(1).toUpperCase()), // Status
-                    patient, // Patient object
-                    doctor, // Doctor object
-                    record.get(4), // Date
-                    record.get(5)  // Time
+                        Integer.parseInt(record.get(0)), // Appointment ID
+                        Status.valueOf(record.get(1).toUpperCase()), // Status
+                        patient, // Patient object
+                        doctor, // Doctor object
+                        record.get(4), // Date
+                        record.get(5) // Time
                 ));
             }
         }
-    
+
         return appointments;
     }
-    
-    
 
     public static ArrayList<ReplenishmentRequest> initReplenishmentRequests() {
         ArrayList<ReplenishmentRequest> requests = new ArrayList<>();
         List<List<String>> records = readFile("data/Replenishment_List.csv");
         for (List<String> record : records) {
             ReplenishmentRequest request = new ReplenishmentRequest(
-                record.get(0),
-                Integer.parseInt(record.get(1)),
-                record.get(2)
-            );
+                    record.get(0),
+                    Integer.parseInt(record.get(1)),
+                    record.get(2));
             if (record.size() > 3 && Boolean.parseBoolean(record.get(3))) {
                 request.approveRequest();
             }
@@ -263,21 +262,19 @@ public class DatabaseHelper {
     public static ArrayList<Availability> initAvailabilities() {
         ArrayList<Availability> availabilities = new ArrayList<>();
         List<List<String>> records = readFile("data/Availability_List.csv");
-    
+
         for (List<String> record : records) {
             if (!record.isEmpty() && record.size() >= 4) { // Ensure valid record
                 availabilities.add(new Availability(
-                    record.get(0), // Doctor ID
-                    record.get(1), // Date
-                    record.get(2), // Start Time
-                    record.get(3)  // End Time
+                        record.get(0), // Doctor ID
+                        record.get(1), // Date
+                        record.get(2), // Start Time
+                        record.get(3) // End Time
                 ));
             }
         }
         return availabilities;
     }
-    
-    
 
     public static List<List<String>> readFile(String fileName) {
         List<List<String>> records = new ArrayList<>();
@@ -419,24 +416,24 @@ public class DatabaseHelper {
                     break;
                 // Med Rec
                 case 1:
-                for (T item : list) {
-                    // Append the details of each MedicalRecord to the CSV
-                    writer.append(item != null ? String.valueOf(((MedicalRecord) item).getDiagnosis()) : "")
-                            .append(",");
-                    writer.append(item != null ? String.valueOf(((MedicalRecord) item).getPrescription()) : "")
-                            .append(",");
-                    writer.append(item != null ? String.valueOf(((MedicalRecord) item).getPatientId()) : "")
-                            .append(",");
-                    writer.append(item != null ? String.valueOf(((MedicalRecord) item).getAppointmentId()) : "")
-                            .append(",");
-                    writer.append(item != null ? String.valueOf(((MedicalRecord) item).getNotes()) : "")
-                            .append(",");
-                    writer.append(item != null ? String.valueOf(((MedicalRecord) item).getService()) : "")
-                            .append(",");
-                    writer.append(item != null ? String.valueOf(((MedicalRecord) item).getQuantity()) : "")
-                            .append("\n");
-                }
-                break;
+                    for (T item : list) {
+                        // Append the details of each MedicalRecord to the CSV
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getDiagnosis()) : "")
+                                .append(",");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getPrescription()) : "")
+                                .append(",");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getPatientId()) : "")
+                                .append(",");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getAppointmentId()) : "")
+                                .append(",");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getNotes()) : "")
+                                .append(",");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getService()) : "")
+                                .append(",");
+                        writer.append(item != null ? String.valueOf(((MedicalRecord) item).getQuantity()) : "")
+                                .append("\n");
+                    }
+                    break;
 
                 // Patient
                 case 2:
@@ -456,22 +453,22 @@ public class DatabaseHelper {
 
                 // Replenishment
                 case 3:
-                for (T item : list) {
-                    writer.append(
-                            item != null ? String.valueOf(((ReplenishmentRequest) item).getMedicineName()) : "")
-                            .append(",");
-                    writer.append(
-                            item != null ? String.valueOf(((ReplenishmentRequest) item).getRequestedQuantity())
-                                    : "")
-                            .append(",");
-                    writer.append(
-                            item != null ? String.valueOf(((ReplenishmentRequest) item).getPharmacistId()) : "")
-                            .append(",");  // Add this comma
-                    writer.append(
-                            item != null ? String.valueOf(((ReplenishmentRequest) item).isApproved()) : "");
-                    writer.append("\n");
-                }
-                break;
+                    for (T item : list) {
+                        writer.append(
+                                item != null ? String.valueOf(((ReplenishmentRequest) item).getMedicineName()) : "")
+                                .append(",");
+                        writer.append(
+                                item != null ? String.valueOf(((ReplenishmentRequest) item).getRequestedQuantity())
+                                        : "")
+                                .append(",");
+                        writer.append(
+                                item != null ? String.valueOf(((ReplenishmentRequest) item).getPharmacistId()) : "")
+                                .append(","); // Add this comma
+                        writer.append(
+                                item != null ? String.valueOf(((ReplenishmentRequest) item).getStatus()) : "");
+                        writer.append("\n");
+                    }
+                    break;
 
                 // Staff
                 case 4:
@@ -487,25 +484,27 @@ public class DatabaseHelper {
                     }
 
                     break;
-                case 5:  // Medicine list
-                for (T item : list) {
-                    writer.append(item != null ? String.valueOf(((Medicine) item).getName()) : "").append(",");
-                    writer.append(item != null ? String.valueOf(((Medicine) item).getQuantity()) : "").append(",");
-                    writer.append(item != null ? String.valueOf(((Medicine) item).getThreshold()) : "");
-                    writer.append("\n");
-                }
-                break;
+                case 5: // Medicine list
+                    for (T item : list) {
+                        writer.append(item != null ? String.valueOf(((Medicine) item).getName()) : "").append(",");
+                        writer.append(item != null ? String.valueOf(((Medicine) item).getQuantity()) : "").append(",");
+                        writer.append(item != null ? String.valueOf(((Medicine) item).getThreshold()) : "");
+                        writer.append("\n");
+                    }
+                    break;
 
                 // Availabilities
                 case 6:
                     for (T item : list) {
-                        writer.append(item != null ? String.valueOf(((Availability) item).getDoctorId()) : "").append(",");
+                        writer.append(item != null ? String.valueOf(((Availability) item).getDoctorId()) : "")
+                                .append(",");
                         writer.append(item != null ? String.valueOf(((Availability) item).getDate()) : "").append(",");
-                        writer.append(item != null ? String.valueOf(((Availability) item).getStartTime()) : "").append(",");
+                        writer.append(item != null ? String.valueOf(((Availability) item).getStartTime()) : "")
+                                .append(",");
                         writer.append(item != null ? String.valueOf(((Availability) item).getEndTime()) : "");
                         writer.append("\n");
                     }
-                    break;    
+                    break;
 
             }
 
@@ -529,21 +528,20 @@ public class DatabaseHelper {
         try (FileWriter writer = new FileWriter("data/Availability_List.csv")) {
             // Write CSV header
             writer.write("Doctor ID,Date,Start Time,End Time\n");
-    
+
             // Write CSV rows
             for (Availability availability : availabilities) {
                 writer.write(availability.getDoctorId() + "," +
-                             availability.getDate() + "," +
-                             availability.getStartTime() + "," +
-                             availability.getEndTime() + "\n");
+                        availability.getDate() + "," +
+                        availability.getStartTime() + "," +
+                        availability.getEndTime() + "\n");
             }
-    
+
             System.out.println("Availability_List.csv updated successfully.");
         } catch (IOException e) {
             System.out.println("Error saving availability list: " + e.getMessage());
         }
     }
-    
 
     public static void saveReplenishmentRequest(ReplenishmentRequest request) {
         try (FileWriter writer = new FileWriter("data/Replenishment_List.csv", true)) { // Append mode
@@ -554,9 +552,9 @@ public class DatabaseHelper {
 
             // Append new request
             writer.append(request.getMedicineName()).append(",")
-                 .append(String.valueOf(request.getRequestedQuantity())).append(",")
-                 .append(request.getPharmacistId()).append(",")
-                 .append(String.valueOf(request.isApproved())).append("\n");
+                    .append(String.valueOf(request.getRequestedQuantity())).append(",")
+                    .append(request.getPharmacistId()).append(",")
+                    .append(String.valueOf(request.getStatus())).append("\n");
         } catch (IOException e) {
             System.out.println("Error saving replenishment request: " + e.getMessage());
         }
@@ -570,9 +568,9 @@ public class DatabaseHelper {
             // Write all requests
             for (ReplenishmentRequest req : requests) {
                 writer.append(req.getMedicineName()).append(",")
-                     .append(String.valueOf(req.getRequestedQuantity())).append(",")
-                     .append(req.getPharmacistId()).append(",")
-                     .append(String.valueOf(req.isApproved())).append("\n");
+                        .append(String.valueOf(req.getRequestedQuantity())).append(",")
+                        .append(req.getPharmacistId()).append(",")
+                        .append(String.valueOf(req.getStatus())).append("\n");
             }
         } catch (IOException e) {
             System.out.println("Error updating replenishment requests: " + e.getMessage());
