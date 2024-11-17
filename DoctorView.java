@@ -238,6 +238,7 @@ public class DoctorView {
                     database.saveDatabase();
                     System.out.println("Exiting...");
                     scanner.close();
+                    System.exit(0);
                     return;
                 
                 case 10:
