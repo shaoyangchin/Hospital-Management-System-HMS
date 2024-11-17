@@ -1,7 +1,5 @@
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Iterator;
 
 public class Administrator extends User {
@@ -42,13 +40,6 @@ public class Administrator extends User {
     }
 
     public void viewStaff(ArrayList<Staff> stafflist) {
-
-        /*
-         * System.out.println("Hospital Staff:");
-         * for (Staff staff : stafflist) {
-         * System.out.println(staff);
-         * }
-         */
         System.out.println("                    --- Hospital Staff ---                     ");
         System.out.println("=====================================================================");
         System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender", "Age");
@@ -72,7 +63,6 @@ public class Administrator extends User {
             int filter = scanner.nextInt();
             switch (filter) {
                 case 0:
-                    // Display all staff
                     System.out.println("                       --- Hospital Staff ---                        ");
                     System.out.println("=====================================================================");
                     System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
@@ -95,7 +85,6 @@ public class Administrator extends User {
                     break;
 
                 case 1:
-                    // Filter by role (Doctors)
                     System.out.println("                    --- Hospital Staff (Doctors) ---                     ");
                     System.out.println("=====================================================================");
                     System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
@@ -120,7 +109,6 @@ public class Administrator extends User {
                     break;
 
                 case 2:
-                    // Filter by role (Pharmacists)
                     System.out.println("                    --- Hospital Staff (Pharmacists) ---                     ");
                     System.out.println("=====================================================================");
                     System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
@@ -145,7 +133,6 @@ public class Administrator extends User {
                     break;
 
                 case 3:
-                    // Filter by role (Administrators)
                     System.out.println(
                             "                    --- Hospital Staff (Administrators) ---                     ");
                     System.out.println("=====================================================================");
@@ -171,7 +158,6 @@ public class Administrator extends User {
                     break;
 
                 case 4:
-                    // Filter by gender (Male)
                     System.out.println("                    --- Hospital Staff (Male) ---                     ");
                     System.out.println("=====================================================================");
                     System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
@@ -196,7 +182,6 @@ public class Administrator extends User {
                     break;
 
                 case 5:
-                    // Filter by gender (Female)
                     System.out.println("                    --- Hospital Staff (Female) ---                     ");
                     System.out.println("=====================================================================");
                     System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
@@ -221,7 +206,6 @@ public class Administrator extends User {
                     break;
 
                 case 6:
-                    // Filter by age range (21-30)
                     System.out.println("                    --- Hospital Staff (Age: 21-30) ---                     ");
                     System.out.println("=====================================================================");
                     System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
@@ -246,7 +230,6 @@ public class Administrator extends User {
                     break;
 
                 case 7:
-                    // Filter by age range (31-40)
                     System.out.println("                    --- Hospital Staff (Age: 31-40) ---                     ");
                     System.out.println("=====================================================================");
                     System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
@@ -271,7 +254,6 @@ public class Administrator extends User {
                     break;
 
                 case 8:
-                    // Filter by age range (41-50)
                     System.out.println("                    --- Hospital Staff (Age: 41-50) ---                     ");
                     System.out.println("=====================================================================");
                     System.out.printf("| %-10s | %-15s | %-15s | %-6s | %-5s |\n", "ID", "Name", "Role", "Gender",
@@ -307,15 +289,15 @@ public class Administrator extends User {
 
     public void addStaff(ArrayList<Staff> stafflist) {
         scanner.nextLine();
-        System.out.println("Enter name of staff to add: ");
+        System.out.print("Enter name of staff to add: ");
         String name = scanner.nextLine();
-        System.out.println("Enter ID of staff to add: ");
+        System.out.print("Enter ID of staff to add: ");
         String ID = scanner.nextLine();
-        System.out.println("Enter role of staff to add: ");
+        System.out.print("Enter role of staff to add: ");
         String role = scanner.nextLine();
-        System.out.println("Enter gender of staff to add: ");
+        System.out.print("Enter gender of staff to add: ");
         String gender = scanner.nextLine();
-        System.out.println("Enter age of staff to add: ");
+        System.out.print("Enter age of staff to add: ");
         int age = scanner.nextInt();
         scanner.nextLine();
         UserType type = null;
@@ -336,7 +318,7 @@ public class Administrator extends User {
 
     public void removeStaff(ArrayList<Staff> stafflist) {
         scanner.nextLine();
-        System.out.println("Enter ID of staff to be removed: ");
+        System.out.print("Enter ID of staff to be removed: ");
         String removeID = scanner.nextLine();
         if (removeID.equalsIgnoreCase(this.getUserId())) {
             System.out.println("Cannot remove current user!");
@@ -361,7 +343,7 @@ public class Administrator extends User {
 
     public void updateStaff(ArrayList<Staff> stafflist) {
         scanner.nextLine();
-        System.out.println("Enter ID of staff to be updated");
+        System.out.print("Enter ID of staff to be updated: ");
         String updateID = scanner.nextLine();
         boolean found = false;
         Iterator<Staff> iterator = stafflist.iterator();
@@ -378,7 +360,7 @@ public class Administrator extends User {
                     switch (option) {
                         case 1:
                             scanner.nextLine();
-                            System.out.println("Enter new ID:");
+                            System.out.print("Enter new ID:");
                             String newID = scanner.nextLine();
                             for (Staff worker : stafflist) {
                                 if (newID.equalsIgnoreCase(worker.getUserId())) {
@@ -390,7 +372,7 @@ public class Administrator extends User {
                             break;
                         case 2:
                             scanner.nextLine();
-                            System.out.println("Enter new name:");
+                            System.out.print("Enter new name:");
                             String newName = scanner.nextLine();
                             for (Staff worker : stafflist) {
                                 if (newName.equalsIgnoreCase(worker.getName())) {
@@ -402,16 +384,16 @@ public class Administrator extends User {
                             break;
                         case 3:
                             scanner.nextLine();
-                            System.out.println("Enter new role:");
+                            System.out.print("Enter new role:");
                             staff.setRole(scanner.nextLine());
                             break;
                         case 4:
                             scanner.nextLine();
-                            System.out.println("Enter new gender:");
+                            System.out.print("Enter new gender:");
                             staff.setGender(scanner.nextLine());
                             break;
                         case 5:
-                            System.out.println("Enter new age:");
+                            System.out.print("Enter new age:");
                             staff.setAge(scanner.nextInt());
                             break;
                         case 6:
@@ -428,38 +410,18 @@ public class Administrator extends User {
         return;
     }
 
-    /*
-     * public void viewAppts(ArrayList<Appointment> appts, ArrayList<MedicalRecord>
-     * records) {
-     * System.out.println("Viewing all appointments:");
-     * for (Appointment appointment : appts) {
-     * System.out.println(appointment);
-     * if (appointment.getStatus() == Status.COMPLETED) {
-     * for (MedicalRecord record : records) {
-     * if (record.getAppointmentId() == appointment.getAppointmentID())
-     * System.out.println(
-     * "(OUTCOME) Diagnosis: " + record.getDiagnosis() +
-     * ", Prescription: " + record.getPrescription() +
-     * ", Service: " + record.getService() +
-     * ", Notes: " + record.getNotes());
-     * }
-     * }
-     * }
-     * }
-     */
-
     public void viewAppts(ArrayList<Appointment> appts, ArrayList<MedicalRecord> records) {
         System.out.println(
-                "                                                         --- All Appointments ---                                                       ");
+                "                                                                   --- All Appointments ---                                                       ");
         System.out.println(
-                "========================================================================================================================================");
-        System.out.printf("| %-10s | %-15s | %-15s | %-20s | %-12s | %-20s | %-10s | %-10s|\n",
+                "=========================================================================================================================================================================");
+        System.out.printf("| %-10s | %-20s | %-25s | %-25s | %-25s | %-20s | %-10s | %-10s|\n",
                 "Appt ID", "Patient Name", "Patient ID", "Doctor Name", "Doctor ID", "Status", "Date", "Time");
         System.out.println(
-                "========================================================================================================================================");
+                "=========================================================================================================================================================================");
 
         for (Appointment appointment : appts) {
-            System.out.printf("| %-10d | %-15s | %-15s | %-20s | %-12s | %-20s | %-10s | %-10s|\n",
+            System.out.printf("| %-10d | %-20s | %-25s | %-25s | %-25s | %-20s | %-10s | %-10s|\n",
                     appointment.getAppointmentID(),
                     appointment.getPatient().getName(),
                     appointment.getPatient().getPatientId(),
@@ -468,24 +430,19 @@ public class Administrator extends User {
                     appointment.getStatus(),
                     appointment.getDate(),
                     appointment.getTime());
-        }
-        System.out.println(
-                "========================================================================================================================================");
-        System.out.println("Outcomes:");
-        for (Appointment appointment : appts) {
             if (appointment.getStatus() == Status.COMPLETED) {
                 for (MedicalRecord record : records) {
-                    if (record.getAppointmentId() == appointment.getAppointmentID()) {
-                        System.out.println(
-                                "Appointment ID: " + record.getAppointmentId() + ", Diagnosis: " + record.getDiagnosis()
-                                        +
-                                        ", Prescription: " + record.getPrescription() +
-                                        ", Service: " + record.getService() +
-                                        ", Notes: " + record.getNotes());
-                    }
+                    if (record.getAppointmentId() == appointment.getAppointmentID())
+                        System.out.printf("| %-10s | %-20s | %-25s | %-25s | %-25s | %-20s | %-10s | %-10s|\n",
+                                "OUTCOME", "Diagnosis: " + record.getDiagnosis(),
+                                "Prescription: " + record.getPrescription(), "Service: " + record.getService(),
+                                "Notes: " + record.getNotes(), "", "", "");
                 }
             }
         }
+        System.out.println(
+                "=========================================================================================================================================================================");
+
     }
 
     public void viewInventory(ArrayList<Medicine> inventory) {
@@ -504,20 +461,20 @@ public class Administrator extends User {
     }
 
     public void addMedicine(ArrayList<Medicine> inventory) {
-        System.out.println("Enter name of new medicine: ");
+        System.out.print("Enter name of new medicine: ");
         String medicineName = scanner.nextLine();
-        System.out.println("Enter stock of new medicine: ");
+        System.out.print("Enter stock of new medicine: ");
         int stock = scanner.nextInt();
-        System.out.println("Enter low stock alert level of new medicine: ");
+        System.out.print("Enter low stock alert level of new medicine: ");
         int threshold = scanner.nextInt();
         Medicine medicine = new Medicine(medicineName, "null", stock, threshold);
         inventory.add(medicine);
-        System.out.println(medicineName + " has been added to the inventory");
+        System.out.println(medicineName + " has been added to the inventory.");
     }
 
     public void removeMedicine(ArrayList<Medicine> inventory) {
         scanner.nextLine();
-        System.out.println("Enter name of medicine to be removed: ");
+        System.out.print("Enter name of medicine to be removed: ");
         String medicineName = scanner.nextLine();
         Medicine med = null;
         for (Medicine medicine : inventory) {
@@ -535,9 +492,9 @@ public class Administrator extends User {
 
     public void setMedStock(ArrayList<Medicine> inventory) {
         scanner.nextLine();
-        System.out.println("Enter name of medicine to update stock: ");
+        System.out.print("Enter name of medicine to update stock: ");
         String medicineName = scanner.nextLine();
-        System.out.println("Enter new stock level: ");
+        System.out.print("Enter new stock level: ");
         int stock = scanner.nextInt();
         Medicine med = null;
         for (Medicine medicine : inventory) {
@@ -549,15 +506,15 @@ public class Administrator extends User {
             med.setQuantity(stock);
             System.out.println(medicineName + "'s stock has been updated to " + stock);
         } else {
-            System.out.println(medicineName + " does not exist");
+            System.out.println(medicineName + " does not exist.");
         }
     }
 
     public void setMedStockLevel(ArrayList<Medicine> inventory) {
         scanner.nextLine();
-        System.out.println("Enter name of medicine to change low stock alert level: ");
+        System.out.print("Enter name of medicine to change low stock alert level: ");
         String medicineName = scanner.nextLine();
-        System.out.println("Enter new alert level:");
+        System.out.print("Enter new alert level:");
         int stocklevel = scanner.nextInt();
         Medicine med = null;
         for (Medicine medicine : inventory) {
@@ -569,7 +526,7 @@ public class Administrator extends User {
             med.setThreshold(stocklevel);
             System.out.println(medicineName + "'s low stock alert level has been updated to " + stocklevel);
         } else {
-            System.out.println(medicineName + " does not exist");
+            System.out.println(medicineName + " does not exist.");
         }
     }
 
@@ -577,18 +534,18 @@ public class Administrator extends User {
         System.out.println("                     --- Replenishment Requests ---                      ");
         System.out.println("=========================================================================");
         System.out.printf("| %-15s | %-20s | %-15s | %-10s |\n", "Name", "Requested Quantity", "Pharmacist ID",
-                "Approved?");
+                "Status");
         System.out.println("=========================================================================");
 
         for (ReplenishmentRequest request : replenishmentRequests) {
             System.out.printf("| %-15s | %-20d | %-15s | %-10s |\n",
                     request.getMedicineName(),
                     request.getRequestedQuantity(),
-                    request.getPharmacistId(), // false
-                    request.isApproved() ? "Yes" : "No");
+                    request.getPharmacistId(),
+                    request.getStatus());
         }
         System.out.println("=========================================================================");
-        System.out.println("Enter the name of the medicine whose request is to be approved/declined: ");
+        System.out.print("Enter the name of the medicine whose request is to be approved/declined: ");
         String medicineName = scanner.nextLine();
         Medicine med = null;
         for (Medicine medicine : inventory) {
@@ -618,6 +575,7 @@ public class Administrator extends User {
                     "Request for " + med.getName() + " has been approved. The medicine's stock is now "
                             + med.getQuantity());
         } else {
+            request.declineRequest();
             System.out.println(med.getName() + " has sufficient stock.");
         }
     }

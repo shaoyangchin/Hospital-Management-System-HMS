@@ -19,8 +19,7 @@ public class DoctorView {
             System.out.printf("| %-2s | %-30s |\n", "6", "Decline Appointment");
             System.out.printf("| %-2s | %-30s |\n", "7", "View Upcoming Appointments");
             System.out.printf("| %-2s | %-30s |\n", "8", "Record Appointment Outcome");
-            System.out.printf("| %-2s | %-30s |\n", "9", "Exit");
-            System.out.printf("| %-2s | %-30s |\n", "10", "Logout");
+            System.out.printf("| %-2s | %-30s |\n", "9", "Logout");
             System.out.println("======================================");
             System.out.print("Choose an option: ");
             
@@ -28,7 +27,7 @@ public class DoctorView {
             try {
                 choice = Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.println("\nInvalid input. Please enter a number between 1 and 10.");
+                System.out.println("\nInvalid input. Please enter a number between 1 and 9.");
                 continue; // Restart the menu loop
             }
 
@@ -232,16 +231,8 @@ public class DoctorView {
                     // Call ApptManager to handle the rest of the outcome recording
                     apptManager.recordAppointmentOutcome(outcomeID, null, null, null, null, 0, doctor, database);
                     break;
-
-
-                case 9:  // Exit
-                    database.saveDatabase();
-                    System.out.println("Exiting...");
-                    scanner.close();
-                    System.exit(0);
-                    return;
                 
-                case 10:
+                case 9:
                     database.saveDatabase();
                     System.out.println("Logging out...");
                     return; // Logout ends this view
