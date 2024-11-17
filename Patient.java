@@ -1,6 +1,12 @@
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class Patient extends User {
     private String patientId;
@@ -133,7 +139,6 @@ public class Patient extends User {
         // }
         // }
         // Displays all available (PENDING) appointments for patient logged in
-        
 
         // Scanner scanner = new Scanner(System.in);
         // System.out.print("Enter doctor ID: ");
@@ -143,7 +148,7 @@ public class Patient extends User {
 
         ArrayList<Availability> availList = database.getAvailabilities();
         ArrayList<Doctor> docList = database.getAllDoctors();
-        ArrayList<String> schedule = new ArrayList<>();
+        //ArrayList<String> schedule = new ArrayList<>();
     
         // Define the 30-minute time slots
         String[] timeSlots = {
@@ -153,79 +158,66 @@ public class Patient extends User {
             "06:00 PM"
         };
     
-        // Initialize all slots as "Free"
-        for (String slot : timeSlots) {
-            schedule.add("Free");
+        
+        Set<String> validTimeSlots = new HashSet<>(Arrays.asList(timeSlots));
+        // Group availability slots by doctor and date
+        Map<String, Map<String, List<Availability>>> doctorAvailMap = new HashMap<>();
+        for (Availability avail : availList) {
+            if (validTimeSlots.contains(avail.getStartTime()) && validTimeSlots.contains(avail.getEndTime())) {
+                doctorAvailMap
+                        .computeIfAbsent(avail.getDoctorId(), k -> new HashMap<>())
+                        .computeIfAbsent(avail.getDate(), k -> new ArrayList<>())
+                        .add(avail);
+            } else {
+                // System.out.printf("Invalid availability skipped: Doctor=%s, Date=%s, Start=%s, End=%s%n",
+                //         avail.getDoctorId(), avail.getDate(), avail.getStartTime(), avail.getEndTime());
+            }
         }
 
-        // for (Doctor doc : docList) {
-        //     for (Availability availSlot : availList) {
-        //         if (availSlot.getDoctorId().equals(doc.getUserId())) {
-        
-        //             String start = availSlot.getStartTime();
-        //             String end = availSlot.getEndTime();
-    
-        
-        //             //Find the matching time slot and populate it
-        //             for (int i = 0; i < j; i++) {
-        //                 if (timeSlots[i].equalsIgnoreCase(start)) {
-        //                     schedule.set(i, appt.getPatient().getName() + " (" + appt.getPatient().getUserId() + ")");
-        //                     break;
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
-        
-
-        // String header = String.format("| %-10s | %-20s |", "Time", "Appointment");
-        // String separator = "=".repeat(header.length());
-        // System.out.println("\n--- Personal Schedule for Dr. " + doctor.getName());
-        // System.out.println(separator);
-        // System.out.println(header);
-        // System.out.println(separator);
-    
+        // Process each doctor's availability
         for (Doctor doc : docList) {
-            for (int a = 0; a < availList.size(); a++) {
-                Availability availSlot = availList.get(a);
-                int j = 0;
-                int g = 0;
-    
-                if (availSlot.getDoctorId().equals(doc.getUserId())) {
-                    String start = availSlot.getStartTime();
-                    String end = availSlot.getEndTime();
-    
-                    if (a == 0 || !availSlot.getDate().equals(availList.get(a - 1).getDate())) {
-                        //System.out.println("date: " + availSlot.getDate());
-                    }
-    
-                    for (int index = 0; index < timeSlots.length; index++) {
-                        if (timeSlots[index].equals(end)) {
-                            j = index;
+            Map<String, List<Availability>> dateAvailMap = doctorAvailMap.getOrDefault(doc.getUserId(), Collections.emptyMap());
+
+            for (String date : dateAvailMap.keySet()) {
+                List<String> schedule = new ArrayList<>(Collections.nCopies(timeSlots.length, "Free"));
+                List<Availability> dateAvailList = dateAvailMap.get(date);
+
+                for (Availability availSlot : dateAvailList) {
+                    int startIdx = -1;
+                    int endIdx = -1;
+                    for (int i = 0; i < timeSlots.length; i++) {
+                        if (timeSlots[i].equals(availSlot.getStartTime())) {
+                            startIdx = i;
+                        }
+                        if (timeSlots[i].equals(availSlot.getEndTime())) {
+                            endIdx = i;
                         }
                     }
-                    for (int index = 0; index < timeSlots.length; index++) {
-                        if (timeSlots[index].equals(start)) {
-                            g = index;
+                    if (startIdx != -1 && endIdx != -1) {
+                        for (int i = startIdx; i <= endIdx; i++) {
+                            schedule.set(i, "Unavailable");
                         }
                     }
-    
-                    // for (int i = g; i < j+1; i++) {
-                    //     System.out.printf("| %-10s | %-20s |%n", timeSlots[i], schedule.get(i));
-                    // }
-    
-                    for (int i = g; i < j+1; i++) {
+                }
+
+                
+
+                // Print the schedule for this doctor and date
+                boolean isDuplicate = false;
+                //System.out.println("Doctor: " + doc.getName() + " | Date: " + date);
+                for (int i = 0; i < timeSlots.length; i++) {
+                    //System.out.printf("| %-10s | %-10s | %-20s |%n", i, timeSlots[i], schedule.get(i));
+                    if (schedule.get(i).equals("Free")) {
                         int apptListLength = appts.size();
-                        Appointment newAppt = new Appointment(apptListLength+1, Status.PENDING, null, doc, availSlot.getDate(), timeSlots[i]);
+                        Appointment newAppt = new Appointment(apptListLength + 1, Status.PENDING, null, doc, date, timeSlots[i]);
                         
                         List<Appointment> apptCopy = new ArrayList<>(appts);
-                        boolean isDuplicate = false;
-    
                         for (Appointment appt : apptCopy) {
                             if (appt.getDoctor() != null && appt.getDate() != null && appt.getTime() != null
                                     && appt.getDoctor().equals(newAppt.getDoctor())
                                     && appt.getDate().equals(newAppt.getDate())
                                     && appt.getTime().equals(newAppt.getTime())) {
+                                //return true; // Duplicate found
                                 isDuplicate = true;
                                 break;
                             }
@@ -233,36 +225,36 @@ public class Patient extends User {
                         if (!isDuplicate) {
                             appts.add(newAppt);
                         }
-                        
+    
                     }
                 }
-                //System.out.println(separator); // Closing line of the table
+                System.out.println();
             }
         }
-        
+        apptM.saveAppt(appts);
         
     
+        ArrayList<Appointment> appointmentsNew = database.getAppointments();
         // Print table header
-        String header = String.format("| %-10s | %-20s | %-10s | %-15s | %-10s | %-10s | %-10s | %-10s |",
+        String header = String.format("| %-10s | %-15s | %-10s | %-15s | %-10s | %-10s | %-10s | %-10s |",
                 "Appt ID", "Patient", "Patient Id", "Doctor", "Doctor Id", "Status", "Date", "Time");
         String separator = "=".repeat(header.length());
         System.out.println(separator);
         System.out.println(header);
         System.out.println(separator);
 
-        for (Appointment appt : appts) {
-            if ((appt.getStatus() == Status.PENDING && appt.getPatient() != null && appt.getPatient().getPatientId().equals(patientId))
-            || appt.getPatient() == null) {
+        for (Appointment appt : appointmentsNew) {
+            if ((appt.getStatus() == Status.PENDING && appt.getPatient() == null)) {
                 //System.out.println(appt);
 
                 // Print the medical record in table format
-                    System.out.printf("| %-10s | %-20s | %-10s | %-15s | %-10s | %-10s | %-10s | %-10s |\n",
+                    System.out.printf("| %-10s | %-15s | %-10s | %-15s | %-10s | %-10s | %-10s | %-10s |\n",
                     appt.getAppointmentID(),
                     (appt.getPatient() != null ? ( patient.getName())
-                        : "No patient assigned"),
+                        : "NA"),
                     (appt.getPatient() != null ? ( patient.getPatientId())
                         : "NA"),
-                    (appt.getDoctor() != null ? (appt.getDoctor().getName()) : "No doctor assigned"),
+                    (appt.getDoctor() != null ? (appt.getDoctor().getName()) : "NA"),
                     (appt.getDoctor() != null ? (appt.getDoctor().getUserId()) : "NA"),
                     appt.getStatus(),
                     appt.getDate(),

@@ -523,6 +523,29 @@ public class DatabaseHelper {
         saveToCsv(database.getAvailabilities(), "data/Availability_List.csv", availabilityFields, 6);
     }
 
+    public static void saveApptList(ArrayList<Appointment> appts) {
+        try (FileWriter writer = new FileWriter("data/Appointment_List.csv")) {
+            // Write CSV header
+            writer.write("AppointmentID,Status,PatientID,DoctorID,Date,Time\n");
+
+            // Write CSV rows
+            for (Appointment appt : appts) {
+                writer.write(appt.getAppointmentID() + "," +
+                appt.getStatus() + "," +
+                (appt.getPatient() != null ? ( appt.getPatient().getPatientId())
+                        : "NA") + "," +
+                (appt.getDoctor() != null ? (appt.getDoctor().getUserId()) : "NA") + "," +
+                appt.getDate() + "," +
+                appt.getTime() + "," 
+                + "\n");
+            }
+
+            System.out.println("Appointment_List.csv updated successfully.");
+        } catch (IOException e) {
+            System.out.println("Error saving Appointment list: " + e.getMessage());
+        }
+    }
+
     public static void saveAvailabilityList(ArrayList<Availability> availabilities) {
         try (FileWriter writer = new FileWriter("data/Availability_List.csv")) {
             // Write CSV header
