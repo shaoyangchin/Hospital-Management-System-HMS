@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class MainView {
 
-    public static User login(ArrayList<User> userList) {
+    public static User login(ArrayList<User> userList, HMSDatabase hmsDatabase) {
         System.out.print("  _    _ __  __  _____ \n" +
                 " | |  | |  \\/  |/ ____|\n" +
                 " | |__| | \\  / | (___  \n" +
@@ -25,7 +25,7 @@ public class MainView {
             if (user.validateUser(userId, password)) {
                 if (password.equals("Password")) {
                     System.out.println("\n\u001B[33mFirst login detected. Please reset your password.\u001B[0m");
-                    user.resetPassword();
+                    user.resetPassword(hmsDatabase);
                 }
                 System.out.println("\n\u001B[32mLogin successful! Welcome, " + user.getUserId() + ".\u001B[0m\n");
                 return user;
@@ -36,24 +36,39 @@ public class MainView {
     }
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+
         HMSDatabase db = new HMSDatabase();
         while (true) {
-
+            Scanner scanner = new Scanner(System.in);
+            loginMenu:
             while (true){
                 System.out.println("\n\u001B[34m 1. Login \u001B[0m");
-                System.out.println("\u001B[34m 2. Exit \u001B[0m");
+                System.out.println("\u001B[34m 2. Reset Password \u001B[0m");
+                System.out.println("\u001B[34m 3. Exit \u001B[0m");
                 System.out.println("\u001B[34m Please Select Option:  \u001B[0m");
                 String option = scanner.nextLine();
                 if (option.equals("1")) {break;}
-                else if (option.equals("2")) { return;}
+                else if (option.equals("2")) {
+                    System.out.print("\n\u001B[34mEnter your hospital ID: \u001B[0m");
+                    String userId = scanner.nextLine();
+                    System.out.print("\u001B[34mEnter your password: \u001B[0m");
+                    String password = scanner.nextLine();
+                    for (User user : db.getUsers()) {
+                        if (user.validateUser(userId, password)) {
+                            user.resetPassword(db);
+                            break loginMenu;
+                        }
+                    }
+                    System.out.println("\n\u001B[31mWrong Password!\u001B[0m\n");
+                }
+                else if (option.equals("3")) { return;}
                 else{
                     System.out.println("\n\u001B[31mInvalid Option, Please Try Again.\u001B[0m\n");
                 }
             }
 
 
-            User user = login(db.getUsers());
+            User user = login(db.getUsers(),db);
             if (user == null) {
                 continue;
             }
