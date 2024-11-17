@@ -24,7 +24,7 @@ public class PharmacistView {
             System.out.printf("| %-2s | %-30s |\n", "2", "Update Prescription Status");
             System.out.printf("| %-2s | %-30s |\n", "3", "View Medicine Inventory");
             System.out.printf("| %-2s | %-30s |\n", "4", "Submit Replenishment Request");
-            System.out.printf("| %-2s | %-30s |\n", "5", "Exit");
+            System.out.printf("| %-2s | %-30s |\n", "5", "Logout");
             System.out.println("======================================");
             System.out.print("Select an option: ");
             
