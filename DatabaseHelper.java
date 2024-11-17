@@ -582,9 +582,9 @@ public class DatabaseHelper {
     public static void main(String[] args) throws IOException {
         resetAllFiles();
         HMSDatabase database = new HMSDatabase();
-        ArrayList<Patient> patients = initPatients();
+        //ArrayList<Patient> patients = initPatients();
         // writeArrayListToCSV(patients, "test.csv");
-        resetFile("data/Patient_List.csv", "test.csv");
+        //resetFile("data/Patient_List.csv", "test.csv");
         saveDatabase(database);
         // updateFiles(database);
     }

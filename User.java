@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
-public abstract class User {
+public abstract class User implements INameable {
     private String userId;
     protected String password;
     private AccountType accountType; // Staff or Patient
