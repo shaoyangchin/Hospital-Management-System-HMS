@@ -1,11 +1,8 @@
 Diagnosis,Prescription,Patient Id,Appointment Id,Notes,Service,Quantity
-Cold,Paracetamol,P1003,2,Routine check,General Checkup,8
-Allergy,Cough Syrup,P1001,3,Routine check,Pee Test,8
-Fever,Antihistamine,P1001,1,Follow-up required,X-Ray,20
-Cold,Ibuprofen,P1001,6,Routine check,Pee Test,20
-Allergy,Antibiotics,P1004,4,Routine check,General Checkup,8
-Headache,Ibuprofen,P1002,5,I think he sick,Ultrasound,8
-Headache,Ibuprofen,P1002,7,Looks serious,Knee Surgery,20
-Cold,Amoxicillin,P1003,10,Looks serious,Knee Surgery,8
-Flu,Ibuprofen,P1005,8,Follow-up required,General Checkup,20
-Injury,Amoxicillin,P1005,9,Prescribed medication,General Checkup,5
+Cold,Paracetamol,P1001,6,Routine check,General Checkup,8
+Allergy,Cough Syrup,P1001,13,Routine check,Pee Test,8
+Fever,Antihistamine,P1002,14,Follow-up required,X-Ray,20
+Cold,Ibuprofen,P1001,19,Routine check,Pee Test,20
+Allergy,Antibiotics,P1003,3,Routine check,General Checkup,8
+Headache,Ibuprofen,P1003,7,I think he sick,Ultrasound,8
+Headache,Ibuprofen,P1002,15,Looks serious,Knee Surgery,20
