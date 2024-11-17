@@ -1,2 +1,2 @@
-medicineName,requestedQuantity,pharmacistId
-Paracetamol,100,P001
+medicineName,requestedQuantity,pharmacistId,Status
+Paracetamol,100,P001,PENDING
