@@ -79,12 +79,16 @@ public class Patient extends User implements GetRecord<List<MedicalRecord>>{
         return appt;
     }
 
-    public void viewMedicalRecord(Patient patient) {
+    public void viewMedicalRecord(Patient patient, HMSDatabase database) {
         System.out.println("Viewing medical records for patient ID: " + patient.getPatientId() + ", Name: "
                 + patient.getName() + ", DOB: " + patient.getDateOfBirth() + ", gender: " + patient.getGender()
                 + ", Blood Type: " + patient.getBloodType() + ", Email: " + patient.getContact() + ", Phone number: "
                 + patient.getPhoneNum());
-        System.out.println(getRecordForPatient(patient));
+        //System.out.println(getRecordForPatient(patient));
+        ArrayList<Availability> availabilities = database.getAvailabilities(); // Load from CSV
+
+        System.out.println("Use View Past Appointment Outcome Records option to view past diagnoses and treatments.");
+
     }
 
     public void updateRecord(Patient patient, String contact, String phone) {
@@ -94,7 +98,7 @@ public class Patient extends User implements GetRecord<List<MedicalRecord>>{
 
     ApptManager manager = new ApptManager();
 
-    public void viewAvailAppts(ArrayList<Appointment> appts) {
+    public void viewAvailAppts(ArrayList<Appointment> appts, ApptManager apptM, HMSDatabase database, Patient patient) {
         // Displays all available (PENDING) appointments for all patients
         // for (Appointment appointment : appts) {
         // if (appointment.getStatus() == Status.PENDING) {
@@ -102,21 +106,128 @@ public class Patient extends User implements GetRecord<List<MedicalRecord>>{
         // }
         // }
         // Displays all available (PENDING) appointments for patient logged in
-        for (Appointment appointment : appts) {
-            if (appointment.getStatus() == Status.PENDING && appointment.getPatient() == null) {
-                System.out.println(appointment);
-            }
+        
+
+        // Scanner scanner = new Scanner(System.in);
+        // System.out.print("Enter doctor ID: ");
+        // String doctorId = scanner.nextLine();
+        // Doctor doctor = database.getDoctorById(doctorId);
+
+
+        ArrayList<Availability> availList = database.getAvailabilities();
+        ArrayList<Doctor> docList = database.getAllDoctors();
+        ArrayList<String> schedule = new ArrayList<>();
+    
+        // Define the 30-minute time slots
+        String[] timeSlots = {
+            "09:00 AM", "09:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM",
+            "12:00 PM", "12:30 PM", "01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM",
+            "03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM", "05:00 PM", "05:30 PM",
+            "06:00 PM"
+        };
+    
+        // Initialize all slots as "Free"
+        for (String slot : timeSlots) {
+            schedule.add("Free");
         }
 
+        // for (Doctor doc : docList) {
+        //     for (Availability availSlot : availList) {
+        //         if (availSlot.getDoctorId().equals(doc.getUserId())) {
+        
+        //             String start = availSlot.getStartTime();
+        //             String end = availSlot.getEndTime();
+    
+        
+        //             //Find the matching time slot and populate it
+        //             for (int i = 0; i < j; i++) {
+        //                 if (timeSlots[i].equalsIgnoreCase(start)) {
+        //                     schedule.set(i, appt.getPatient().getName() + " (" + appt.getPatient().getUserId() + ")");
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        
+
+        // String header = String.format("| %-10s | %-20s |", "Time", "Appointment");
+        // String separator = "=".repeat(header.length());
+        // System.out.println("\n--- Personal Schedule for Dr. " + doctor.getName());
+        // System.out.println(separator);
+        // System.out.println(header);
+        // System.out.println(separator);
+    
+        for (Doctor doc : docList) {
+            for (int a = 0; a < availList.size(); a++) {
+                Availability availSlot = availList.get(a);
+                int j = 0;
+                int g = 0;
+    
+                if (availSlot.getDoctorId().equals(doc.getUserId())) {
+                    String start = availSlot.getStartTime();
+                    String end = availSlot.getEndTime();
+    
+                    if (a == 0 || !availSlot.getDate().equals(availList.get(a - 1).getDate())) {
+                        //System.out.println("date: " + availSlot.getDate());
+                    }
+    
+                    for (int index = 0; index < timeSlots.length; index++) {
+                        if (timeSlots[index].equals(end)) {
+                            j = index;
+                        }
+                    }
+                    for (int index = 0; index < timeSlots.length; index++) {
+                        if (timeSlots[index].equals(start)) {
+                            g = index;
+                        }
+                    }
+    
+                    // for (int i = g; i < j+1; i++) {
+                    //     System.out.printf("| %-10s | %-20s |%n", timeSlots[i], schedule.get(i));
+                    // }
+    
+                    for (int i = g; i < j+1; i++) {
+                        int apptListLength = appts.size();
+                        Appointment newAppt = new Appointment(apptListLength+1, Status.PENDING, null, doc, availSlot.getDate(), timeSlots[i]);
+                        
+                        List<Appointment> apptCopy = new ArrayList<>(appts);
+                        boolean isDuplicate = false;
+    
+                        for (Appointment appt : apptCopy) {
+                            if (appt.getDoctor() != null && appt.getDate() != null && appt.getTime() != null
+                                    && appt.getDoctor().equals(newAppt.getDoctor())
+                                    && appt.getDate().equals(newAppt.getDate())
+                                    && appt.getTime().equals(newAppt.getTime())) {
+                                isDuplicate = true;
+                                break;
+                            }
+                        }
+                        if (!isDuplicate) {
+                            appts.add(newAppt);
+                        }
+                        
+                    }
+                }
+                //System.out.println(separator); // Closing line of the table
+            }
+        }
+        
+        
+        for (Appointment appt : appts) {
+            if ((appt.getStatus() == Status.PENDING && appt.getPatient() != null && appt.getPatient().getPatientId().equals(patientId))
+            || appt.getPatient() == null) {
+                System.out.println(appt);
+            }
+        }
     }
 
     public void scheduleAppt(Patient patient, int apptId, ApptManager apptM, ArrayList<Appointment> appts) {
-        apptM.schedulePatient(patient, apptId, appts);
+        apptM.schedulePatient(patient, appts);
     }
 
-    public void rescheduleAppt(int oldApptId, int newApptId, Patient patient, ApptManager apptM,
-            ArrayList<Appointment> appts) {
-        apptM.reschedulePatient(oldApptId, newApptId, patient, appts);
+    public void rescheduleAppt(Patient patient, ApptManager apptM, ArrayList<Appointment> appts) {
+        apptM.reschedulePatient(patient, appts);
     }
 
     public void cancelAppt(int apptId, Patient patient, ApptManager apptM, ArrayList<Appointment> appts) {
