@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Patient extends User implements GetRecord<List<MedicalRecord>>{
+public class Patient extends User {
     private String patientId;
     private String name;
     private ArrayList<MedicalRecord> medicalRecords;
@@ -32,6 +32,7 @@ public class Patient extends User implements GetRecord<List<MedicalRecord>>{
     public String getName() {
         return name;
     }
+    public void setName(String name) { this.name = name; }
 
     public String getDateOfBirth() {
         return dateOfBirth;
@@ -56,7 +57,7 @@ public class Patient extends User implements GetRecord<List<MedicalRecord>>{
         return phoneNum;
     }
 
-    @Override
+
     // New method to expose medical records
     public List<MedicalRecord> getRecord() {
         return medicalRecords;
