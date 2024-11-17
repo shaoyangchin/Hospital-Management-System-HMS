@@ -36,9 +36,8 @@ public class MainView {
     }
 
     public static void main(String[] args) {
-
-        HMSDatabase db = new HMSDatabase();
         while (true) {
+            HMSDatabase db = new HMSDatabase();
             Scanner scanner = new Scanner(System.in);
             loginMenu:
             while (true){

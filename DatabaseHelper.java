@@ -508,7 +508,6 @@ public class DatabaseHelper {
 
             }
 
-            System.out.println("CSV file updated successfully at " + filePath);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -461,11 +461,11 @@ public class Administrator extends User {
     }
 
     public void addMedicine(ArrayList<Medicine> inventory) {
-        System.out.print("Enter name of new medicine: ");
+        System.out.println("Enter name of new medicine: ");
         String medicineName = scanner.nextLine();
-        System.out.print("Enter stock of new medicine: ");
+        System.out.println("Enter stock of new medicine: ");
         int stock = scanner.nextInt();
-        System.out.print("Enter low stock alert level of new medicine: ");
+        System.out.println("Enter low stock alert level of new medicine: ");
         int threshold = scanner.nextInt();
         Medicine medicine = new Medicine(medicineName, "null", stock, threshold);
         inventory.add(medicine);
