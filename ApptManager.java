@@ -48,7 +48,6 @@ public class ApptManager {
             for (Appointment appt : appts) {
                 if ((appt.getPatient() == null && appt.getAppointmentID() == apptId
                 && appt.getStatus() == Status.PENDING)) {
-                    System.out.println("hey");
                     patient.setAppointment(appt);
                     appt.setStatus(Status.CONFIRMED);
                     appt.setPatient(patient);
@@ -59,7 +58,6 @@ public class ApptManager {
     
                 else if (appt.getPatient() != null && appt.getAppointmentID() == apptId && appt.getPatient().getPatientId().equals(patient.getPatientId())
                 && appt.getStatus() == Status.PENDING) {
-                    System.out.println("hey2");
                     patient.setAppointment(appt);
                     appt.setStatus(Status.CONFIRMED);
                     doesApptIdExist = true;
@@ -205,15 +203,47 @@ public class ApptManager {
     // Views all confirmed appointments for a specific patient
     public void viewScheduled(Patient patient, ArrayList<Appointment> appts) {
         haveAppt = 0;
+        // for (Appointment appt : appts) {
+        //     if (appt.getPatient() != null &&
+        //         patient.getUserId().equals(appt.getPatient().getUserId()) &&
+        //         appt.getStatus() == Status.CONFIRMED) {
+
+        //         System.out.println(appt);
+        //         haveAppt++;
+        //     }
+        // }
+
+        String header = String.format("| %-10s | %-20s | %-10s | %-15s | %-10s | %-10s | %-10s | %-10s |",
+                "Appt ID", "Patient", "Patient Id", "Doctor", "Doctor Id", "Status", "Date", "Time");
+        String separator = "=".repeat(header.length());
+        System.out.println(separator);
+        System.out.println(header);
+        System.out.println(separator);
+
         for (Appointment appt : appts) {
             if (appt.getPatient() != null &&
                 patient.getUserId().equals(appt.getPatient().getUserId()) &&
                 appt.getStatus() == Status.CONFIRMED) {
+                //System.out.println(appt);
 
-                System.out.println(appt);
+                // Print the medical record in table format
+                    System.out.printf("| %-10s | %-20s | %-10s | %-15s | %-10s | %-10s | %-10s | %-10s |\n",
+                    appt.getAppointmentID(),
+                    (appt.getPatient() != null ? ( patient.getName())
+                        : "No patient assigned"),
+                    (appt.getPatient() != null ? ( patient.getPatientId())
+                        : "NA"),
+                    (appt.getDoctor() != null ? (appt.getDoctor().getName()) : "No doctor assigned"),
+                    (appt.getDoctor() != null ? (appt.getDoctor().getUserId()) : "NA"),
+                    appt.getStatus(),
+                    appt.getDate(),
+                    appt.getTime()
+                );
                 haveAppt++;
             }
         }
+        System.out.println(separator); // Closing line of the table
+
         if (haveAppt == 0) {
             System.out.println("No scheduled appointments.");
         }
