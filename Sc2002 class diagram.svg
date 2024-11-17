@@ -778,46 +778,34 @@
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
     ><text x="2" xml:space="preserve" y="138" clip-path="url(#clipPath11)" stroke="none"
-      >+viewAppointmentOutcomes(patient : Patient)</text
-    ></g
-    ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="153" clip-path="url(#clipPath11)" stroke="none"
       >+updatePrescriptionStatus(apptId : int, newStatus : String)</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="168" clip-path="url(#clipPath11)" stroke="none"
+    ><text x="2" xml:space="preserve" y="153" clip-path="url(#clipPath11)" stroke="none"
       >+viewMedicationInventory(medicines : ArrayList&lt;Medicine&gt;)</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="183" clip-path="url(#clipPath11)" stroke="none"
+    ><text x="2" xml:space="preserve" y="168" clip-path="url(#clipPath11)" stroke="none"
       >+submitReplenishmentRequest(medicineName : String, requestedQuantity : int)</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="198" clip-path="url(#clipPath11)" stroke="none"
+    ><text x="2" xml:space="preserve" y="183" clip-path="url(#clipPath11)" stroke="none"
       >+setDatabaseHelper(dbHelper : DatabaseHelper) : void</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="213" clip-path="url(#clipPath11)" stroke="none"
+    ><text x="2" xml:space="preserve" y="198" clip-path="url(#clipPath11)" stroke="none"
       >+viewPendingPrescriptions(database : HMSDatabase) : void</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="228" clip-path="url(#clipPath11)" stroke="none"
-      >+updatePrescriptionStatus(appointmentId : int, database : HMSDatabase) : void</text
-    ></g
-    ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="243" clip-path="url(#clipPath11)" stroke="none"
-      >+viewMedicationInventory(medicines) : void</text
-    ></g
-    ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="258" clip-path="url(#clipPath11)" stroke="none"
+    ><text x="2" xml:space="preserve" y="213" clip-path="url(#clipPath11)" stroke="none"
       >+getName() : String</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="273" clip-path="url(#clipPath11)" stroke="none"
+    ><text x="2" xml:space="preserve" y="228" clip-path="url(#clipPath11)" stroke="none"
       >+setName(name : String) : void</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2168,1212)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="288" clip-path="url(#clipPath11)" stroke="none"
+    ><text x="2" xml:space="preserve" y="243" clip-path="url(#clipPath11)" stroke="none"
       >+setAppointmentManager(apptManager : ApptManager) : void</text
     ></g
     ><g font-size="11px" transform="translate(2168,1197)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" font-weight="bold" stroke-opacity="1"
@@ -1361,39 +1349,31 @@
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2682,827)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
     ><text x="2" xml:space="preserve" y="44" clip-path="url(#clipPath44)" stroke="none"
-      >-dosage : String</text
-    ></g
-    ><g font-size="11px" transform="matrix(1,0,0,1,2682,827)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="59" clip-path="url(#clipPath44)" stroke="none"
       >-quantity : int</text
-    ></g
-    ><g font-size="11px" transform="matrix(1,0,0,1,2682,827)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="74" clip-path="url(#clipPath44)" stroke="none"
-      >-expirationDate : String</text
-      ><line stroke-linecap="butt" clip-path="url(#clipPath44)" fill="none" x1="0" x2="463" y1="79" y2="79" stroke-linejoin="bevel" stroke-miterlimit="0"
+      ><line stroke-linecap="butt" clip-path="url(#clipPath44)" fill="none" x1="0" x2="463" y1="49" y2="49" stroke-linejoin="bevel" stroke-miterlimit="0"
     /></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2682,827)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="93" clip-path="url(#clipPath44)" stroke="none"
+    ><text x="2" xml:space="preserve" y="63" clip-path="url(#clipPath44)" stroke="none"
       >+Medicine(name : String, dosage : String, quantity : int, threshold : int, expirationDate : String)</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2682,827)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="108" clip-path="url(#clipPath44)" stroke="none"
+    ><text x="2" xml:space="preserve" y="78" clip-path="url(#clipPath44)" stroke="none"
       >+Medicine()</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2682,827)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="123" clip-path="url(#clipPath44)" stroke="none"
+    ><text x="2" xml:space="preserve" y="93" clip-path="url(#clipPath44)" stroke="none"
       >+isLowStock() : boolean</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2682,827)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="138" clip-path="url(#clipPath44)" stroke="none"
+    ><text x="2" xml:space="preserve" y="108" clip-path="url(#clipPath44)" stroke="none"
       >+isExpired(currentDate : String) : boolean</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2682,827)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="153" clip-path="url(#clipPath44)" stroke="none"
+    ><text x="2" xml:space="preserve" y="123" clip-path="url(#clipPath44)" stroke="none"
       >+toRowData() : String[]</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2682,827)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
-    ><text x="2" xml:space="preserve" y="168" clip-path="url(#clipPath44)" stroke="none"
+    ><text x="2" xml:space="preserve" y="138" clip-path="url(#clipPath44)" stroke="none"
       >+toString() : String</text
     ></g
     ><g font-size="11px" transform="translate(2682,812)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" font-weight="bold" stroke-opacity="1"
@@ -1671,7 +1651,7 @@
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2682,558)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
     ><text x="2" xml:space="preserve" y="59" clip-path="url(#clipPath56)" stroke="none"
-      >&lt;&lt;Property&gt;&gt; -status : Status</text
+      >-status : Status</text
       ><line stroke-linecap="butt" clip-path="url(#clipPath56)" fill="none" x1="0" x2="470" y1="64" y2="64" stroke-linejoin="bevel" stroke-miterlimit="0"
     /></g
     ><g font-size="11px" transform="matrix(1,0,0,1,2682,558)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
