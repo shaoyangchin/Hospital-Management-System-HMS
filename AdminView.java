@@ -24,8 +24,9 @@ public class AdminView {
                     admin.viewStaff(database.getStaff());
                     int manage = 0;
                     do {
-                        System.out.println("--- Manage Staff ---\n" + "1. Add Staff\n" + "2. Remove Staff\n"
-                                + "3. Update Staff details\n" + "4. Exit");
+                        System.out.print("--- Manage Staff ---\n" + "1. Add Staff\n" + "2. Remove Staff\n"
+                                + "3. Update Staff details\n" + "4. Exit\n");
+                        System.out.print("Choose an Option: ");
                         manage = scanner.nextInt();
                         switch (manage) {
                             case 1:
@@ -52,10 +53,15 @@ public class AdminView {
                     admin.viewInventory(database.getInventory());
                     int choose = 0;
                     do {
-                        System.out.println("--- Manage inventory --- \n" + "1. Add Medicine\n" + "2. Remove Medicine\n"
-                                + "3. Update Medicine Stocks\n" + "4. Update Medicine Low Stock Level\n" + "5. Exit\n");
+                        System.out.println("--- Manage inventory --- \n" + "0. View Inventory\n" + "1. Add Medicine\n"
+                                + "2. Remove Medicine\n"
+                                + "3. Update Medicine Stocks\n" + "4. Update Medicine Low Stock Level\n" + "5. Exit");
+                        System.out.print("Choose an Option: ");
                         choose = scanner.nextInt();
                         switch (choose) {
+                            case 0:
+                                admin.viewInventory(database.getInventory());
+                                break;
                             case 1:
                                 admin.addMedicine(database.getInventory());
                                 break;
