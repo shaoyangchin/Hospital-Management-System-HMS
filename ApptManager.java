@@ -36,6 +36,10 @@ public class ApptManager {
         }
     }
 
+
+    public void saveAppt(ArrayList<Appointment> appts) {
+        DatabaseHelper.saveApptList(appts);
+    }
     
         // Schedules an appointment for a specific patient and doctor by appointment ID
         public void schedulePatient(Patient patient, ArrayList<Appointment> appts) {
@@ -78,6 +82,8 @@ public class ApptManager {
             if (!doesApptIdExist) {
                 System.out.println("AppointmentId does not exist");
             }
+
+            DatabaseHelper.saveApptList(appts);
         }
     
         // Reschedules a confirmed appointment to a new date and time for a specific patient
@@ -175,6 +181,7 @@ public class ApptManager {
                 }
             }
         }
+        DatabaseHelper.saveApptList(appts);
     }
     
     
@@ -200,6 +207,8 @@ public class ApptManager {
         if (!doesApptIdExist) {
             System.out.println("AppointmentId does not exist");
         }
+
+        DatabaseHelper.saveApptList(appts);
     }
 
     // Views all confirmed appointments for a specific patient

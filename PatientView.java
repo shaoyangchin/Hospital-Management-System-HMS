@@ -21,7 +21,7 @@ public class PatientView {
             System.out.printf("| %-2s | %-40s |\n", "6", "Cancel an Appointment");
             System.out.printf("| %-2s | %-40s |\n", "7", "View scheduled Appointments");
             System.out.printf("| %-2s | %-40s |\n", "8", "View Past Appointment Outcome Records");
-            System.out.printf("| %-2s | %-40s |\n", "9", "Exit");
+            System.out.printf("| %-2s | %-40s |\n", "9", "Logout");
             System.out.println("==================================================");
             System.out.print("Choose an option: ");
 
@@ -99,8 +99,8 @@ public class PatientView {
                         patient.viewPastApptOutcomes(patient, apptM, database);
                         break;
                     case 9:
-                        database.saveDatabase();
                         System.out.println("Exiting...");
+                        //database.saveDatabase();
                         return;
 
                     default:
